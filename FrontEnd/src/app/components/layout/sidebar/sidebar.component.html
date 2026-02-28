@@ -1,0 +1,78 @@
+<div class="d-flex flex-column h-100 text-white w-100">
+    <div class="d-flex align-items-center mb-4 mt-2">
+        <!-- Placeholder para a Logo -->
+        <i class="bi bi-seedling fs-2 text-secondary me-2"></i>
+        <span class="fs-4 fw-bold">Fortunato Agrícola</span>
+    </div>
+
+    <ul class="nav nav-pills flex-column mb-auto mt-2 gap-2">
+        <li class="nav-item">
+            <a routerLink="/app/dashboard" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-house-door me-2 fs-5"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/app/clientes" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-people me-2 fs-5"></i>
+                <span>Clientes</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/app/produtores" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-person-badge me-2 fs-5"></i>
+                <span>Produtores</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/app/contratos" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-file-earmark-text me-2 fs-5"></i>
+                <span>Contratos</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/app/transportadoras" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-truck me-2 fs-5"></i>
+                <span>Transportadoras</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/app/usuarios" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-shield-lock me-2 fs-5"></i>
+                <span>Usuários</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/app/configuracoes" routerLinkActive="active"
+                class="nav-link text-white d-flex align-items-center">
+                <i class="bi bi-gear me-2 fs-5"></i>
+                <span>Configurações</span>
+            </a>
+        </li>
+    </ul>
+
+    <hr>
+
+    <div class="dropdown pb-3 mt-auto">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&background=f1c40f&color=0d4a22" alt="perfil admin"
+                width="32" height="32" class="rounded-circle me-2">
+            <strong>Admin</strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="#">Configurações</a></li>
+            <li><a class="dropdown-item" href="#">Perfil</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Sair</a></li>
+        </ul>
+    </div>
+</div>

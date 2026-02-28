@@ -1,0 +1,15 @@
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\bin\Debug\net10.0\FortunatoAgricola.Application.deps.json
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\bin\Debug\net10.0\FortunatoAgricola.Application.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\bin\Debug\net10.0\FortunatoAgricola.Application.pdb
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\bin\Debug\net10.0\FortunatoAgricola.Domain.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\bin\Debug\net10.0\FortunatoAgricola.Domain.pdb
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.csproj.AssemblyReference.cache
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.AssemblyInfoInputs.cache
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.AssemblyInfo.cs
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.csproj.CoreCompileInputs.cache
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\Fortunat.49A40BA8.Up2Date
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\refint\FortunatoAgricola.Application.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.pdb
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\ref\FortunatoAgricola.Application.dll

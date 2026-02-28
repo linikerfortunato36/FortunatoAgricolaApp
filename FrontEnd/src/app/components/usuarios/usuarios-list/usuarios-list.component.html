@@ -1,0 +1,79 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="h3 fw-bold text-dark mb-1">Usuários do Sistema</h2>
+            <p class="text-muted mb-0 small">Controle e permissões de acesso ao sistema operacional.</p>
+        </div>
+        <button routerLink="/app/usuarios/novo" class="btn btn-primary d-flex align-items-center fw-bold">
+            <i class="bi bi-person-plus-fill me-2 fs-5"></i> Novo Usuário
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="p-3 border-bottom d-flex flex-wrap gap-3 bg-light align-items-center">
+                <div class="input-group" style="max-width: 300px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Nome, E-mail...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted small">
+                        <tr>
+                            <th class="ps-4">NOME / E-MAIL</th>
+                            <th>PERFIL DE ACESSO</th>
+                            <th>STATUS</th>
+                            <th class="text-end pe-4">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark">Administrador Geral
+                                <div class="text-muted small fw-normal">admin.fortunatoagricola.com.br</div>
+                            </td>
+                            <td><span class="badge bg-danger bg-opacity-10 text-danger px-3 rounded-pill">Admin</span>
+                            </td>
+                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <button routerLink="/app/usuarios/editar/1" class="btn btn-sm btn-outline-secondary"
+                                        title="Editar Usuário">
+                                        <i class="bi bi-pencil-fill"></i> Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger shadow-sm" disabled>
+                                        <i class="bi bi-ban"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark">Operador Logístico
+                                <div class="text-muted small fw-normal">logistica.fortunatoagricola.com.br</div>
+                            </td>
+                            <td><span
+                                    class="badge bg-primary bg-opacity-10 text-primary px-3 rounded-pill">Operador</span>
+                            </td>
+                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <button routerLink="/app/usuarios/editar/2" class="btn btn-sm btn-outline-secondary"
+                                        title="Editar Usuário">
+                                        <i class="bi bi-pencil-fill"></i> Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger shadow-sm">
+                                        <i class="bi bi-ban"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

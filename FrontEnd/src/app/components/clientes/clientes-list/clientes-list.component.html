@@ -1,0 +1,100 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="h3 fw-bold text-dark mb-1">Clientes (Compradores)</h2>
+            <p class="text-muted mb-0 small">Gerenciamento de clientes com contratos de entregas de grãos.</p>
+        </div>
+        <button routerLink="/app/clientes/novo" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-building-add me-2"></i> Adicionar Cliente
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="p-3 border-bottom d-flex bg-light gap-2 align-items-center">
+                <div class="input-group" style="max-width: 350px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0"
+                        placeholder="Buscar por nome ou CNPJ...">
+                </div>
+                <button class="btn btn-outline-secondary d-flex align-items-center"><i class="bi bi-filter me-2"></i>
+                    Filtros</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted small">
+                        <tr>
+                            <th class="ps-4">CLIENTE / CNPJ</th>
+                            <th>STATUS</th>
+                            <th>CONTRATOS ATIVOS</th>
+                            <th>VOL. TOTAL NEGOCIADO</th>
+                            <th>ÚLTIMA MOVIMENTAÇÃO</th>
+                            <th class="pe-4 text-end">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Placeholder row for preview -->
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">Cargill Agrícola S.A</div>
+                                <div class="small text-muted">60.498.706/0001-57</div>
+                            </td>
+                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                            </td>
+                            <td><span class="fw-bold fs-6">3</span></td>
+                            <td>125.000 t</td>
+                            <td class="text-muted small">Há 2 horas</td>
+                            <td class="pe-4 text-end">
+                                <div class="btn-group">
+                                    <!-- Visualizar Contratos / Boards do cliente -->
+                                    <button routerLink="/app/clientes/editar/1" class="btn btn-sm btn-outline-secondary"
+                                        title="Boards e Contratos" aria-label="Acessar Boards do Cliente">
+                                        <i class="bi bi-kanban"></i> Boards
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" title="Desativar Cliente">
+                                        <i class="bi bi-ban"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">Bunge Alimentos</div>
+                                <div class="small text-muted">84.093.856/0001-90</div>
+                            </td>
+                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                            </td>
+                            <td><span class="fw-bold fs-6">1</span></td>
+                            <td>45.000 t</td>
+                            <td class="text-muted small">Ontem</td>
+                            <td class="pe-4 text-end">
+                                <div class="btn-group">
+                                    <button routerLink="/app/clientes/editar/2"
+                                        class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-kanban"></i> Boards
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-ban"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-3 border-top d-flex justify-content-between align-items-center bg-light">
+                <span class="text-muted small">Mostrando <strong>1</strong> a <strong>2</strong> de <strong>2</strong>
+                    registros</span>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                        <li class="page-item active"><a class="page-link bg-primary border-primary" href="#">1</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#">Próxima</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

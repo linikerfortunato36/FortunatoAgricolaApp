@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="FortunatoAgricola.API/FortunatoAgricola.API.csproj" />
+  <Project Path="FortunatoAgricola.Application/FortunatoAgricola.Application.csproj" />
+  <Project Path="FortunatoAgricola.Domain/FortunatoAgricola.Domain.csproj" />
+  <Project Path="FortunatoAgricola.Infrastructure/FortunatoAgricola.Infrastructure.csproj" />
+</Solution>

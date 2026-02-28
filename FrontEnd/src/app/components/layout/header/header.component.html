@@ -1,0 +1,51 @@
+<header class="py-3 bg-white border-bottom shadow-sm w-100">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center d-md-none">
+            <button class="btn btn-primary btn-sm me-2">
+                <i class="bi bi-list fs-5"></i>
+            </button>
+            <span class="fs-5 fw-bold text-primary">Fortunato Agrícola</span>
+        </div>
+
+        <!-- Barra de busca no topo (Simulada para visual) -->
+        <div class="w-100 me-3 d-none d-md-flex mx-4">
+            <form class="w-100 w-md-50 position-relative">
+                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                <input type="search" class="form-control ps-5 rounded-pill bg-light border-0"
+                    placeholder="Buscar contratos, produtores, clientes..." aria-label="Search">
+            </form>
+        </div>
+
+        <!-- Notificações e atalhos -->
+        <div class="flex-shrink-0 d-flex align-items-center">
+            <a href="#" class="btn btn-outline-secondary rounded-circle border-0 me-2 position-relative pt-2 pb-2">
+                <i class="bi bi-bell fs-5"></i>
+                <span
+                    class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">Novos alertas</span>
+                </span>
+            </a>
+
+            <div class="dropdown d-none d-md-block">
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                    id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img [src]="'https://ui-avatars.com/api/?name=' + (usuario?.nome || 'User') + '&background=f1c40f&color=0d4a22'"
+                        alt="Avatar" width="32" height="32" class="rounded-circle me-2">
+                    <span class="d-none d-lg-inline small fw-bold text-dark">{{ usuario?.nome || 'Usuário' }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2">
+                    <li>
+                        <h6 class="dropdown-header small">{{ usuario?.perfil }}</h6>
+                    </li>
+                    <li><a class="dropdown-item" routerLink="/app/movimentacoes/novo">
+                            <i class="bi bi-plus-circle me-2 text-primary"></i>Nova Movimentação</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item text-danger" href="#" (click)="$event.preventDefault(); logout()">
+                            <i class="bi bi-box-arrow-left me-2"></i>Sair do Sistema</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>

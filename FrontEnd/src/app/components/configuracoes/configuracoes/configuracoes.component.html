@@ -1,0 +1,67 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="h3 fw-bold text-dark mb-1">Configurações Gerais do Sistema</h2>
+            <p class="text-muted mb-0 small">Personalização de dados corporativos.</p>
+        </div>
+        <button class="btn btn-primary"><i class="bi bi-floppy me-1"></i> Salvar Alterações</button>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom pt-3 pb-2">
+                    <h5 class="fw-bold mb-0 text-dark">Dados Fiscais e Emissão</h5>
+                </div>
+
+                <div class="card-body">
+                    <form class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-dark">Razão Social Global</label>
+                            <input type="text" class="form-control" value="FORTUNATO AGRÍCOLA LTDA">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-dark">CNPJ Emissor Padrão</label>
+                            <input type="text" class="form-control bg-light" value="00.000.000/0001-00" readonly>
+                            <div class="form-text mt-1" style="font-size: 0.70rem;">Alterações corporativas não são
+                                permitidas por aqui.</div>
+                        </div>
+
+                        <div class="col-md-12 mt-4">
+                            <h6 class="fw-bold border-bottom pb-2">Taxas e Regras Financeiras Padronizadas</h6>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-dark">Margem de Lucro (% Alvo)</label>
+                            <input type="number" class="form-control" value="12">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-dark">Tolerância Quebra Peso (%)</label>
+                            <input type="number" class="form-control text-warning fw-bold" value="0.5">
+                            <div class="form-text mt-1" style="font-size: 0.70rem;">Quebra aceitável sem multas
+                                logísticas.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-dark">Tolerância Umidade Base (%)</label>
+                            <input type="number" class="form-control text-primary fw-bold" value="14.0">
+                            <div class="form-text mt-1" style="font-size: 0.70rem;">Base para cálculo de contrato (desc.
+                                água).</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <!-- Logo Preview -->
+            <div class="card shadow-sm border-0 bg-light d-flex align-items-center justify-content-center py-5">
+                <i class="bi bi-seedling fs-1 text-secondary mb-3"></i>
+                <h5 class="fw-bold">Fortunato Agrícola</h5>
+                <button class="btn btn-outline-secondary btn-sm mt-3"><i class="bi bi-image me-1"></i> Alterar
+                    Logo</button>
+            </div>
+        </div>
+    </div>
+</div>

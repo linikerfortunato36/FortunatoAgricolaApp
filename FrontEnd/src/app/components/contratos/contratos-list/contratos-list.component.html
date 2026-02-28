@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="h3 fw-bold text-dark mb-1">Contratos</h2>
+            <p class="text-muted mb-0 small">Visualização de contratos firmados e seu acompanhamento diário.</p>
+        </div>
+        <button class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-file-earmark-plus me-2"></i> Novo Contrato
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <!-- Barra de Filtros Intuitiva -->
+            <div class="p-3 border-bottom d-flex flex-wrap gap-3 bg-light align-items-center">
+                <div class="input-group" style="max-width: 250px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Número do contrato...">
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <label class="text-muted small mb-0 ms-2 fw-bold">Status:</label>
+                    <select class="form-select form-select-sm border-0 shadow-sm" style="width: 140px;">
+                        <option selected>Todos</option>
+                        <option value="Aberto">Aberto</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Finalizado">Finalizado</option>
+                    </select>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <label class="text-muted small mb-0 ms-2 fw-bold">Cliente:</label>
+                    <select class="form-select form-select-sm border-0 shadow-sm" style="width: 200px;">
+                        <option selected>Todos os Clientes</option>
+                        <option value="Cargill">Cargill Agrícola</option>
+                        <option value="Bunge">Bunge Alimentos</option>
+                    </select>
+                </div>
+
+                <div class="ms-auto">
+                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-funnel"></i> Limpar
+                        Filtros</button>
+                </div>
+            </div>
+
+            <!-- Grade de Contratos -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted small">
+                        <tr>
+                            <th class="ps-4">Nº CONTRATO</th>
+                            <th>CLIENTE DESTINO</th>
+                            <th>TOTAL ACORDADO</th>
+                            <th>TOTAL ENTREGUE</th>
+                            <th style="width: 20%">STATUS / METAS</th>
+                            <th class="pe-4 text-end">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- *ngFor Contrato iteration -->
+                        <tr *ngFor="let c of contratos">
+                            <td class="ps-4 fw-bold text-dark">{{ c.numeroContrato }}</td>
+                            <td>{{ c.clienteNome }}</td>
+                            <td><span class="fw-bold">{{ (c.quantidadeTotalKg / 1000) | number:'1.0-0' }} t</span></td>
+                            <td
+                                [ngClass]="{'text-success fw-bold': c.quantidadeEntregueKg > 0, 'text-muted': c.quantidadeEntregueKg === 0}">
+                                {{ (c.quantidadeEntregueKg / 1000) | number:'1.0-0' }} t
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between small text-primary fw-bold mb-1">
+                                    <span>{{ c.status }}</span>
+                                    <span>{{ getProgressoWidth(c.quantidadeEntregueKg, c.quantidadeTotalKg) |
+                                        number:'1.0-0' }}%</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-primary" role="progressbar"
+                                        [style.width]="getProgressoWidth(c.quantidadeEntregueKg, c.quantidadeTotalKg) + '%'"
+                                        [attr.aria-valuenow]="getProgressoWidth(c.quantidadeEntregueKg, c.quantidadeTotalKg)"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <button [routerLink]="['/app/contratos/detalhe', c.id]"
+                                    class="btn btn-sm btn-outline-primary shadow-sm"
+                                    title="Ver Detalhes e Inserir Entregas">
+                                    <i class="bi bi-arrow-right-short fs-6"></i> Acessar Painel
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

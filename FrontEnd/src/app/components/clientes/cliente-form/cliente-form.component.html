@@ -1,0 +1,156 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a routerLink="/app/clientes" class="text-decoration-none">Clientes</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Adicionar Cliente</li>
+                </ol>
+            </nav>
+            <h2 class="h3 fw-bold text-dark mb-0">Novo Cliente (Comprador)</h2>
+        </div>
+        <div>
+            <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2"><i
+                    class="bi bi-x-circle me-1"></i> Cancelar</button>
+            <button class="btn btn-primary"><i class="bi bi-floppy me-1"></i> Salvar Cliente</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-8">
+            <!-- Tabs exigidas na rega de negócio -->
+            <ul class="nav nav-tabs mb-4 border-bottom-0" id="clienteTab" role="tablist">
+                <li class="nav-item d-none" role="presentation">
+                    <!-- Ocultado porque estamos adicionando novo cliente (primeira aba invisível) -->
+                    <button class="nav-link text-dark shadow-sm bg-white border border-bottom-0 rounded-top"
+                        id="boards-tab" data-bs-toggle="tab" data-bs-target="#boards" type="button" role="tab"
+                        aria-controls="boards" aria-selected="false">
+                        <i class="bi bi-kanban me-2 text-primary"></i> Boards de Contratos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active text-primary fw-bold border-bottom-0 rounded-top shadow-sm bg-white"
+                        id="form-tab" data-bs-toggle="tab" data-bs-target="#form" type="button" role="tab"
+                        aria-controls="form" aria-selected="true">
+                        <i class="bi bi-card-text me-2"></i> Cadastro de Dados
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content border bg-white p-4 shadow-sm rounded-bottom rounded-end" id="clienteTabContent">
+                <!-- Aba de Boards (Invisível no form de novo) -->
+                <div class="tab-pane fade" id="boards" role="tabpanel" aria-labelledby="boards-tab">
+                    <p class="text-muted">Os boards ficarão disponíveis após salvar o cadastro do cliente.</p>
+                </div>
+
+                <!-- Aba Principal de Formulário -->
+                <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="nome" class="form-label fw-bold text-dark">Razão Social / Nome Fantasia
+                                    *</label>
+                                <input type="text" class="form-control" id="nome" placeholder="Ex: Cargill Agrícola S.A"
+                                    required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="cnpj" class="form-label fw-bold text-dark">CNPJ *</label>
+                                <input type="text" class="form-control" id="cnpj" placeholder="00.000.000/0001-00"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6 mt-4">
+                                <label for="inscEstadual" class="form-label fw-bold text-dark">Inscrição
+                                    Estadual</label>
+                                <input type="text" class="form-control" id="inscEstadual"
+                                    placeholder="Isento / Documento">
+                            </div>
+
+                            <div class="col-md-6 mt-4">
+                                <label for="email" class="form-label fw-bold text-dark">E-mail de Contato</label>
+                                <input type="email" class="form-control" id="email" placeholder="contato@empresa.com">
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <h5 class="fw-bold border-bottom pb-2 mt-2">Endereço Principal</h5>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="cep" class="form-label fw-bold text-dark">CEP</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="cep">
+                                    <button class="btn btn-outline-secondary" type="button"><i
+                                            class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <label for="rua" class="form-label fw-bold text-dark">Logradouro / Fazenda</label>
+                                <input type="text" class="form-control" id="rua">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="numero" class="form-label fw-bold text-dark">Número</label>
+                                <input type="text" class="form-control" id="numero">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="bairro" class="form-label fw-bold text-dark">Bairro</label>
+                                <input type="text" class="form-control" id="bairro">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="cidade" class="form-label fw-bold text-dark">Cidade</label>
+                                <input type="text" class="form-control" id="cidade">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="estado" class="form-label fw-bold text-dark">UF</label>
+                                <select id="estado" class="form-select">
+                                    <option selected>Selecione...</option>
+                                    <option value="MT">MT</option>
+                                    <option value="PR">PR</option>
+                                    <option value="SP">SP</option>
+                                    <option value="GO">GO</option>
+                                    <option value="MS">MS</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="form-check form-switch fs-5">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="ativo" checked>
+                                    <label class="form-check-label ms-2 text-dark fs-6 mt-1" for="ativo">Cliente Ativo
+                                        no Sistema</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Lateral Informativo -->
+        <div class="col-xl-4 mt-4 mt-xl-0 d-none d-lg-block">
+            <div class="card bg-light border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-primary mb-3"><i class="bi bi-info-circle me-2"></i> Orientação
+                    </h5>
+                    <p class="text-muted small">
+                        Preencha os dados primários do cliente para depois registrar os <strong>Contratos de
+                            Venda</strong>. O Dashboard e Boards só são liberados em etapa de edição.
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mt-4 text-dark mb-2">Restrições Padrão</h6>
+                    <ul class="text-muted small ps-3">
+                        <li class="mb-2">Clientes que detém contratos ativos <strong>nunca podem ser removidos</strong>
+                            do sistema (Políticas de <i>Fake Delete</i>).</li>
+                        <li class="mb-2">A troca de CNPJ implica em reavaliação de todos os contratos abertos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

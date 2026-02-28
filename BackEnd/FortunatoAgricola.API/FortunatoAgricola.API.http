@@ -1,0 +1,6 @@
+@FortunatoAgricola.API_HostAddress = http://localhost:5201
+
+GET {{FortunatoAgricola.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
