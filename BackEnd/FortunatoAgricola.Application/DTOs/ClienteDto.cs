@@ -14,5 +14,11 @@ namespace FortunatoAgricola.Application.DTOs
         public string? Cidade { get; set; }
         public string? Estado { get; set; }
         public bool IsActive { get; set; }
+        
+        // Audit
+        public DateTime CreatedAt { get; set; }
+        public string? CreatedByName { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public string? UpdatedByName { get; set; }
     }
 }

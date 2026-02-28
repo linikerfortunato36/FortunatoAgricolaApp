@@ -6,7 +6,38 @@ namespace FortunatoAgricola.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        private readonly FortunatoAgricola.Application.Interfaces.IUserAccessor? _userAccessor;
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, 
+                                    FortunatoAgricola.Application.Interfaces.IUserAccessor userAccessor) : base(options) 
+        {
+            _userAccessor = userAccessor;
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var userId = _userAccessor?.GetUserId();
+            var userName = _userAccessor?.GetUserName();
+
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                        entry.Entity.CreatedBy = userId;
+                        entry.Entity.CreatedByName = userName;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+                        entry.Entity.UpdatedBy = userId;
+                        entry.Entity.UpdatedByName = userName;
+                        break;
+                }
+            }
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Produtor> Produtores { get; set; }
