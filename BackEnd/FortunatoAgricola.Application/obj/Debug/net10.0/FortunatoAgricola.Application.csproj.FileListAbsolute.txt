@@ -13,3 +13,4 @@ C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\refint\FortunatoAgricola.Application.dll
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.pdb
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\ref\FortunatoAgricola.Application.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Application\obj\Debug\net10.0\FortunatoAgricola.Application.sourcelink.json

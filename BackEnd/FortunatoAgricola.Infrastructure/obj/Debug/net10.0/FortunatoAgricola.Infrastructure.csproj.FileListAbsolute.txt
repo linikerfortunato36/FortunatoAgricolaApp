@@ -17,3 +17,4 @@ C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Infrastructure\obj\Debug\net10.0\FortunatoAgricola.Infrastructure.pdb
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Infrastructure\obj\Debug\net10.0\FortunatoAgricola.Infrastructure.genruntimeconfig.cache
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Infrastructure\obj\Debug\net10.0\ref\FortunatoAgricola.Infrastructure.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Infrastructure\obj\Debug\net10.0\FortunatoAgricola.Infrastructure.sourcelink.json

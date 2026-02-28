@@ -139,3 +139,4 @@ C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.API\obj\Debug\net10.0\ref\FortunatoAgricola.API.dll
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.API\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.InMemory.dll
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.API\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.API\obj\Debug\net10.0\FortunatoAgricola.API.sourcelink.json

@@ -9,3 +9,4 @@ C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Domain\obj\Debug\net10.0\refint\FortunatoAgricola.Domain.dll
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Domain\obj\Debug\net10.0\FortunatoAgricola.Domain.pdb
 C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Domain\obj\Debug\net10.0\ref\FortunatoAgricola.Domain.dll
+C:\Usuario\Documents\Projetos\Sites\Fortunato Agricola\BackEnd\FortunatoAgricola.Domain\obj\Debug\net10.0\FortunatoAgricola.Domain.sourcelink.json
