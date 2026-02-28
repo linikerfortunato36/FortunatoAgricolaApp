@@ -1,6 +1,6 @@
-namespace FortunatoAgricola.Application.DTOs
+﻿namespace FortunatoAgricola.Application.DTOs
 {
-    public class ProdutorDto
+    public class UpdateProdutorDto
     {
         public Guid Id { get; set; }
         public string Nome { get; set; } = string.Empty;

@@ -1,6 +1,6 @@
-namespace FortunatoAgricola.Application.DTOs
+﻿namespace FortunatoAgricola.Application.DTOs
 {
-    public class ConfiguracaoDto
+    public class UpdateConfiguracaoDto
     {
         public Guid Id { get; set; }
         public decimal ValorBaseComissaoVendaPorSaca { get; set; }
