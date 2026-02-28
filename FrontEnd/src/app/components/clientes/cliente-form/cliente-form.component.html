@@ -5,10 +5,11 @@
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a routerLink="/app/clientes" class="text-decoration-none">Clientes</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Adicionar Cliente</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ isEditing ? 'Editar Cliente' : 'Adicionar
+                        Cliente' }}</li>
                 </ol>
             </nav>
-            <h2 class="h3 fw-bold text-dark mb-0">Novo Cliente (Comprador)</h2>
+            <h2 class="h3 fw-bold text-dark mb-0">{{ isEditing ? 'Editar Cliente' : 'Novo Cliente (Comprador)' }}</h2>
         </div>
         <div>
             <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2"><i

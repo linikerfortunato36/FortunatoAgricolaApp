@@ -1,7 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import "@ng-select/ng-select/themes/default.theme.css";
+
 :root {
-  --primary-color: #0d4a22; /* Verde escuro */
-  --secondary-color: #f1c40f; /* Amarelo */
+  --primary-color: #0d4a22;
+  /* Verde escuro */
+  --secondary-color: #f1c40f;
+  /* Amarelo */
   --text-color: #333333;
   --bg-color: #f4f6f9;
 }
@@ -38,7 +42,7 @@ body {
 }
 
 .shadow-sm {
-  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
 }
 
 .card {
