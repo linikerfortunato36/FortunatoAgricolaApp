@@ -17,30 +17,64 @@
         </div>
 
         <!-- Notificações e atalhos -->
-        <div class="flex-shrink-0 d-flex align-items-center">
-            <a href="javascript:void(0)"
-                class="btn btn-outline-secondary rounded-circle border-0 me-2 position-relative pt-2 pb-2">
-                <i class="bi bi-bell fs-5"></i>
-                <span
-                    class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    <span class="visually-hidden">Novos alertas</span>
-                </span>
-            </a>
+        <div class="flex-shrink-0 d-flex align-items-center position-relative">
+            <!-- Dropdown Notificações -->
+            <div class="dropdown me-2 position-relative">
+                <a href="javascript:void(0)"
+                    (click)="notifMenuOpen = !notifMenuOpen; userMenuOpen = false; $event.stopPropagation()"
+                    class="btn btn-outline-secondary rounded-circle border-0 position-relative pt-2 pb-2 dropdown-toggle">
+                    <i class="bi bi-bell fs-5"></i>
+                    <span
+                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                        <span class="visually-hidden">Novos alertas</span>
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end shadow" [class.show]="notifMenuOpen"
+                    style="width: 300px; position: absolute; top: 100%; right: 0;">
+                    <h6 class="dropdown-header">Notificações</h6>
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="javascript:void(0)">
+                        <div class="text-bg-warning rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px;">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0 fw-bold small">Saldo Quase no Fim</h6>
+                            <small class="text-muted d-block">Contrato 007/26</small>
+                        </div>
+                    </a>
+                    <a class="dropdown-item py-2 d-flex align-items-center border-top" href="javascript:void(0)">
+                        <div class="text-bg-info rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center text-white"
+                            style="width: 32px; height: 32px;">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0 fw-bold small">Nova Movimentação</h6>
+                            <small class="text-muted d-block">1 ticket hoje.</small>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider mb-0"></div>
+                    <a class="dropdown-item text-center small text-primary fw-bold py-2" href="javascript:void(0)">Ver
+                        todas as notificações</a>
+                </div>
+            </div>
 
-            <div class="dropdown d-none d-md-block">
-                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
-                    id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+            <!-- Dropdown Usuário -->
+            <div class="dropdown d-none d-md-block position-relative">
+                <a href="javascript:void(0)"
+                    (click)="userMenuOpen = !userMenuOpen; notifMenuOpen = false; $event.stopPropagation()"
+                    class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle">
                     <img [src]="'https://ui-avatars.com/api/?name=' + (usuario?.nome || 'User') + '&background=f1c40f&color=0d4a22'"
                         alt="Avatar" width="32" height="32" class="rounded-circle me-2">
                     <span class="d-none d-lg-inline small fw-bold text-dark">{{ usuario?.nome || 'Usuário' }}</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2">
+                <ul class="dropdown-menu dropdown-menu-end shadow" [class.show]="userMenuOpen"
+                    style="position: absolute; top: 100%; right: 0;">
                     <li>
                         <h6 class="dropdown-header small">{{ usuario?.perfil }}</h6>
                     </li>
-                    <li><a class="dropdown-item" routerLink="/app/configuracoes">
+                    <li><a class="dropdown-item" routerLink="/app/configuracoes" (click)="userMenuOpen = false">
                             <i class="bi bi-gear me-2 text-primary"></i>Configurações</a></li>
-                    <li><a class="dropdown-item" routerLink="/app/usuarios">
+                    <li><a class="dropdown-item" routerLink="/app/usuarios" (click)="userMenuOpen = false">
                             <i class="bi bi-person me-2 text-primary"></i>Perfil / Usuários</a></li>
                     <li>
                         <hr class="dropdown-divider">

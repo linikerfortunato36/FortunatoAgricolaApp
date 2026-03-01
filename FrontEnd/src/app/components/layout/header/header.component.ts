@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -13,11 +13,19 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class HeaderComponent {
   searchQuery = '';
+  userMenuOpen = false;
+  notifMenuOpen = false;
 
   constructor(
     public authService: AuthService,
     private router: Router
   ) { }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    this.userMenuOpen = false;
+    this.notifMenuOpen = false;
+  }
 
   onGlobalSearch(): void {
     if (this.searchQuery.trim()) {
