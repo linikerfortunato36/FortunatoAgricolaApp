@@ -27,6 +27,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                     IsActive = c.IsActive,
                     InscricaoEstadual = c.InscricaoEstadual,
                     Email = c.Email,
+                    ContratosAtivos = _context.Contratos.Count(co => co.ClienteId == c.Id && !co.IsDeleted && co.Status != "Finalizado"),
+                    ValorTotalNegociado = _context.Contratos.Where(co => co.ClienteId == c.Id && !co.IsDeleted).Sum(co => co.QuantidadeTotalKg),
                     CreatedAt = c.CreatedAt,
                     CreatedByName = c.CreatedByName,
                     UpdatedAt = c.UpdatedAt,
@@ -106,6 +108,12 @@ namespace FortunatoAgricola.Infrastructure.Services
 
         public async Task DeleteAsync(Guid id)
         {
+            var hasContratos = await _context.Contratos.AnyAsync(c => c.ClienteId == id && !c.IsDeleted);
+            if (hasContratos)
+            {
+                throw new InvalidOperationException("Este cliente possui contratos ativos associados. Inative o cliente em vez de excluí-lo.");
+            }
+
             var c = await _context.Clientes.FindAsync(id);
             if (c != null)
             {

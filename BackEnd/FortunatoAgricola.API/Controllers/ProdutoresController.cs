@@ -51,9 +51,19 @@ namespace FortunatoAgricola.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            // Fake delete rules are handled by the service and EF Core Query Filters
-            await _produtorService.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                await _produtorService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Erro interno ao excluir produtor.", Details = ex.Message });
+            }
         }
     }
 }

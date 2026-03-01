@@ -106,17 +106,12 @@
   },
   {
     "ContainingType": "FortunatoAgricola.API.Controllers.ConfiguracoesController",
-    "Method": "Update",
-    "RelativePath": "api/Configuracoes/{id}",
-    "HttpMethod": "PUT",
+    "Method": "Save",
+    "RelativePath": "api/Configuracoes",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Guid",
-        "IsRequired": true
-      },
       {
         "Name": "dto",
         "Type": "FortunatoAgricola.Application.DTOs.UpdateConfiguracaoDto",
@@ -319,6 +314,22 @@
     "Parameters": [
       {
         "Name": "contratoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FortunatoAgricola.API.Controllers.MovimentacoesController",
+    "Method": "GetByProdutor",
+    "RelativePath": "api/Movimentacoes/by-produtor/{produtorId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "produtorId",
         "Type": "System.Guid",
         "IsRequired": true
       }

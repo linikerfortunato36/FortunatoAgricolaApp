@@ -33,6 +33,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                     Logradouro = t.Logradouro,
                     Estado = t.Estado,
                     IsActive = t.IsActive,
+                    TotalViagens = _context.Movimentacoes.Count(m => m.TransportadoraId == t.Id && !m.IsDeleted),
                     CreatedAt = t.CreatedAt,
                     CreatedByName = t.CreatedByName,
                     UpdatedAt = t.UpdatedAt,
@@ -98,6 +99,12 @@ namespace FortunatoAgricola.Infrastructure.Services
 
         public async Task DeleteAsync(Guid id)
         {
+            var hasMovimentacoes = await _context.Movimentacoes.AnyAsync(m => m.TransportadoraId == id && !m.IsDeleted);
+            if (hasMovimentacoes)
+            {
+                throw new InvalidOperationException("Esta transportadora possui movimentações vinculadas. Inative-a em vez de excluí-la.");
+            }
+
             var t = await _context.Transportadoras.FindAsync(id);
             if (t != null)
             {

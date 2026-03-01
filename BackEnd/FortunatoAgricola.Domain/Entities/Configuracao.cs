@@ -13,5 +13,6 @@ namespace FortunatoAgricola.Domain.Entities
         // Novos campos financeiros globais
         public decimal ValorImpostoPorSaca { get; set; }
         public decimal ValorComissaoPorSaca { get; set; }
+        public string? LogoBase64 { get; set; }
     }
 }

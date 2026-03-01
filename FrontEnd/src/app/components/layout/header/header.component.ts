@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 
@@ -14,12 +14,16 @@ import { AuthService } from '../../../services/auth.service';
 export class HeaderComponent {
   searchQuery = '';
 
-  constructor(public authService: AuthService) { }
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) { }
 
   onGlobalSearch(): void {
     if (this.searchQuery.trim()) {
+      // Por enquanto, redireciona para a lista de contratos com o termo de busca (opcional futuramente)
       console.log('Pesquisando por:', this.searchQuery);
-      // Aqui poderíamos redirecionar para uma página de resultados
+      this.router.navigate(['/app/contratos']);
     }
   }
 

@@ -12,5 +12,6 @@
         // Novos campos
         public decimal ValorImpostoPorSaca { get; set; }
         public decimal ValorComissaoPorSaca { get; set; }
+        public string? LogoBase64 { get; set; }
     }
 }

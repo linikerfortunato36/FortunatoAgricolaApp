@@ -65,6 +65,12 @@ namespace FortunatoAgricola.Infrastructure.Services
 
         public async Task DeleteAsync(Guid id)
         {
+            var hasMovimentacoes = await _context.Movimentacoes.AnyAsync(m => m.VendedorId == id && !m.IsDeleted);
+            if (hasMovimentacoes)
+            {
+                throw new InvalidOperationException("Este usuário possui movimentações (entregas) vinculadas ao seu perfil. Inative-o em vez de excluí-lo.");
+            }
+
             var u = await _context.Usuarios.FindAsync(id);
             if (u != null)
             {

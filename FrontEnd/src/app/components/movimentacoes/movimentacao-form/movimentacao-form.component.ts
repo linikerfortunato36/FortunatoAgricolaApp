@@ -28,8 +28,8 @@ export class MovimentacaoFormComponent implements OnInit {
     pesoDescargaKg: 0,
     umidadeKg: 0,
     impurezaKg: 0,
-    umidadePorcentagem: 14.0,
-    impurezaPorcentagem: 1.0,
+    umidadePorcentagem: 0,
+    impurezaPorcentagem: 0,
     pesoLiquidofazenda: 0,
     motorista: '',
     transportadoraId: '',
@@ -140,18 +140,8 @@ export class MovimentacaoFormComponent implements OnInit {
   }
 
   calcularDescontos(): void {
-    if (this.form.pesoDescargaKg > 0) {
-      // O usuário pediu que umidade e impureza em KG NÃO sejam calculados automaticamente?
-      // "na tela de clientes, os valores de umidade e impurezas, não serão calculados automaticamente" -> Isso se refere a tela de CLIENTES (aquele board que eu fiz?)
-      // Mas em "nova movimentação", ele listou: "umidade (em kg e %, sendo dois campos), impurezas (em kg e porcentagem, sendo dois campos)"
-      // E disse "peso final (com descontos, calculado automaticamente)".
-      // Geralmente KG = % * Peso. Vou manter o cálculo automático aqui na movimentação, a menos que ele queira manual.
-      // Re-lendo: "na tela de clientes, os valores de umidade e impurezas, não serão calculados automaticamente"
-      // No ClienteFormComponent eu não calculei umidade/impureza nos boards, apenas progresso de entrega.
-      // Vou manter automatizado aqui na Movimentação para ajudar o usuário, mas permitindo edição.
-      this.form.umidadeKg = parseFloat((this.form.pesoDescargaKg * (this.form.umidadePorcentagem / 100)).toFixed(2));
-      this.form.impurezaKg = parseFloat((this.form.pesoDescargaKg * (this.form.impurezaPorcentagem / 100)).toFixed(2));
-    }
+    // Cálculo automático desativado conforme solicitação do usuário.
+    // O usuário prefere informar os valores de KG e % manualmente.
   }
 
   onSubmit(): void {

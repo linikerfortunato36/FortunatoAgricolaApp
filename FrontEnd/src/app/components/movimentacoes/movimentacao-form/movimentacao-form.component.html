@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold small">Vendedor (Usuário) *</label>
-                            <ng-select [items]="vendedores" bindLabel="nome" bindValue="id"
+                            <ng-select [items]="vendedores" bindLabel="nome" bindValue="id" appendTo="body"
                                 [(ngModel)]="form.vendedorId" placeholder="Vendedor responsável..."></ng-select>
                         </div>
                     </div>
@@ -220,37 +220,39 @@
 
         <!-- SIDEBAR RESUMO COM CÁLCULOS AUTOMÁTICOS -->
         <div class="col-xl-3 sticky-top" style="top: 1rem;">
-            <div class="card shadow-sm border-0 bg-dark text-white rounded-4 overflow-hidden mb-4">
-                <div class="card-header bg-primary border-0 py-3">
-                    <h6 class="fw-bold mb-0 text-white"><i class="bi bi-calculator me-2"></i>Resumo do Ganho</h6>
+            <div
+                class="card shadow-sm border-0 bg-white rounded-4 overflow-hidden mb-4 border-top border-primary border-4">
+                <div class="card-header bg-white border-0 py-3 pb-0">
+                    <h6 class="fw-bold mb-0 text-primary"><i class="bi bi-calculator me-2"></i>Resumo do Ganho</h6>
                 </div>
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="opacity-75">Venda Bruta:</span>
-                        <span class="fw-bold">R$ {{ valorTotalVenda | number:'1.2-2' }}</span>
+                    <div class="d-flex justify-content-between mb-3 small">
+                        <span class="text-muted">Venda Bruta:</span>
+                        <span class="fw-bold text-dark">R$ {{ valorTotalVenda | number:'1.2-2' }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="opacity-75">Total da Compra:</span>
+                    <div class="d-flex justify-content-between mb-2 small">
+                        <span class="text-muted">Total da Compra:</span>
                         <span class="text-danger fw-bold">- R$ {{ totalCompra | number:'1.2-2' }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-4 border-bottom border-secondary pb-3">
-                        <span class="opacity-75">Ganho Bruto:</span>
-                        <span class="text-warning fw-bold">R$ {{ ganhoBruto | number:'1.2-2' }}</span>
+                    <div class="d-flex justify-content-between mb-4 border-bottom pb-3">
+                        <span class="text-muted">Ganho Bruto:</span>
+                        <span class="text-dark fw-bold">R$ {{ ganhoBruto | number:'1.2-2' }}</span>
                     </div>
 
-                    <div class="d-flex justify-content-between mb-2 small text-secondary">
+                    <div class="d-flex justify-content-between mb-2 small text-muted">
                         <span>Imposto Est. (Saca):</span>
                         <span>- R$ {{ imposto | number:'1.2-2' }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-4 small text-secondary">
+                    <div class="d-flex justify-content-between mb-4 small text-muted">
                         <span>Comissão LD:</span>
                         <span>- R$ {{ comissaoLd | number:'1.2-2' }}</span>
                     </div>
 
-                    <div class="mt-4 p-3 bg-white bg-opacity-10 rounded-3">
-                        <span class="text-uppercase small fw-bold text-primary d-block mb-1">Ganho Líquido
+                    <div class="mt-2 p-3 rounded-3 text-center"
+                        style="background-color: #f1f8e9; border: 1px solid #c5e1a5;">
+                        <span class="text-uppercase small fw-bold d-block mb-1" style="color: #33691e;">Ganho Líquido
                             Estimado</span>
-                        <h3 class="fw-bold mb-0 text-primary">R$ {{ ganhoLiquido | number:'1.2-2' }}</h3>
+                        <h3 class="fw-bold mb-0" style="color: #2e7d32;">R$ {{ ganhoLiquido | number:'1.2-2' }}</h3>
                     </div>
                 </div>
             </div>

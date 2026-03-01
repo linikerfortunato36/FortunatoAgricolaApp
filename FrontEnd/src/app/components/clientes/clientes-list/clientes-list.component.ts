@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService, Cliente } from '../../../services/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-clientes-list',
@@ -26,16 +27,29 @@ export class ClientesListComponent implements OnInit {
   }
 
   onDelete(id: string, nome: string): void {
-    if (confirm(`Tem certeza que deseja desativar o cliente "${nome}"?`)) {
-      this.apiService.deleteCliente(id).subscribe({
-        next: () => {
-          this.loadClientes();
-        },
-        error: (err) => {
-          console.error('Erro ao excluir cliente:', err);
-          alert('Não foi possível excluir o cliente no momento.');
-        }
-      });
-    }
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: `Deseja inativar/excluir o cliente "${nome}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiService.deleteCliente(id).subscribe({
+          next: () => {
+            Swal.fire('Sucesso!', 'Cliente atualizado com sucesso.', 'success');
+            this.loadClientes();
+          },
+          error: (err) => {
+            console.error('Erro ao excluir cliente:', err);
+            const msg = err.error?.Message || err.error?.message || 'Não foi possível excluir o cliente no momento.';
+            Swal.fire('Atenção', msg, 'warning');
+          }
+        });
+      }
+    });
   }
 }

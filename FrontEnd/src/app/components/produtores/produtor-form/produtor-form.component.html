@@ -1,194 +1,190 @@
-<div class="container-fluid">
+<div class="container-fluid" style="padding-bottom: 50px;">
+    <!-- Headings e Nav -->
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
         <div>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-1">
-                    <li class="breadcrumb-item"><a routerLink="/app/produtores"
-                            class="text-decoration-none">Produtores</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Adição / Detalhes do Produtor</li>
-                </ol>
-            </nav>
-            <h2 class="h3 fw-bold text-dark mb-0">Gestão e Edição de Produtor</h2>
+            <h2 class="h3 fw-bold text-dark pe-3 mb-1" style="display:-webkit-inline-box">
+                <button routerLink="/app/produtores" class="btn btn-outline-secondary me-2 btn-sm rounded-circle"><i
+                        class="bi bi-arrow-left"></i></button>
+                {{ isEditing ? produtor.nome : 'Novo Produtor' }}
+            </h2>
+            <p class="text-muted mb-0 small" style="margin-left: 2.8rem">Painel gerencial do produtor (fazenda).</p>
         </div>
-        <div>
-            <button routerLink="/app/produtores" class="btn btn-outline-secondary me-2" [disabled]="submitting"><i
-                    class="bi bi-x-circle me-1"></i> Cancelar</button>
-            <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
-                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
-                <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar Produtor
-            </button>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <!-- Tabs exigidas na rega de negócio -->
-            <ul class="nav nav-tabs mb-4 border-bottom-0" id="produtorTab" role="tablist">
-                <!-- 1 Aba: Resumo (Invisível para Novos Registros, conforme exigência) -->
-                <li class="nav-item d-none" role="presentation">
-                    <button class="nav-link text-dark shadow-sm bg-white border border-bottom-0 rounded-top"
-                        id="movimentos-tab" data-bs-toggle="tab" data-bs-target="#movimentos" type="button" role="tab"
-                        aria-controls="movimentos" aria-selected="false">
-                        <i class="bi bi-truck me-2 text-primary"></i> Visão de Carregamentos
+        <div *ngIf="isEditing">
+            <ul class="nav nav-pills bg-light rounded shadow-sm px-2 py-2">
+                <li class="nav-item">
+                    <button class="nav-link bg-transparent fw-bold rounded-pill mx-1 active"
+                        [class.bg-white]="activeTab === 'boards'" [class.text-primary]="activeTab === 'boards'"
+                        [class.shadow-sm]="activeTab === 'boards'" [class.text-muted]="activeTab !== 'boards'"
+                        (click)="setActiveTab('boards')">
+                        <i class="bi bi-clipboard-data"></i> Painel de Entregas
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active text-primary fw-bold border-bottom-0 rounded-top shadow-sm bg-white"
-                        id="edicao-tab" data-bs-toggle="tab" data-bs-target="#edicao" type="button" role="tab"
-                        aria-controls="edicao" aria-selected="true">
-                        <i class="bi bi-card-checklist me-2"></i> Cadastro (Edição)
+                <li class="nav-item">
+                    <button class="nav-link bg-transparent fw-bold rounded-pill mx-1"
+                        [class.bg-white]="activeTab === 'form'" [class.text-primary]="activeTab === 'form'"
+                        [class.shadow-sm]="activeTab === 'form'" [class.text-muted]="activeTab !== 'form'"
+                        (click)="setActiveTab('form')">
+                        <i class="bi bi-person-lines-fill"></i> Cadastro (Dados)
                     </button>
                 </li>
             </ul>
+        </div>
+    </div>
 
-            <div class="tab-content border bg-white shadow-sm rounded-bottom rounded-end mb-4" id="produtorTabContent">
-                <!-- FIRST TAB: Painel (Visualização) Oculta em novo registro -->
-                <div class="tab-pane fade" id="movimentos" role="tabpanel" aria-labelledby="movimentos-tab">
-                    <div class="p-4" style="background-color: var(--bg-color);">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-bar-chart-fill text-primary"></i> Resumo de Entregas
-                            por Contrato</h5>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-body">
-                                        <h6 class="text-uppercase text-muted fw-bold small">Contrato Associado</h6>
-                                        <h5 class="fw-bold">001/26 (Cargill Agrícola)</h5>
-                                        <hr class="my-2">
-                                        <div class="d-flex justify-content-between small">
-                                            <span class="text-muted">Total Entregue:</span>
-                                            <span class="fw-bold text-dark fs-6">31.000 Kg</span>
-                                        </div>
+    <!-- Aba Padrão de Form (Quando Novo/Add) -->
+    <div *ngIf="activeTab === 'form'">
+        <div class="row w-100">
+            <div class="col-lg-12">
+                <div class="card shadow-sm border-0 mb-4 h-100">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-building"></i> Dados Cadastrais</h6>
+                    </div>
+                    <div class="card-body">
+                        <form (ngSubmit)="onSubmit()" #produtorForm="ngForm">
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-muted small fw-bold">Nome / Razão Social <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="nome" [(ngModel)]="produtor.nome"
+                                        required placeholder="Ex: Fazenda Boa Vista Silva">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label text-muted small fw-bold">CPF / CNPJ <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="cpfCnpj"
+                                        [(ngModel)]="produtor.cpfCnpj" required placeholder="000.000.000-00">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label text-muted small fw-bold">Inscrição Estadual</label>
+                                    <input type="text" class="form-control" name="inscricaoEstadual"
+                                        [(ngModel)]="produtor.inscricaoEstadual" placeholder="Isento pu N.º">
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small fw-bold">Telefone</label>
+                                    <input type="text" class="form-control" name="telefone"
+                                        [(ngModel)]="produtor.telefone" placeholder="(00) 00000-0000">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small fw-bold">E-mail</label>
+                                    <input type="email" class="form-control" name="email" [(ngModel)]="produtor.email"
+                                        placeholder="contato@fazenda.com">
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small fw-bold d-block">Status</label>
+                                    <div class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="isActiveSwitch" name="isActive" [(ngModel)]="produtor.isActive">
+                                        <label class="form-check-label" for="isActiveSwitch">{{ produtor.isActive ?
+                                            'Ativo (Aceita recebimentos)' : 'Inativo (Bloqueado p/ contratos)'
+                                            }}</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-body">
-                                        <h6 class="text-uppercase text-muted fw-bold small">Contrato Associado</h6>
-                                        <h5 class="fw-bold">014/25 (Amaggi Exp.)</h5>
-                                        <hr class="my-2">
-                                        <div class="d-flex justify-content-between small">
-                                            <span class="text-muted">Total Entregue:</span>
-                                            <span class="fw-bold text-dark fs-6">10.000 Kg</span>
-                                        </div>
-                                    </div>
-                                </div>
+
+                            <hr class="text-muted opacity-25 my-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-outline-secondary" routerLink="/app/produtores"
+                                    [disabled]="submitting">Cancelar</button>
+                                <button type="submit"
+                                    class="btn btn-primary px-4 fw-bold shadow-sm d-flex align-items-center"
+                                    [disabled]="!produtorForm.form.valid || submitting">
+                                    <i class="bi bi-floppy me-2 d-none d-sm-inline"></i>
+                                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                                    Salvar Produtor
+                                </button>
                             </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aba de Painel de Entregas / Recebimento de Cargas do Produtor -->
+    <div *ngIf="activeTab === 'boards'">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-5">
+            <div class="col" *ngFor="let summary of contratosGrouped">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body p-4 position-relative overflow-hidden">
+                        <div class="position-absolute top-0 end-0 bg-primary bg-opacity-10 rounded-bottom-start p-3">
+                            <i class="bi bi-file-earmark-text text-primary fs-3 opacity-50"></i>
                         </div>
+                        <h6 class="text-uppercase text-muted fw-bold small mb-3">Contrato #{{ summary.contratoNumero }}
+                        </h6>
 
-                        <!-- Tabela de Movimentos Filtráveis -->
-                        <div class="card border-0 shadow-sm mt-2">
-                            <div
-                                class="card-header bg-white border-bottom pt-3 pb-2 d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold mb-0">Registro Detalhado de Movimentos (Syncfusion Placeholder)</h6>
-                                <!-- Filtros Inteligentes -->
-                                <div class="d-flex gap-2">
-                                    <select class="form-select form-select-sm" style="width: 200px;">
-                                        <option value="">Buscar por Contrato</option>
-                                        <option value="1">Contrato 001/26</option>
-                                        <option value="2">Contrato 014/25</option>
-                                    </select>
-                                </div>
+                        <h3 class="fw-bold text-dark mb-1">{{ (summary.totalEntregueKg || 0) | number:'1.0-0' }} Kg</h3>
+                        <p class="text-secondary small mb-4">Total Descarregado (Líquido)</p>
+
+                        <div class="d-flex border-top pt-3 gap-3">
+                            <div class="flex-fill border-end pe-2">
+                                <div class="text-muted small">Cargas Entregues</div>
+                                <div class="fw-bold">{{ summary.totalDescargas }} cargas</div>
                             </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0 text-center text-nowrap small">
-                                        <thead class="bg-light text-muted">
-                                            <tr>
-                                                <th class="ps-3 text-start">DATA</th>
-                                                <th class="text-start">CONTRATO / DESTINO</th>
-                                                <th>P. FAZENDA (KG)</th>
-                                                <th><span title="Umidade em Kg"
-                                                        class="border-bottom border-dotted">UMID. (Kg)</span></th>
-                                                <th><span title="Umidade %" class="border-bottom border-dotted">UMID
-                                                        (%)</span></th>
-                                                <th><span title="Impureza em Kg"
-                                                        class="border-bottom border-dotted">IMP. (Kg)</span></th>
-                                                <th><span title="Impureza %" class="border-bottom border-dotted">IMP
-                                                        (%)</span></th>
-                                                <th class="text-primary fw-bold">P. LÍQUIDO (KG)</th>
-                                                <th class="pe-3 text-end">MOTORISTA (Veículo)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="ps-3 text-start">28/02/2026</td>
-                                                <td class="text-start"><span class="badge bg-secondary">001/26</span>
-                                                    Cargill</td>
-                                                <td>31.000</td>
-                                                <td class="text-danger">-230</td>
-                                                <td class="text-danger">0.7%</td>
-                                                <td class="text-danger">-120</td>
-                                                <td class="text-danger">0.3%</td>
-                                                <td class="text-primary fw-bold bg-light fs-6">30.150</td>
-                                                <td class="pe-3 text-muted text-end">João (ABC-1234)</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="ps-3 text-start">25/02/2026</td>
-                                                <td class="text-start"><span class="badge bg-secondary">001/26</span>
-                                                    Cargill</td>
-                                                <td>30.500</td>
-                                                <td class="text-danger">-400</td>
-                                                <td class="text-danger">1.3%</td>
-                                                <td class="text-muted">0</td>
-                                                <td class="text-muted">0%</td>
-                                                <td class="text-primary fw-bold bg-light fs-6">30.100</td>
-                                                <td class="pe-3 text-muted text-end">Carlos (XYZ-9999)</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="flex-fill ps-2">
+                                <div class="text-muted small">Total em Sacas</div>
+                                <div class="fw-bold">{{ (summary.totalSacas || 0) | number:'1.0-0' }} scs</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- SECOND TAB: Cadastro e Edição de Produtor -->
-                <div class="tab-pane fade show active" id="edicao" role="tabpanel" aria-labelledby="edicao-tab">
-                    <form class="p-4">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-dark">Nome / Fazenda *</label>
-                                <input type="text" class="form-control" [(ngModel)]="produtor.nome" name="nome"
-                                    placeholder="Razão Social do Produtor" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold text-dark">CPF / CNPJ *</label>
-                                <input type="text" class="form-control" [(ngModel)]="produtor.cpfCnpj" name="cpfCnpj"
-                                    placeholder="000.000.000-00 ou CNPJ" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold text-dark">Inscrição Estadual</label>
-                                <input type="text" class="form-control" [(ngModel)]="produtor.inscricaoEstadual"
-                                    name="inscricaoEstadual" placeholder="IE / Produtor Rural">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-dark">Contato Telefônico</label>
-                                <input type="text" class="form-control" [(ngModel)]="produtor.telefone" name="telefone"
-                                    placeholder="(00) 00000-0000">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-dark">E-mail</label>
-                                <input type="email" class="form-control" [(ngModel)]="produtor.email" name="email"
-                                    placeholder="contato@fazenda.com.br">
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <div class="form-check form-switch fs-5">
-                                    <input class="form-check-input" type="checkbox" id="ativoProdutor"
-                                        [(ngModel)]="produtor.isActive" name="isActive">
-                                    <label class="form-check-label ms-2 text-dark fs-6 mt-1"
-                                        for="ativoProdutor">Produtor Ativo no Sistema</label>
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
+            </div>
+            <div class="col-12" *ngIf="contratosGrouped.length === 0">
+                <div class="alert alert-secondary text-center rounded-4 border-0 p-4 w-100 shadow-sm">
+                    <i class="bi bi-info-circle fs-3 text-muted d-block mb-2"></i>
+                    Nenhuma entrega ou contrato localizado para este produtor.
                 </div>
+            </div>
+        </div>
+
+        <h4 class="mb-3 fw-bold text-dark"><i class="bi bi-list-check me-2 text-primary"></i> Relatórios de Cargas
+            (Movimentações)</h4>
+        <div class="card shadow-sm border-0 mb-5 rounded-4 overflow-hidden">
+            <div class="card-header bg-white border-bottom p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-filter"></i></span>
+                            <input type="text" class="form-control bg-light border-start-0 ps-0"
+                                placeholder="Filtrar por Contrato..." [(ngModel)]="filtroContrato">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-nowrap">
+                    <thead class="table-light text-muted x-small">
+                        <tr>
+                            <th class="ps-4">DATA</th>
+                            <th>CONTRATO</th>
+                            <th>MOTORISTA</th>
+                            <th>PESO FAZENDA</th>
+                            <th>UMIDADE (KG/%)</th>
+                            <th>IMPUREZA (KG/%)</th>
+                            <th class="fw-bold text-primary pe-4">PESO LÍQ. DESC.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let m of movimentacoesFiltradas">
+                            <td class="ps-4">{{ m.data | date:'dd/MM/yyyy' }}</td>
+                            <td><span class="badge bg-secondary bg-opacity-10 text-dark">{{ m.contratoNumero }}</span>
+                            </td>
+                            <td><i class="bi bi-truck me-1"></i> {{ m.motorista }} <br><span
+                                    class="x-small text-muted">{{ m.nfe }}</span></td>
+                            <td>{{ m.quantidadeOrigemKg | number:'1.0-0' }} Kg</td>
+                            <td>{{ m.umidadeKg | number:'1.0-2' }} Kg <br><span class="text-danger x-small">({{
+                                    m.umidadePorcentagem | number:'1.0-2' }}%)</span></td>
+                            <td>{{ m.impurezaKg | number:'1.0-2' }} Kg <br><span class="text-danger x-small">({{
+                                    m.impurezaPorcentagem | number:'1.0-2' }}%)</span></td>
+                            <td class="pe-4 fw-bold text-dark">{{ m.pesoFinal | number:'1.0-0' }} Kg</td>
+                        </tr>
+                        <tr *ngIf="movimentacoesFiltradas.length === 0">
+                            <td colspan="7" class="text-center py-4 text-muted border-bottom-0">Nenhum registro
+                                encontrado.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

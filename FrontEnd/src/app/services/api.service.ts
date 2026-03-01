@@ -30,6 +30,7 @@ export interface Transportadora {
   createdByName?: string;
   updatedAt?: string;
   updatedByName?: string;
+  totalViagens?: number;
 }
 
 export interface Cliente {
@@ -49,6 +50,8 @@ export interface Cliente {
   createdByName?: string;
   updatedAt?: string;
   updatedByName?: string;
+  contratosAtivos?: number;
+  valorTotalNegociado?: number;
 }
 
 export interface Contrato {
@@ -256,6 +259,10 @@ export class ApiService {
     return this.http.get<Movimentacao[]>(`${this.baseUrl}/Movimentacoes/by-contrato/${contratoId}`);
   }
 
+  getMovimentacoesByProdutor(produtorId: string): Observable<Movimentacao[]> {
+    return this.http.get<Movimentacao[]>(`${this.baseUrl}/Movimentacoes/by-produtor/${produtorId}`);
+  }
+
   createMovimentacao(payload: CreateMovimentacaoPayload): Observable<Movimentacao> {
     return this.http.post<Movimentacao>(`${this.baseUrl}/Movimentacoes`, payload);
   }
@@ -264,9 +271,18 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/Movimentacoes/${id}`);
   }
 
+  // Dashboard
+  getDashboardStats(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/Dashboard/stats`);
+  }
+
   // Usuarios
   getUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.baseUrl}/Usuarios`);
+  }
+
+  deleteUsuario(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Usuarios/${id}`);
   }
 
   // Configuracoes
@@ -275,6 +291,6 @@ export class ApiService {
   }
 
   updateConfiguracao(config: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/Configuracoes/${config.id}`, config);
+    return this.http.post<any>(`${this.baseUrl}/Configuracoes`, config);
   }
 }

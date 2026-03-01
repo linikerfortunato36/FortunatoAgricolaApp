@@ -45,8 +45,8 @@
                                     {{ cliente.isActive ? 'Ativo' : 'Inativo' }}
                                 </span>
                             </td>
-                            <td><span class="fw-bold fs-6">—</span></td> <!-- TODO: Trazer contratos do back -->
-                            <td>—</td>
+                            <td><span class="fw-bold fs-6">{{ cliente.contratosAtivos || 0 }}</span></td>
+                            <td>{{ (cliente.valorTotalNegociado || 0) | number:'1.0-0' }} Kg</td>
                             <td class="small text-muted">
                                 <div *ngIf="cliente.updatedByName">
                                     <i class="bi bi-person"></i> {{ cliente.updatedByName }}
@@ -54,8 +54,9 @@
                                 </div>
                                 <div *ngIf="!cliente.updatedByName && cliente.createdByName">
                                     <i class="bi bi-person"></i> {{ cliente.createdByName }}
-                                    <div class="x-small">{{ cliente.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                                    <div class="x-small">{{ cliente.createdAt | date:'dd/MM/yyyy' }}</div>
                                 </div>
+                                <div *ngIf="!cliente.updatedByName && !cliente.createdByName">--</div>
                             </td>
                             <td class="pe-4 text-end">
                                 <div class="btn-group">

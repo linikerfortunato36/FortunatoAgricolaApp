@@ -12,7 +12,8 @@
             <h2 class="h3 fw-bold text-dark mb-0">Contrato Nº {{ contrato?.numeroContrato || 'Carregando...' }}</h2>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf me-1"></i> Exportar
+            <button class="btn btn-outline-danger" (click)="exportarFechamento()"><i
+                    class="bi bi-file-earmark-pdf me-1"></i> Exportar
                 Fechamento</button>
             <button [routerLink]="['/app/movimentacoes/novo']" [queryParams]="{contratoId: contratoId}"
                 class="btn btn-primary fw-bold">
@@ -144,8 +145,10 @@
     </div>
 
     <!-- Movement Detail Modal (Custom Implementation) -->
-    <div *ngIf="selectedMovimentacao" class="modal-backdrop fade show"></div>
-    <div *ngIf="selectedMovimentacao" class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div *ngIf="selectedMovimentacao" class="modal-backdrop fade show w-100 h-100"
+        style="position: fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"></div>
+    <div *ngIf="selectedMovimentacao" class="modal fade show d-block" tabindex="-1" role="dialog"
+        style="z-index: 1050; display: block;">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-primary text-white">

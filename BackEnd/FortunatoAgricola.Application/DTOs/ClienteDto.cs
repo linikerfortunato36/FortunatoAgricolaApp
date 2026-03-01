@@ -14,6 +14,8 @@ namespace FortunatoAgricola.Application.DTOs
         public string? Cidade { get; set; }
         public string? Estado { get; set; }
         public bool IsActive { get; set; }
+        public int ContratosAtivos { get; set; }
+        public decimal ValorTotalNegociado { get; set; }
         
         // Audit
         public DateTime CreatedAt { get; set; }

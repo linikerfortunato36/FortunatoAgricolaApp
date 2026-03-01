@@ -10,6 +10,7 @@ namespace FortunatoAgricola.Application.DTOs
         public string? Logradouro { get; set; }
         public string? Estado { get; set; }
         public bool IsActive { get; set; }
+        public int TotalViagens { get; set; }
 
         // Audit
         public DateTime CreatedAt { get; set; }

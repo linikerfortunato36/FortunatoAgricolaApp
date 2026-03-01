@@ -20,10 +20,9 @@ namespace FortunatoAgricola.API.Controllers
             return c == null ? NotFound("Nenhuma configuração encontrada.") : Ok(c);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, UpdateConfiguracaoDto dto)
+        [HttpPost]
+        public async Task<IActionResult> Save(UpdateConfiguracaoDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID divergente.");
             return Ok(await _service.UpdateAsync(dto));
         }
     }

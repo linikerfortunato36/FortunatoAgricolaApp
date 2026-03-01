@@ -29,46 +29,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="ps-4 fw-bold text-dark">Administrador Geral
-                                <div class="text-muted small fw-normal">admin.fortunatoagricola.com.br</div>
+                        <tr *ngFor="let u of usuarios">
+                            <td class="ps-4 fw-bold text-dark">{{ u.nome }}
+                                <div class="text-muted small fw-normal">{{ u.login }}</div>
                             </td>
-                            <td><span class="badge bg-danger bg-opacity-10 text-danger px-3 rounded-pill">Admin</span>
+                            <td>
+                                <span class="badge px-3 rounded-pill"
+                                    [ngClass]="u.perfil === 'Admin' ? 'bg-danger bg-opacity-10 text-danger' : 'bg-info bg-opacity-10 text-primary'">
+                                    {{ u.perfil }}
+                                </span>
                             </td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                            <td>
+                                <span class="badge rounded-pill px-3"
+                                    [ngClass]="u.isActive ? 'bg-success bg-opacity-10 text-success' : 'bg-secondary bg-opacity-10 text-secondary'">
+                                    {{ u.isActive ? 'Ativo' : 'Inativo' }}
+                                </span>
                             </td>
                             <td class="text-end pe-4">
                                 <div class="btn-group">
-                                    <button routerLink="/app/usuarios/editar/1" class="btn btn-sm btn-outline-secondary"
-                                        title="Editar Usuário">
+                                    <button [routerLink]="['/app/usuarios/editar', u.id]"
+                                        class="btn btn-sm btn-outline-secondary" title="Editar Usuário">
                                         <i class="bi bi-pencil-fill"></i> Editar
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger shadow-sm" disabled>
+                                    <button (click)="deleteUsuario(u.id)"
+                                        class="btn btn-sm btn-outline-danger shadow-sm"
+                                        [disabled]="u.perfil === 'Admin'" title="Inativar/Excluir">
                                         <i class="bi bi-ban"></i>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="ps-4 fw-bold text-dark">Operador Logístico
-                                <div class="text-muted small fw-normal">logistica.fortunatoagricola.com.br</div>
-                            </td>
-                            <td><span
-                                    class="badge bg-primary bg-opacity-10 text-primary px-3 rounded-pill">Operador</span>
-                            </td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group">
-                                    <button routerLink="/app/usuarios/editar/2" class="btn btn-sm btn-outline-secondary"
-                                        title="Editar Usuário">
-                                        <i class="bi bi-pencil-fill"></i> Editar
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger shadow-sm">
-                                        <i class="bi bi-ban"></i>
-                                    </button>
-                                </div>
-                            </td>
+                        <tr *ngIf="usuarios.length === 0">
+                            <td colspan="4" class="text-center py-4 text-muted">Ainda não há usuários cadastrados.</td>
                         </tr>
                     </tbody>
                 </table>

@@ -63,5 +63,12 @@ namespace FortunatoAgricola.API.Controllers
             await _movimentacaoService.DeleteAsync(id);
             return NoContent();
         }
+        [HttpGet("by-produtor/{produtorId}")]
+        public async Task<IActionResult> GetByProdutor(Guid produtorId)
+        {
+            var m = await _movimentacaoService.GetAllAsync();
+            var filtered = m.Where(x => x.ProdutorOrigemId == produtorId).OrderByDescending(x => x.Data).ToList();
+            return Ok(filtered);
+        }
     }
 }

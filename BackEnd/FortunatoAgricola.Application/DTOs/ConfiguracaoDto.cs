@@ -10,6 +10,7 @@ namespace FortunatoAgricola.Application.DTOs
         public decimal ToleranciaUmidade { get; set; }
         public decimal ValorImpostoPorSaca { get; set; }
         public decimal ValorComissaoPorSaca { get; set; }
+        public string? LogoBase64 { get; set; }
 
         // Audit
         public DateTime CreatedAt { get; set; }

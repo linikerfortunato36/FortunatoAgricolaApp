@@ -61,7 +61,8 @@
                                         title="Painel de Carregamentos e Edição">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger shadow-sm">
+                                    <button (click)="deleteProdutor(p.id)"
+                                        class="btn btn-sm btn-outline-danger shadow-sm" title="Inativar / Excluir">
                                         <i class="bi bi-ban"></i>
                                     </button>
                                 </div>

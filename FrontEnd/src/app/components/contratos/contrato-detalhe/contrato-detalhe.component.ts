@@ -64,6 +64,43 @@ export class ContratoDetalheComponent implements OnInit {
     this.selectedMovimentacao = null;
   }
 
+  exportarFechamento(): void {
+    if (!this.contrato) return;
+
+    import('jspdf').then(jsPDF => {
+      import('jspdf-autotable').then(autoTable => {
+        const doc = new jsPDF.default();
+        const c = this.contrato!;
+
+        doc.setFontSize(18);
+        doc.text(`FECHAMENTO DE CONTRATO - ${c.numeroContrato}`, 14, 22);
+
+        doc.setFontSize(12);
+        doc.text(`Cliente: ${c.clienteNome}`, 14, 32);
+        doc.text(`Status: ${c.status}`, 14, 38);
+
+        doc.text(`Total Negociado: ${c.quantidadeTotalKg.toLocaleString('pt-BR')} Kg`, 150, 32);
+        doc.text(`Total Entregue: ${c.quantidadeEntregueKg.toLocaleString('pt-BR')} Kg`, 150, 38);
+
+        autoTable.default(doc, {
+          startY: 45,
+          head: [['Data', 'Produtor', 'De (Kg)', 'Quebra', 'Final', 'NF-e', 'Venda']],
+          body: this.movimentacoes.map(m => [
+            new Date(m.data).toLocaleDateString('pt-BR'),
+            m.produtorOrigemNome,
+            m.quantidadeOrigemKg.toLocaleString('pt-BR'),
+            m.diferencaPesoKg.toLocaleString('pt-BR'),
+            m.pesoFinal.toLocaleString('pt-BR'),
+            m.nfe || '-',
+            m.valorTotalVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+          ])
+        });
+
+        doc.save(`Fechamento_${c.numeroContrato.replace('/', '-')}.pdf`);
+      });
+    });
+  }
+
   getProgressoPct(): number {
     if (!this.contrato || this.contrato.quantidadeTotalKg === 0) return 0;
     return (this.contrato.quantidadeEntregueKg / this.contrato.quantidadeTotalKg) * 100;

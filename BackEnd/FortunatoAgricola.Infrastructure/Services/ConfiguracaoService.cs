@@ -28,6 +28,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ToleranciaUmidade = c.ToleranciaUmidade,
                 ValorImpostoPorSaca = c.ValorImpostoPorSaca,
                 ValorComissaoPorSaca = c.ValorComissaoPorSaca,
+                LogoBase64 = c.LogoBase64,
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
                 UpdatedAt = c.UpdatedAt,
@@ -37,7 +38,7 @@ namespace FortunatoAgricola.Infrastructure.Services
 
         public async Task<ConfiguracaoDto> UpdateAsync(UpdateConfiguracaoDto dto)
         {
-            var c = await _context.Configuracoes.FindAsync(dto.Id);
+            var c = await _context.Configuracoes.FirstOrDefaultAsync();
             if (c == null)
             {
                 c = new Configuracao
@@ -48,7 +49,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                     ToleranciaQuebraPeso = dto.ToleranciaQuebraPeso,
                     ToleranciaUmidade = dto.ToleranciaUmidade,
                     ValorImpostoPorSaca = dto.ValorImpostoPorSaca,
-                    ValorComissaoPorSaca = dto.ValorComissaoPorSaca
+                    ValorComissaoPorSaca = dto.ValorComissaoPorSaca,
+                    LogoBase64 = dto.LogoBase64
                 };
                 await _context.Configuracoes.AddAsync(c);
             }
@@ -61,6 +63,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 c.ToleranciaUmidade = dto.ToleranciaUmidade;
                 c.ValorImpostoPorSaca = dto.ValorImpostoPorSaca;
                 c.ValorComissaoPorSaca = dto.ValorComissaoPorSaca;
+                c.LogoBase64 = dto.LogoBase64;
                 c.UpdatedAt = DateTime.UtcNow;
                 _context.Configuracoes.Update(c);
             }

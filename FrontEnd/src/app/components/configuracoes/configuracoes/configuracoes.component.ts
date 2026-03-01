@@ -18,8 +18,9 @@ export class ConfiguracoesComponent implements OnInit {
     margemLucro: 0,
     toleranciaQuebraPeso: 0,
     toleranciaUmidade: 0,
-    valorBaseComissaoVendaPorSaca: 0,
-    porcentagemImposto: 0
+    valorImpostoPorSaca: 0,
+    valorComissaoPorSaca: 0,
+    logoBase64: null as string | null
   };
 
   loading = true;
@@ -27,14 +28,25 @@ export class ConfiguracoesComponent implements OnInit {
 
   constructor(private apiService: ApiService) { }
 
-  ngOnInit(): void {
-    this.loadConfig();
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.config.logoBase64 = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
-  loadConfig(): void {
+  ngOnInit(): void {
     this.apiService.getConfiguracao().subscribe({
       next: (data) => {
-        if (data) this.config = data;
+        if (data && data.length > 0) {
+          this.config = data[0];
+        } else if (data && !Array.isArray(data)) {
+          this.config = data;
+        }
         this.loading = false;
       },
       error: () => this.loading = false

@@ -38,7 +38,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                     ClienteNome = c.Cliente.Nome,
                     c.QuantidadeTotalKg,
                     c.QuantidadeEntregueKg,
-                    PercentualProgresso = c.QuantidadeTotalKg > 0 ? (double)(c.QuantidadeEntregueKg / c.QuantidadeTotalKg * 100) : 0
+                    PercentualProgresso = c.QuantidadeTotalKg > 0 ? (double)c.QuantidadeEntregueKg / (double)c.QuantidadeTotalKg * 100.0 : 0
                 })
                 .ToListAsync();
 
