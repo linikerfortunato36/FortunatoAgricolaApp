@@ -32,6 +32,13 @@ namespace FortunatoAgricola.API.Controllers
             return Ok(c);
         }
 
+        [HttpGet("by-cliente/{clienteId}")]
+        public async Task<IActionResult> GetByCliente(Guid clienteId)
+        {
+            var contratos = await _contratoService.GetByClienteIdAsync(clienteId);
+            return Ok(contratos);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateContratoDto dto)
         {

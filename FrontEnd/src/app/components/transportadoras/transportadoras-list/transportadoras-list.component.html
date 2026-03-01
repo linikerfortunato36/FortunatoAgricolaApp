@@ -27,21 +27,36 @@
                             <th>CPF / CNPJ</th>
                             <th>TOTAL VIAGENS</th>
                             <th>STATUS</th>
+                            <th>ÚLTIMA EDIÇÃO</th>
                             <th class="text-end pe-4">AÇÕES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="ps-4 fw-bold text-dark">TransGrãos Logística LTDA</td>
-                            <td><span class="text-muted small">45.123.000/0001-99</span></td>
-                            <td><span class="badge bg-secondary rounded-pill">402</span></td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                        <tr *ngFor="let t of transportadoras">
+                            <td class="ps-4 fw-bold text-dark">{{ t.nome }}</td>
+                            <td><span class="text-muted small">{{ t.cpfCnpj }}</span></td>
+                            <td><span class="badge bg-secondary rounded-pill">—</span></td>
+                            <td>
+                                <span class="badge bg-opacity-10 rounded-pill px-3"
+                                    [ngClass]="t.isActive ? 'bg-success text-success' : 'bg-danger text-danger'">
+                                    {{ t.isActive ? 'Ativo' : 'Inativo' }}
+                                </span>
+                            </td>
+                            <td class="small text-muted">
+                                <div *ngIf="t.updatedByName">
+                                    <i class="bi bi-person"></i> {{ t.updatedByName }}
+                                    <div class="x-small">{{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                                </div>
+                                <div *ngIf="!t.updatedByName && t.createdByName">
+                                    <i class="bi bi-person"></i> {{ t.createdByName }}
+                                    <div class="x-small">{{ t.createdAt | date:'dd/MM/yyyy' }}</div>
+                                </div>
                             </td>
                             <td class="text-end pe-4">
                                 <div class="btn-group">
-                                    <button routerLink="/app/transportadoras/editar/1"
-                                        class="btn btn-sm btn-outline-secondary" title="Painel Logístico">
-                                        <i class="bi bi-map-fill"></i> Logística
+                                    <button [routerLink]="['/app/transportadoras/editar', t.id]"
+                                        class="btn btn-sm btn-outline-secondary" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger shadow-sm">
                                         <i class="bi bi-ban"></i>
@@ -49,22 +64,11 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="ps-4 fw-bold text-dark">Expresso Safra (João Silva)</td>
-                            <td><span class="text-muted small">123.456.789-00</span></td>
-                            <td><span class="badge bg-secondary rounded-pill">15</span></td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group">
-                                    <button routerLink="/app/transportadoras/editar/2"
-                                        class="btn btn-sm btn-outline-secondary" title="Painel Logístico">
-                                        <i class="bi bi-map-fill"></i> Logística
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger shadow-sm">
-                                        <i class="bi bi-ban"></i>
-                                    </button>
-                                </div>
+
+                        <tr *ngIf="transportadoras.length === 0">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                Nenhuma transportadora encontrada.
                             </td>
                         </tr>
                     </tbody>

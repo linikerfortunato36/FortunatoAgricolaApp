@@ -21,8 +21,17 @@ namespace FortunatoAgricola.Infrastructure.Services
             return new ConfiguracaoDto
             {
                 Id = c.Id,
+                RazaoSocial = c.RazaoSocial,
+                Cnpj = c.Cnpj,
+                MargemLucro = c.MargemLucro,
+                ToleranciaQuebraPeso = c.ToleranciaQuebraPeso,
+                ToleranciaUmidade = c.ToleranciaUmidade,
                 ValorBaseComissaoVendaPorSaca = c.ValorBaseComissaoVendaPorSaca,
-                PorcentagemImposto = c.PorcentagemImposto
+                PorcentagemImposto = c.PorcentagemImposto,
+                CreatedAt = c.CreatedAt,
+                CreatedByName = c.CreatedByName,
+                UpdatedAt = c.UpdatedAt,
+                UpdatedByName = c.UpdatedByName
             };
         }
 
@@ -34,6 +43,11 @@ namespace FortunatoAgricola.Infrastructure.Services
                 // Cria se não existir
                 c = new Configuracao
                 {
+                    RazaoSocial = dto.RazaoSocial,
+                    Cnpj = dto.Cnpj,
+                    MargemLucro = dto.MargemLucro,
+                    ToleranciaQuebraPeso = dto.ToleranciaQuebraPeso,
+                    ToleranciaUmidade = dto.ToleranciaUmidade,
                     ValorBaseComissaoVendaPorSaca = dto.ValorBaseComissaoVendaPorSaca,
                     PorcentagemImposto = dto.PorcentagemImposto
                 };
@@ -41,18 +55,18 @@ namespace FortunatoAgricola.Infrastructure.Services
             }
             else
             {
+                c.RazaoSocial = dto.RazaoSocial;
+                c.Cnpj = dto.Cnpj;
+                c.MargemLucro = dto.MargemLucro;
+                c.ToleranciaQuebraPeso = dto.ToleranciaQuebraPeso;
+                c.ToleranciaUmidade = dto.ToleranciaUmidade;
                 c.ValorBaseComissaoVendaPorSaca = dto.ValorBaseComissaoVendaPorSaca;
                 c.PorcentagemImposto = dto.PorcentagemImposto;
                 c.UpdatedAt = DateTime.UtcNow;
                 _context.Configuracoes.Update(c);
             }
             await _context.SaveChangesAsync();
-            return new ConfiguracaoDto
-            {
-                Id = c.Id,
-                ValorBaseComissaoVendaPorSaca = c.ValorBaseComissaoVendaPorSaca,
-                PorcentagemImposto = c.PorcentagemImposto
-            };
+            return (await GetAsync())!;
         }
     }
 }

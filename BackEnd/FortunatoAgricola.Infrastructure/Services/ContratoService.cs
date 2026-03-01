@@ -23,6 +23,7 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var contratos = await _context.Contratos
                 .Include(c => c.Cliente)
+                .Include(c => c.Movimentacoes)
                 .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
 
@@ -36,6 +37,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeTotalKg = c.QuantidadeTotalKg,
                 QuantidadeEntregueKg = c.QuantidadeEntregueKg,
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
+                QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 IsActive = c.IsActive
             });
         }
@@ -44,6 +46,7 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var c = await _context.Contratos
                 .Include(co => co.Cliente)
+                .Include(co => co.Movimentacoes)
                 .FirstOrDefaultAsync(co => co.Id == id);
 
             if (c == null) return null;
@@ -58,6 +61,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeTotalKg = c.QuantidadeTotalKg,
                 QuantidadeEntregueKg = c.QuantidadeEntregueKg,
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
+                QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 IsActive = c.IsActive
             };
         }
@@ -95,6 +99,30 @@ namespace FortunatoAgricola.Infrastructure.Services
             await _context.SaveChangesAsync();
 
             return await GetByIdAsync(c.Id);
+        }
+
+        public async Task<IEnumerable<ContratoDto>> GetByClienteIdAsync(Guid clienteId)
+        {
+            var contratos = await _context.Contratos
+                .Include(c => c.Cliente)
+                .Include(c => c.Movimentacoes)
+                .Where(c => c.ClienteId == clienteId)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+            return contratos.Select(c => new ContratoDto
+            {
+                Id = c.Id,
+                ClienteId = c.ClienteId,
+                ClienteNome = c.Cliente?.Nome,
+                NumeroContrato = c.NumeroContrato,
+                Status = c.Status,
+                QuantidadeTotalKg = c.QuantidadeTotalKg,
+                QuantidadeEntregueKg = c.QuantidadeEntregueKg,
+                QuantidadeRestanteKg = c.QuantidadeRestanteKg,
+                QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
+                IsActive = c.IsActive
+            });
         }
 
         public async Task DeleteAsync(Guid id)

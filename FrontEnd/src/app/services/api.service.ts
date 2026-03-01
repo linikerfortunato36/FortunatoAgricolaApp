@@ -7,22 +7,48 @@ export interface Produtor {
   id: string;
   nome: string;
   cpfCnpj: string;
-  inscricaoEstadual: string;
+  inscricaoEstadual?: string;
+  telefone?: string;
+  email?: string;
   isActive: boolean;
+  createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface Transportadora {
   id: string;
   nome: string;
   cpfCnpj: string;
+  inscricaoEstadual?: string;
+  cep?: string;
+  logradouro?: string;
+  estado?: string;
   isActive: boolean;
+  createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface Cliente {
   id: string;
   nome: string;
   cnpj: string;
+  inscricaoEstadual?: string;
+  email?: string;
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
   isActive: boolean;
+  createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface Contrato {
@@ -35,6 +61,10 @@ export interface Contrato {
   quantidadeEntregueKg: number;
   quantidadeRestanteKg: number;
   isActive: boolean;
+  createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface Movimentacao {
@@ -51,6 +81,7 @@ export interface Movimentacao {
   umidadePorcentagem: number;
   impurezaPorcentagem: number;
   pesoFinal: number;
+  pesoLiquidofazenda: number;
   motorista: string;
   transportadoraId: string;
   transportadoraNome: string;
@@ -58,6 +89,10 @@ export interface Movimentacao {
   valorCompraPorSaca: number;
   valorVendaPorSaca: number;
   ganhoLiquido: number;
+  createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface CreateMovimentacaoPayload {
@@ -70,6 +105,7 @@ export interface CreateMovimentacaoPayload {
   impurezaKg: number;
   umidadePorcentagem: number;
   impurezaPorcentagem: number;
+  pesoLiquidofazenda: number;
   motorista: string;
   transportadoraId: string;
 }
@@ -87,14 +123,66 @@ export class ApiService {
     return this.http.get<Produtor[]>(`${this.baseUrl}/Produtores`);
   }
 
+  getProdutorById(id: string): Observable<Produtor> {
+    return this.http.get<Produtor>(`${this.baseUrl}/Produtores/${id}`);
+  }
+
+  createProdutor(produtor: any): Observable<Produtor> {
+    return this.http.post<Produtor>(`${this.baseUrl}/Produtores`, produtor);
+  }
+
+  updateProdutor(id: string, produtor: any): Observable<Produtor> {
+    return this.http.put<Produtor>(`${this.baseUrl}/Produtores/${id}`, produtor);
+  }
+
+  deleteProdutor(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Produtores/${id}`);
+  }
+
   // Transportadoras
   getTransportadoras(): Observable<Transportadora[]> {
     return this.http.get<Transportadora[]>(`${this.baseUrl}/Transportadoras`);
   }
 
+  getTransportadoraById(id: string): Observable<Transportadora> {
+    return this.http.get<Transportadora>(`${this.baseUrl}/Transportadoras/${id}`);
+  }
+
+  createTransportadora(transportadora: any): Observable<Transportadora> {
+    return this.http.post<Transportadora>(`${this.baseUrl}/Transportadoras`, transportadora);
+  }
+
+  updateTransportadora(id: string, transportadora: any): Observable<Transportadora> {
+    return this.http.put<Transportadora>(`${this.baseUrl}/Transportadoras/${id}`, transportadora);
+  }
+
+  deleteTransportadora(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Transportadoras/${id}`);
+  }
+
   // Clientes
   getClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.baseUrl}/Clientes`);
+  }
+
+  getClienteById(id: string): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.baseUrl}/Clientes/${id}`);
+  }
+
+  createCliente(cliente: any): Observable<Cliente> {
+    return this.http.post<Cliente>(`${this.baseUrl}/Clientes`, cliente);
+  }
+
+  updateCliente(id: string, cliente: any): Observable<Cliente> {
+    return this.http.put<Cliente>(`${this.baseUrl}/Clientes/${id}`, cliente);
+  }
+
+  deleteCliente(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Clientes/${id}`);
+  }
+
+  getContratosByCliente(clienteId: string): Observable<Contrato[]> {
+    return this.http.get<Contrato[]>(`${this.baseUrl}/Contratos/by-cliente/${clienteId}`);
   }
 
   // Contratos
@@ -104,6 +192,14 @@ export class ApiService {
 
   getContratoById(id: string): Observable<Contrato> {
     return this.http.get<Contrato>(`${this.baseUrl}/Contratos/${id}`);
+  }
+
+  createContrato(contrato: any): Observable<Contrato> {
+    return this.http.post<Contrato>(`${this.baseUrl}/Contratos`, contrato);
+  }
+
+  updateContrato(id: string, contrato: any): Observable<Contrato> {
+    return this.http.put<Contrato>(`${this.baseUrl}/Contratos/${id}`, contrato);
   }
 
   // Movimentacoes
@@ -121,5 +217,14 @@ export class ApiService {
 
   deleteMovimentacao(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Movimentacoes/${id}`);
+  }
+
+  // Configuracoes
+  getConfiguracao(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/Configuracoes`);
+  }
+
+  updateConfiguracao(config: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/Configuracoes/${config.id}`, config);
   }
 }

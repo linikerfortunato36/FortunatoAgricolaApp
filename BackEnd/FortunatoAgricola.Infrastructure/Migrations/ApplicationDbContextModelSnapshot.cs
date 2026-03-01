@@ -308,6 +308,9 @@ namespace FortunatoAgricola.Infrastructure.Migrations
                     b.Property<decimal>("PesoDescargaKg")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<decimal>("PesoLiquidofazenda")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<decimal>("PorcentagemImposto")
                         .HasColumnType("decimal(65,30)");
 

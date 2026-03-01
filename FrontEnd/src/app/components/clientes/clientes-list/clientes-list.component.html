@@ -29,55 +29,52 @@
                             <th>STATUS</th>
                             <th>CONTRATOS ATIVOS</th>
                             <th>VOL. TOTAL NEGOCIADO</th>
-                            <th>ÚLTIMA MOVIMENTAÇÃO</th>
+                            <th>ÚLTIMA EDIÇÃO</th>
                             <th class="pe-4 text-end">AÇÕES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Placeholder row for preview -->
-                        <tr>
+                        <tr *ngFor="let cliente of clientes">
                             <td class="ps-4">
-                                <div class="fw-bold text-dark">Cargill Agrícola S.A</div>
-                                <div class="small text-muted">60.498.706/0001-57</div>
+                                <div class="fw-bold text-dark">{{ cliente.nome }}</div>
+                                <div class="small text-muted">{{ cliente.cnpj }}</div>
                             </td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
+                            <td>
+                                <span class="badge bg-opacity-10 rounded-pill px-3"
+                                    [ngClass]="cliente.isActive ? 'bg-success text-success' : 'bg-danger text-danger'">
+                                    {{ cliente.isActive ? 'Ativo' : 'Inativo' }}
+                                </span>
                             </td>
-                            <td><span class="fw-bold fs-6">3</span></td>
-                            <td>125.000 t</td>
-                            <td class="text-muted small">Há 2 horas</td>
+                            <td><span class="fw-bold fs-6">—</span></td> <!-- TODO: Trazer contratos do back -->
+                            <td>—</td>
+                            <td class="small text-muted">
+                                <div *ngIf="cliente.updatedByName">
+                                    <i class="bi bi-person"></i> {{ cliente.updatedByName }}
+                                    <div class="x-small">{{ cliente.updatedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                                </div>
+                                <div *ngIf="!cliente.updatedByName && cliente.createdByName">
+                                    <i class="bi bi-person"></i> {{ cliente.createdByName }}
+                                    <div class="x-small">{{ cliente.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                                </div>
+                            </td>
                             <td class="pe-4 text-end">
                                 <div class="btn-group">
-                                    <!-- Visualizar Contratos / Boards do cliente -->
-                                    <button routerLink="/app/clientes/editar/1" class="btn btn-sm btn-outline-secondary"
-                                        title="Boards e Contratos" aria-label="Acessar Boards do Cliente">
-                                        <i class="bi bi-kanban"></i> Boards
+                                    <button [routerLink]="['/app/clientes/editar', cliente.id]"
+                                        class="btn btn-sm btn-outline-secondary" title="Editar Cliente">
+                                        <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger" title="Desativar Cliente">
+                                    <button (click)="onDelete(cliente.id, cliente.nome)"
+                                        class="btn btn-sm btn-outline-danger" title="Desativar Cliente">
                                         <i class="bi bi-ban"></i>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="ps-4">
-                                <div class="fw-bold text-dark">Bunge Alimentos</div>
-                                <div class="small text-muted">84.093.856/0001-90</div>
-                            </td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Ativo</span>
-                            </td>
-                            <td><span class="fw-bold fs-6">1</span></td>
-                            <td>45.000 t</td>
-                            <td class="text-muted small">Ontem</td>
-                            <td class="pe-4 text-end">
-                                <div class="btn-group">
-                                    <button routerLink="/app/clientes/editar/2"
-                                        class="btn btn-sm btn-outline-secondary">
-                                        <i class="bi bi-kanban"></i> Boards
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-ban"></i>
-                                    </button>
-                                </div>
+
+                        <tr *ngIf="clientes.length === 0">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                Nenhum cliente encontrado.
                             </td>
                         </tr>
                     </tbody>

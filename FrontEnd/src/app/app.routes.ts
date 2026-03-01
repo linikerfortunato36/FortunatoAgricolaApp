@@ -4,6 +4,7 @@ import { ClientesListComponent } from './components/clientes/clientes-list/clien
 import { ClienteFormComponent } from './components/clientes/cliente-form/cliente-form.component';
 import { ContratosListComponent } from './components/contratos/contratos-list/contratos-list.component';
 import { ContratoDetalheComponent } from './components/contratos/contrato-detalhe/contrato-detalhe.component';
+import { ContratoFormComponent } from './components/contratos/contrato-form/contrato-form.component';
 import { ProdutoresListComponent } from './components/produtores/produtores-list/produtores-list.component';
 import { ProdutorFormComponent } from './components/produtores/produtor-form/produtor-form.component';
 import { TransportadorasListComponent } from './components/transportadoras/transportadoras-list/transportadoras-list.component';
@@ -33,6 +34,8 @@ export const routes: Routes = [
             { path: 'clientes/novo', component: ClienteFormComponent },
             { path: 'clientes/editar/:id', component: ClienteFormComponent },
             { path: 'contratos', component: ContratosListComponent },
+            { path: 'contratos/novo', component: ContratoFormComponent },
+            { path: 'contratos/editar/:id', component: ContratoFormComponent },
             { path: 'contratos/detalhe/:id', component: ContratoDetalheComponent },
             { path: 'produtores', component: ProdutoresListComponent },
             { path: 'produtores/novo', component: ProdutorFormComponent },

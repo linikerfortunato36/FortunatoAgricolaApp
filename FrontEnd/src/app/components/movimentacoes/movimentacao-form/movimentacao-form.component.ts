@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Contrato, Produtor, Transportadora, CreateMovimentacaoPayload } from '../../../services/api.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-movimentacao-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NgSelectModule],
   templateUrl: './movimentacao-form.component.html',
   styleUrl: './movimentacao-form.component.css'
 })
@@ -29,6 +30,7 @@ export class MovimentacaoFormComponent implements OnInit {
     impurezaKg: 0,
     umidadePorcentagem: 14.0,
     impurezaPorcentagem: 1.0,
+    pesoLiquidofazenda: 0,
     motorista: '',
     transportadoraId: ''
   };

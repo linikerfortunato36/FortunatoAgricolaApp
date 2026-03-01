@@ -68,6 +68,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ImpurezaKg = dto.ImpurezaKg,
                 UmidadePorcentagem = dto.UmidadePorcentagem,
                 ImpurezaPorcentagem = dto.ImpurezaPorcentagem,
+                PesoLiquidofazenda = dto.PesoLiquidofazenda,
                 Motorista = dto.Motorista,
                 TransportadoraId = dto.TransportadoraId
             };
@@ -145,6 +146,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             UmidadePorcentagem = m.UmidadePorcentagem,
             ImpurezaPorcentagem = m.ImpurezaPorcentagem,
             PesoFinal = m.PesoFinal,
+            PesoLiquidofazenda = m.PesoLiquidofazenda,
             Motorista = m.Motorista,
             TransportadoraId = m.TransportadoraId,
             TransportadoraNome = m.Transportadora?.Nome ?? string.Empty,

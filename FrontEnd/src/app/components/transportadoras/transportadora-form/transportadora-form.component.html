@@ -11,9 +11,12 @@
             <h2 class="h3 fw-bold text-dark mb-0">Gestão de Transportadora</h2>
         </div>
         <div>
-            <button routerLink="/app/transportadoras" class="btn btn-outline-secondary me-2"><i
+            <button routerLink="/app/transportadoras" class="btn btn-outline-secondary me-2" [disabled]="submitting"><i
                     class="bi bi-x-circle me-1"></i> Cancelar</button>
-            <button class="btn btn-primary"><i class="bi bi-floppy me-1"></i> Salvar</button>
+            <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar
+            </button>
         </div>
     </div>
 
@@ -105,17 +108,20 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold text-dark">Razão Social / Nome da Transportadora
                                     *</label>
-                                <input type="text" class="form-control" placeholder="Expresso Safra LTDA" required>
+                                <input type="text" class="form-control" [(ngModel)]="transportadora.nome" name="nome"
+                                    placeholder="Expresso Safra LTDA" required>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-dark">CNPJ / CPF *</label>
-                                <input type="text" class="form-control" placeholder="00.000.000/0001-00" required>
+                                <input type="text" class="form-control" [(ngModel)]="transportadora.cpfCnpj"
+                                    name="cpfCnpj" placeholder="00.000.000/0001-00" required>
                             </div>
 
                             <div class="col-md-2">
                                 <label class="form-label fw-bold text-dark">Insc. Estadual</label>
-                                <input type="text" class="form-control" placeholder="ISENTO">
+                                <input type="text" class="form-control" [(ngModel)]="transportadora.inscricaoEstadual"
+                                    name="inscricaoEstadual" placeholder="ISENTO">
                             </div>
 
                             <div class="col-12 mt-4">
@@ -125,7 +131,7 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-bold text-dark">CEP</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" [(ngModel)]="transportadora.cep" name="cep">
                                     <button class="btn btn-outline-secondary" type="button"><i
                                             class="bi bi-search"></i></button>
                                 </div>
@@ -133,20 +139,25 @@
 
                             <div class="col-md-7">
                                 <label class="form-label fw-bold text-dark">Rua / Logradouro</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="transportadora.logradouro"
+                                    name="logradouro">
                             </div>
 
                             <div class="col-md-2">
                                 <label class="form-label fw-bold text-dark">UF</label>
-                                <select class="form-select">
-                                    <option selected>MT</option>
+                                <select class="form-select" [(ngModel)]="transportadora.estado" name="estado">
+                                    <option value="MT">MT</option>
                                     <option value="PR">PR</option>
+                                    <option value="SP">SP</option>
+                                    <option value="GO">GO</option>
+                                    <option value="MS">MS</option>
                                 </select>
                             </div>
 
                             <div class="col-12 mt-4">
                                 <div class="form-check form-switch fs-5">
-                                    <input class="form-check-input" type="checkbox" id="ativoTransp" checked>
+                                    <input class="form-check-input" type="checkbox" id="ativoTransp"
+                                        [(ngModel)]="transportadora.isActive" name="isActive">
                                     <label class="form-check-label ms-2 text-dark fs-6 mt-1"
                                         for="ativoTransp">Transportadora Ativa no Sistema</label>
                                 </div>

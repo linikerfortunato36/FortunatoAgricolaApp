@@ -58,14 +58,14 @@
 
                         <div class="col-md-4">
                             <label class="form-label fw-bold text-dark small">Contrato Vinculado *</label>
-                            <select class="form-select" [(ngModel)]="form.contratoId" required
-                                [ngClass]="{'border-danger': !form.contratoId && submitError}">
-                                <option value="">Selecione o contrato...</option>
-                                <option *ngFor="let c of contratos" [value]="c.id">
-                                    {{ c.numeroContrato }} — {{ c.clienteNome }}
-                                    (Saldo: {{ (c.quantidadeRestanteKg / 1000) | number:'1.0-0' }}t)
-                                </option>
-                            </select>
+                            <ng-select [items]="contratos" bindLabel="numeroContrato" bindValue="id"
+                                [(ngModel)]="form.contratoId" placeholder="Selecione o contrato..." [clearable]="false">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{ item.numeroContrato }} — {{ item.clienteNome }}
+                                    <small class="d-block text-muted">Saldo: {{ (item.quantidadeRestanteKg / 1000) |
+                                        number:'1.0-0' }}t</small>
+                                </ng-template>
+                            </ng-select>
                             <div *ngIf="contratoSelecionado" class="form-text text-success">
                                 <i class="bi bi-check-circle me-1"></i> Saldo disponível:
                                 <strong>{{ (contratoSelecionado.quantidadeRestanteKg / 1000) | number:'1.0-2' }}
@@ -75,20 +75,18 @@
 
                         <div class="col-md-5">
                             <label class="form-label fw-bold text-dark small">Produtor / Fazenda Origem *</label>
-                            <select class="form-select" [(ngModel)]="form.produtorOrigemId" required
-                                [ngClass]="{'border-danger': !form.produtorOrigemId && submitError}">
-                                <option value="">Selecione o produtor...</option>
-                                <option *ngFor="let p of produtores" [value]="p.id">{{ p.nome }}</option>
-                            </select>
+                            <ng-select [items]="produtores" bindLabel="nome" bindValue="id"
+                                [(ngModel)]="form.produtorOrigemId" placeholder="Selecione o produtor..."
+                                [clearable]="false">
+                            </ng-select>
                         </div>
 
                         <div class="col-md-5">
                             <label class="form-label fw-bold text-dark small">Transportadora *</label>
-                            <select class="form-select" [(ngModel)]="form.transportadoraId" required
-                                [ngClass]="{'border-danger': !form.transportadoraId && submitError}">
-                                <option value="">Selecione a transportadora...</option>
-                                <option *ngFor="let t of transportadoras" [value]="t.id">{{ t.nome }}</option>
-                            </select>
+                            <ng-select [items]="transportadoras" bindLabel="nome" bindValue="id"
+                                [(ngModel)]="form.transportadoraId" placeholder="Selecione a transportadora..."
+                                [clearable]="false">
+                            </ng-select>
                         </div>
 
                         <div class="col-md-4">
@@ -113,6 +111,13 @@
                             <input type="number" class="form-control bg-white text-end fw-bold"
                                 [(ngModel)]="form.quantidadeOrigemKg" placeholder="0" min="0">
                             <div class="form-text">Pesagem na fazenda / carregamento.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-success small">Peso Líquido Fazenda (Kg)</label>
+                            <input type="number" class="form-control bg-white text-end fw-bold"
+                                [(ngModel)]="form.pesoLiquidofazenda" placeholder="0" min="0">
+                            <div class="form-text">Peso líquido descontado na origem.</div>
                         </div>
 
                         <div class="col-md-4">

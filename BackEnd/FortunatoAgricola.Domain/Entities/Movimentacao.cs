@@ -10,6 +10,7 @@ namespace FortunatoAgricola.Domain.Entities
         public Guid ProdutorOrigemId { get; set; }
         public Produtor ProdutorOrigem { get; set; }
         public decimal QuantidadeOrigemKg { get; set; }
+        public decimal PesoLiquidofazenda { get; set; }
         public decimal QuantidadeSacas => QuantidadeOrigemKg / 60;
         public decimal PesoDescargaKg { get; set; }
         public decimal DiferencaPesoKg => QuantidadeOrigemKg - PesoDescargaKg;

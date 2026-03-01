@@ -6,6 +6,7 @@
         public Guid ContratoId { get; set; }
         public Guid ProdutorOrigemId { get; set; }
         public decimal QuantidadeOrigemKg { get; set; }
+        public decimal PesoLiquidofazenda { get; set; }
         public decimal PesoDescargaKg { get; set; }
         public decimal UmidadeKg { get; set; }
         public decimal ImpurezaKg { get; set; }

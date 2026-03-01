@@ -28,6 +28,7 @@
                             <th>CPF / CNPJ</th>
                             <th>INSCR. ESTADUAL</th>
                             <th>STATUS</th>
+                            <th>ÚLTIMA EDIÇÃO</th>
                             <th class="text-end pe-4">AÇÕES</th>
                         </tr>
                     </thead>
@@ -43,12 +44,22 @@
                                     {{ p.isActive ? 'Ativo' : 'Inativo' }}
                                 </span>
                             </td>
+                            <td class="small text-muted">
+                                <div *ngIf="p.updatedByName">
+                                    <i class="bi bi-person"></i> {{ p.updatedByName }}
+                                    <div class="x-small">{{ p.updatedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                                </div>
+                                <div *ngIf="!p.updatedByName && p.createdByName">
+                                    <i class="bi bi-person"></i> {{ p.createdByName }}
+                                    <div class="x-small">{{ p.createdAt | date:'dd/MM/yyyy' }}</div>
+                                </div>
+                            </td>
                             <td class="text-end pe-4">
                                 <div class="btn-group">
                                     <button [routerLink]="['/app/produtores/editar', p.id]"
                                         class="btn btn-sm btn-outline-secondary"
                                         title="Painel de Carregamentos e Edição">
-                                        <i class="bi bi-person-lines-fill"></i> Painel do Produtor
+                                        <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger shadow-sm">
                                         <i class="bi bi-ban"></i>

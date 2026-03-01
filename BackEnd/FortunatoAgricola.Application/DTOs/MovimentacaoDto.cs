@@ -15,6 +15,7 @@ namespace FortunatoAgricola.Application.DTOs
         public decimal UmidadePorcentagem { get; set; }
         public decimal ImpurezaPorcentagem { get; set; }
         public decimal PesoFinal { get; set; }
+        public decimal PesoLiquidofazenda { get; set; }
         public string Motorista { get; set; } = string.Empty;
         public Guid TransportadoraId { get; set; }
         public string TransportadoraNome { get; set; } = string.Empty;

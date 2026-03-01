@@ -12,9 +12,12 @@
             <h2 class="h3 fw-bold text-dark mb-0">{{ isEditing ? 'Editar Cliente' : 'Novo Cliente (Comprador)' }}</h2>
         </div>
         <div>
-            <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2"><i
+            <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2" [disabled]="submitting"><i
                     class="bi bi-x-circle me-1"></i> Cancelar</button>
-            <button class="btn btn-primary"><i class="bi bi-floppy me-1"></i> Salvar Cliente</button>
+            <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar Cliente
+            </button>
         </div>
     </div>
 
@@ -52,26 +55,28 @@
                             <div class="col-md-8">
                                 <label for="nome" class="form-label fw-bold text-dark">Razão Social / Nome Fantasia
                                     *</label>
-                                <input type="text" class="form-control" id="nome" placeholder="Ex: Cargill Agrícola S.A"
-                                    required>
+                                <input type="text" class="form-control" id="nome" [(ngModel)]="cliente.nome" name="nome"
+                                    placeholder="Ex: Cargill Agrícola S.A" required>
                             </div>
 
                             <div class="col-md-4">
                                 <label for="cnpj" class="form-label fw-bold text-dark">CNPJ *</label>
-                                <input type="text" class="form-control" id="cnpj" placeholder="00.000.000/0001-00"
-                                    required>
+                                <input type="text" class="form-control" id="cnpj" [(ngModel)]="cliente.cnpj" name="cnpj"
+                                    placeholder="00.000.000/0001-00" required>
                             </div>
 
                             <div class="col-md-6 mt-4">
                                 <label for="inscEstadual" class="form-label fw-bold text-dark">Inscrição
                                     Estadual</label>
                                 <input type="text" class="form-control" id="inscEstadual"
+                                    [(ngModel)]="cliente.inscricaoEstadual" name="inscEstadual"
                                     placeholder="Isento / Documento">
                             </div>
 
                             <div class="col-md-6 mt-4">
                                 <label for="email" class="form-label fw-bold text-dark">E-mail de Contato</label>
-                                <input type="email" class="form-control" id="email" placeholder="contato@empresa.com">
+                                <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email"
+                                    name="email" placeholder="contato@empresa.com">
                             </div>
 
                             <div class="col-12 mt-4">
@@ -81,7 +86,8 @@
                             <div class="col-md-3">
                                 <label for="cep" class="form-label fw-bold text-dark">CEP</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="cep">
+                                    <input type="text" class="form-control" id="cep" [(ngModel)]="cliente.cep"
+                                        name="cep">
                                     <button class="btn btn-outline-secondary" type="button"><i
                                             class="bi bi-search"></i></button>
                                 </div>
@@ -89,28 +95,31 @@
 
                             <div class="col-md-7">
                                 <label for="rua" class="form-label fw-bold text-dark">Logradouro / Fazenda</label>
-                                <input type="text" class="form-control" id="rua">
+                                <input type="text" class="form-control" id="rua" [(ngModel)]="cliente.logradouro"
+                                    name="rua">
                             </div>
 
                             <div class="col-md-2">
                                 <label for="numero" class="form-label fw-bold text-dark">Número</label>
-                                <input type="text" class="form-control" id="numero">
+                                <input type="text" class="form-control" id="numero" [(ngModel)]="cliente.numero"
+                                    name="numero">
                             </div>
 
                             <div class="col-md-5">
                                 <label for="bairro" class="form-label fw-bold text-dark">Bairro</label>
-                                <input type="text" class="form-control" id="bairro">
+                                <input type="text" class="form-control" id="bairro" [(ngModel)]="cliente.bairro"
+                                    name="bairro">
                             </div>
 
                             <div class="col-md-5">
                                 <label for="cidade" class="form-label fw-bold text-dark">Cidade</label>
-                                <input type="text" class="form-control" id="cidade">
+                                <input type="text" class="form-control" id="cidade" [(ngModel)]="cliente.cidade"
+                                    name="cidade">
                             </div>
 
                             <div class="col-md-2">
                                 <label for="estado" class="form-label fw-bold text-dark">UF</label>
-                                <select id="estado" class="form-select">
-                                    <option selected>Selecione...</option>
+                                <select id="estado" class="form-select" [(ngModel)]="cliente.estado" name="estado">
                                     <option value="MT">MT</option>
                                     <option value="PR">PR</option>
                                     <option value="SP">SP</option>
@@ -121,7 +130,8 @@
 
                             <div class="col-12 mt-4">
                                 <div class="form-check form-switch fs-5">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="ativo" checked>
+                                    <input class="form-check-input" type="checkbox" role="switch" id="ativo"
+                                        [(ngModel)]="cliente.isActive" name="isActive">
                                     <label class="form-check-label ms-2 text-dark fs-6 mt-1" for="ativo">Cliente Ativo
                                         no Sistema</label>
                                 </div>

@@ -4,7 +4,7 @@
             <h2 class="h3 fw-bold text-dark mb-1">Contratos</h2>
             <p class="text-muted mb-0 small">Visualização de contratos firmados e seu acompanhamento diário.</p>
         </div>
-        <button class="btn btn-primary d-flex align-items-center">
+        <button routerLink="/app/contratos/novo" class="btn btn-primary d-flex align-items-center">
             <i class="bi bi-file-earmark-plus me-2"></i> Novo Contrato
         </button>
     </div>
@@ -15,30 +15,27 @@
             <div class="p-3 border-bottom d-flex flex-wrap gap-3 bg-light align-items-center">
                 <div class="input-group" style="max-width: 250px;">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Número do contrato...">
+                    <input type="text" class="form-control border-start-0 ps-0" [(ngModel)]="filtroNumero"
+                        placeholder="Número do contrato...">
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
                     <label class="text-muted small mb-0 ms-2 fw-bold">Status:</label>
-                    <select class="form-select form-select-sm border-0 shadow-sm" style="width: 140px;">
-                        <option selected>Todos</option>
-                        <option value="Aberto">Aberto</option>
-                        <option value="Em Andamento">Em Andamento</option>
-                        <option value="Finalizado">Finalizado</option>
-                    </select>
+                    <ng-select [items]="['Todos', 'Aberto', 'Em Andamento', 'Finalizado']" [(ngModel)]="filtroStatus"
+                        [clearable]="false" style="width: 140px;" class="shadow-sm">
+                    </ng-select>
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
                     <label class="text-muted small mb-0 ms-2 fw-bold">Cliente:</label>
-                    <select class="form-select form-select-sm border-0 shadow-sm" style="width: 200px;">
-                        <option selected>Todos os Clientes</option>
-                        <option value="Cargill">Cargill Agrícola</option>
-                        <option value="Bunge">Bunge Alimentos</option>
-                    </select>
+                    <ng-select [items]="clientes" bindLabel="nome" bindValue="id" [(ngModel)]="filtroClienteId"
+                        placeholder="Todos os Clientes" style="width: 220px;" class="shadow-sm">
+                    </ng-select>
                 </div>
 
                 <div class="ms-auto">
-                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-funnel"></i> Limpar
+                    <button class="btn btn-outline-secondary btn-sm" (click)="limparFiltros()"><i
+                            class="bi bi-funnel"></i> Limpar
                         Filtros</button>
                 </div>
             </div>
@@ -59,7 +56,7 @@
                     <tbody>
 
                         <!-- *ngFor Contrato iteration -->
-                        <tr *ngFor="let c of contratos">
+                        <tr *ngFor="let c of getContratosFiltrados()">
                             <td class="ps-4 fw-bold text-dark">{{ c.numeroContrato }}</td>
                             <td>{{ c.clienteNome }}</td>
                             <td><span class="fw-bold">{{ (c.quantidadeTotalKg / 1000) | number:'1.0-0' }} t</span></td>

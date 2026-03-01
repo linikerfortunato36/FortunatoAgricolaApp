@@ -8,6 +8,7 @@ namespace FortunatoAgricola.Application.Interfaces
         Task<ContratoDto> GetByIdAsync(Guid id);
         Task<ContratoDto> CreateAsync(CreateContratoDto dto);
         Task<ContratoDto> UpdateAsync(UpdateContratoDto dto);
+        Task<IEnumerable<ContratoDto>> GetByClienteIdAsync(Guid clienteId);
         Task DeleteAsync(Guid id);
     }
 }

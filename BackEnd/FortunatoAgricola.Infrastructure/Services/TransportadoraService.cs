@@ -28,7 +28,15 @@ namespace FortunatoAgricola.Infrastructure.Services
                     Id = t.Id,
                     Nome = t.Nome,
                     CpfCnpj = t.CpfCnpj,
-                    IsActive = t.IsActive
+                    InscricaoEstadual = t.InscricaoEstadual,
+                    Cep = t.Cep,
+                    Logradouro = t.Logradouro,
+                    Estado = t.Estado,
+                    IsActive = t.IsActive,
+                    CreatedAt = t.CreatedAt,
+                    CreatedByName = t.CreatedByName,
+                    UpdatedAt = t.UpdatedAt,
+                    UpdatedByName = t.UpdatedByName
                 })
                 .ToListAsync();
         }
@@ -37,12 +45,35 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var t = await _context.Transportadoras.FindAsync(id);
             if (t == null) return null;
-            return new TransportadoraDto { Id = t.Id, Nome = t.Nome, CpfCnpj = t.CpfCnpj, IsActive = t.IsActive };
+            return new TransportadoraDto 
+            { 
+                Id = t.Id, 
+                Nome = t.Nome, 
+                CpfCnpj = t.CpfCnpj, 
+                InscricaoEstadual = t.InscricaoEstadual,
+                Cep = t.Cep,
+                Logradouro = t.Logradouro,
+                Estado = t.Estado,
+                IsActive = t.IsActive,
+                CreatedAt = t.CreatedAt,
+                CreatedByName = t.CreatedByName,
+                UpdatedAt = t.UpdatedAt,
+                UpdatedByName = t.UpdatedByName 
+            };
         }
 
         public async Task<TransportadoraDto> CreateAsync(CreateTransportadoraDto dto)
         {
-            var t = new Transportadora { Nome = dto.Nome, CpfCnpj = dto.CpfCnpj, IsActive = true };
+            var t = new Transportadora 
+            { 
+                Nome = dto.Nome, 
+                CpfCnpj = dto.CpfCnpj, 
+                InscricaoEstadual = dto.InscricaoEstadual,
+                Cep = dto.Cep,
+                Logradouro = dto.Logradouro,
+                Estado = dto.Estado,
+                IsActive = true 
+            };
             await _context.Transportadoras.AddAsync(t);
             await _context.SaveChangesAsync();
             return (await GetByIdAsync(t.Id))!;
@@ -54,6 +85,10 @@ namespace FortunatoAgricola.Infrastructure.Services
             if (t == null) throw new Exception("Transportadora não encontrada.");
             t.Nome = dto.Nome;
             t.CpfCnpj = dto.CpfCnpj;
+            t.InscricaoEstadual = dto.InscricaoEstadual;
+            t.Cep = dto.Cep;
+            t.Logradouro = dto.Logradouro;
+            t.Estado = dto.Estado;
             t.IsActive = dto.IsActive;
             t.UpdatedAt = DateTime.UtcNow;
             _context.Transportadoras.Update(t);

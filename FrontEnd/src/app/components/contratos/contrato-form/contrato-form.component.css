@@ -1,0 +1,12 @@
+.card {
+    border-radius: 12px;
+    border: 1px solid #eef0f3;
+}
+
+.form-label {
+    font-size: 0.875rem;
+}
+
+.ng-select .ng-select-container {
+    border-radius: 8px !important;
+}
