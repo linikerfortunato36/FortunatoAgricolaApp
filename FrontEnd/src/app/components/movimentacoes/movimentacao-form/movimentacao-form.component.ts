@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, Contrato, Produtor, Transportadora, CreateMovimentacaoPayload } from '../../../services/api.service';
+import { ApiService, Contrato, Produtor, Transportadora, CreateMovimentacaoPayload, Usuario } from '../../../services/api.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
@@ -18,6 +18,7 @@ export class MovimentacaoFormComponent implements OnInit {
   contratos: Contrato[] = [];
   produtores: Produtor[] = [];
   transportadoras: Transportadora[] = [];
+  vendedores: Usuario[] = [];
 
   // Form model
   form: CreateMovimentacaoPayload = {
@@ -32,7 +33,8 @@ export class MovimentacaoFormComponent implements OnInit {
     impurezaPorcentagem: 1.0,
     pesoLiquidofazenda: 0,
     motorista: '',
-    transportadoraId: ''
+    transportadoraId: '',
+    vendedorId: ''
   };
 
   // UI state
@@ -77,6 +79,10 @@ export class MovimentacaoFormComponent implements OnInit {
     this.apiService.getTransportadoras().subscribe(data => {
       this.transportadoras = data.filter(t => t.isActive);
     });
+
+    this.apiService.getUsuarios().subscribe(data => {
+      this.vendedores = data.filter(u => u.isActive);
+    });
   }
 
   // Auto-calculate umidade and impureza from percentages when peso changes
@@ -92,8 +98,8 @@ export class MovimentacaoFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.form.contratoId || !this.form.produtorOrigemId || !this.form.transportadoraId) {
-      this.submitError = 'Preencha todos os campos obrigatórios (Contrato, Produtor e Transportadora).';
+    if (!this.form.contratoId || !this.form.produtorOrigemId || !this.form.transportadoraId || !this.form.vendedorId) {
+      this.submitError = 'Preencha todos os campos obrigatórios (Contrato, Produtor, Transportadora e Vendedor).';
       return;
     }
     if (this.form.pesoDescargaKg <= 0) {

@@ -25,6 +25,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 .Include(m => m.Contrato)
                 .Include(m => m.ProdutorOrigem)
                 .Include(m => m.Transportadora)
+                .Include(m => m.Vendedor)
                 .OrderByDescending(m => m.Data)
                 .ToListAsync();
 
@@ -37,6 +38,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 .Include(m => m.Contrato)
                 .Include(m => m.ProdutorOrigem)
                 .Include(m => m.Transportadora)
+                .Include(m => m.Vendedor)
                 .Where(m => m.ContratoId == contratoId)
                 .OrderByDescending(m => m.Data)
                 .ToListAsync();
@@ -49,6 +51,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 .Include(mov => mov.Contrato)
                 .Include(mov => mov.ProdutorOrigem)
                 .Include(mov => mov.Transportadora)
+                .Include(mov => mov.Vendedor)
                 .FirstOrDefaultAsync(mov => mov.Id == id);
 
             if (m == null) return null;
@@ -70,7 +73,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ImpurezaPorcentagem = dto.ImpurezaPorcentagem,
                 PesoLiquidofazenda = dto.PesoLiquidofazenda,
                 Motorista = dto.Motorista,
-                TransportadoraId = dto.TransportadoraId
+                TransportadoraId = dto.TransportadoraId,
+                VendedorId = dto.VendedorId
             };
 
             await _context.Movimentacoes.AddAsync(mov);
@@ -150,6 +154,8 @@ namespace FortunatoAgricola.Infrastructure.Services
             Motorista = m.Motorista,
             TransportadoraId = m.TransportadoraId,
             TransportadoraNome = m.Transportadora?.Nome ?? string.Empty,
+            VendedorId = m.VendedorId,
+            VendedorNome = m.Vendedor?.Nome ?? string.Empty,
             CustoFretePorSaca = m.CustoFretePorSaca,
             ValorCompraPorSaca = m.ValorCompraPorSaca,
             ValorVendaPorSaca = m.ValorVendaPorSaca,

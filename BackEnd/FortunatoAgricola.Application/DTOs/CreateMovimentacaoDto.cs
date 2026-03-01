@@ -14,5 +14,6 @@
         public decimal ImpurezaPorcentagem { get; set; }
         public string Motorista { get; set; } = string.Empty;
         public Guid TransportadoraId { get; set; }
+        public Guid VendedorId { get; set; }
     }
 }

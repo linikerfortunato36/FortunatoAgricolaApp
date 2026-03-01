@@ -19,6 +19,8 @@ namespace FortunatoAgricola.Application.DTOs
         public string Motorista { get; set; } = string.Empty;
         public Guid TransportadoraId { get; set; }
         public string TransportadoraNome { get; set; } = string.Empty;
+        public Guid VendedorId { get; set; }
+        public string VendedorNome { get; set; } = string.Empty;
         
         // Dados Financeiros Básicos
         public decimal CustoFretePorSaca { get; set; }

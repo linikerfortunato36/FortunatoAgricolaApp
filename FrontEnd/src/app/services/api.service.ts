@@ -67,6 +67,14 @@ export interface Contrato {
   updatedByName?: string;
 }
 
+export interface Usuario {
+  id: string;
+  nome: string;
+  login: string;
+  perfil: string;
+  isActive: boolean;
+}
+
 export interface Movimentacao {
   id: string;
   data: string;
@@ -85,6 +93,8 @@ export interface Movimentacao {
   motorista: string;
   transportadoraId: string;
   transportadoraNome: string;
+  vendedorId: string;
+  vendedorNome: string;
   custoFretePorSaca: number;
   valorCompraPorSaca: number;
   valorVendaPorSaca: number;
@@ -108,6 +118,7 @@ export interface CreateMovimentacaoPayload {
   pesoLiquidofazenda: number;
   motorista: string;
   transportadoraId: string;
+  vendedorId: string;
 }
 
 @Injectable({
@@ -217,6 +228,11 @@ export class ApiService {
 
   deleteMovimentacao(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Movimentacoes/${id}`);
+  }
+
+  // Usuarios
+  getUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.baseUrl}/Usuarios`);
   }
 
   // Configuracoes

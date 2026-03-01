@@ -94,6 +94,13 @@
                             <input type="text" class="form-control" [(ngModel)]="form.motorista"
                                 placeholder="José Carlos">
                         </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold text-dark small">Vendedor (Usuário) *</label>
+                            <ng-select [items]="vendedores" bindLabel="nome" bindValue="id"
+                                [(ngModel)]="form.vendedorId" placeholder="Selecione o vendedor...">
+                            </ng-select>
+                        </div>
                     </div>
                 </div>
             </div>
