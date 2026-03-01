@@ -1,4 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FortunatoAgricola.Application.Interfaces;
+using FortunatoAgricola.Application.DTOs;
 using FortunatoAgricola.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,5 +58,53 @@ namespace FortunatoAgricola.Infrastructure.Services
                 TopContratos = topContratos
             };
         }
+
+        public async Task<IEnumerable<NotificacaoDto>> GetNotificacoesAsync()
+        {
+            var notificacoes = new List<NotificacaoDto>();
+
+            // 1. Contratos próximos do limite (> 90%)
+            var contratosQuaseFim = await _context.Contratos
+                .Where(c => c.IsActive && c.QuantidadeTotalKg > 0)
+                .Select(c => new { 
+                    c.NumeroContrato, 
+                    Percentual = (double)c.QuantidadeEntregueKg / (double)c.QuantidadeTotalKg 
+                })
+                .Where(c => c.Percentual >= 0.90 && c.Percentual < 1.0)
+                .ToListAsync();
+
+            foreach (var c in contratosQuaseFim)
+            {
+                notificacoes.Add(new NotificacaoDto
+                {
+                    Titulo = "Saldo Quase no Fim",
+                    Mensagem = $"Contrato {c.NumeroContrato} (${Math.Round(c.Percentual * 100, 1)}%)",
+                    Tipo = "warning",
+                    Icone = "bi-exclamation-triangle",
+                    Data = DateTime.Now
+                });
+            }
+
+            // 2. Movimentações de hoje
+            var hoje = DateTime.Today;
+            var qtdeMovimentacoesHoje = await _context.Movimentacoes
+                .Where(m => m.Data.Date == hoje)
+                .CountAsync();
+
+            if (qtdeMovimentacoesHoje > 0)
+            {
+                notificacoes.Add(new NotificacaoDto
+                {
+                    Titulo = "Nova Movimentação",
+                    Mensagem = $"{qtdeMovimentacoesHoje} ticket(s) hoje.",
+                    Tipo = "info",
+                    Icone = "bi-truck",
+                    Data = DateTime.Now
+                });
+            }
+
+            return notificacoes.OrderByDescending(n => n.Data).ThenByDescending(n => n.Tipo);
+        }
     }
 }
+

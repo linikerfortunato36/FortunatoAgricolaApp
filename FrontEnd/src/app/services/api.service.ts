@@ -281,6 +281,18 @@ export class ApiService {
     return this.http.get<Usuario[]>(`${this.baseUrl}/Usuarios`);
   }
 
+  getUsuarioById(id: string): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.baseUrl}/Usuarios/${id}`);
+  }
+
+  createUsuario(usuario: any): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.baseUrl}/Usuarios`, usuario);
+  }
+
+  updateUsuario(id: string, usuario: any): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.baseUrl}/Usuarios/${id}`, usuario);
+  }
+
   deleteUsuario(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Usuarios/${id}`);
   }

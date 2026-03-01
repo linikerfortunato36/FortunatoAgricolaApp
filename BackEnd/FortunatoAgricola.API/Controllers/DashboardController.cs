@@ -17,5 +17,13 @@ namespace FortunatoAgricola.API.Controllers
             var stats = await _dashboardService.GetDashboardStatsAsync();
             return Ok(stats);
         }
+
+        [HttpGet("notificacoes")]
+        public async Task<IActionResult> GetNotificacoes()
+        {
+            var notificacoes = await _dashboardService.GetNotificacoesAsync();
+            return Ok(notificacoes);
+        }
     }
 }
+

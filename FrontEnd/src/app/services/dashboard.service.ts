@@ -14,4 +14,8 @@ export class DashboardService {
     getStats(): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/stats`);
     }
+
+    getNotificacoes(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/notificacoes`);
+    }
 }

@@ -217,6 +217,16 @@
   },
   {
     "ContainingType": "FortunatoAgricola.API.Controllers.DashboardController",
+    "Method": "GetNotificacoes",
+    "RelativePath": "api/Dashboard/notificacoes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FortunatoAgricola.API.Controllers.DashboardController",
     "Method": "GetStats",
     "RelativePath": "api/Dashboard/stats",
     "HttpMethod": "GET",

@@ -1,8 +1,9 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { DashboardService } from '../../../services/dashboard.service';
 
 @Component({
   selector: 'app-header',
@@ -11,15 +12,34 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   searchQuery = '';
   userMenuOpen = false;
   notifMenuOpen = false;
+  notificacoes: any[] = [];
+  unreadCount = 0;
 
   constructor(
     public authService: AuthService,
+    private dashboardService: DashboardService,
     private router: Router
   ) { }
+
+  ngOnInit(): void {
+    this.carregarNotificacoes();
+  }
+
+  carregarNotificacoes(): void {
+    if (this.authService.isLoggedIn()) {
+      this.dashboardService.getNotificacoes().subscribe({
+        next: (data) => {
+          this.notificacoes = data;
+          this.unreadCount = this.notificacoes.filter(n => !n.lida).length;
+        },
+        error: (err) => console.error('Erro ao carregar notificações', err)
+      });
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {

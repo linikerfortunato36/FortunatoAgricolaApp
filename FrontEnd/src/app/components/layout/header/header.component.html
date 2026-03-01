@@ -24,7 +24,7 @@
                     (click)="notifMenuOpen = !notifMenuOpen; userMenuOpen = false; $event.stopPropagation()"
                     class="btn btn-outline-secondary rounded-circle border-0 position-relative pt-2 pb-2 dropdown-toggle">
                     <i class="bi bi-bell fs-5"></i>
-                    <span
+                    <span *ngIf="notificacoes.length > 0"
                         class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                         <span class="visually-hidden">Novos alertas</span>
                     </span>
@@ -32,26 +32,26 @@
                 <div class="dropdown-menu dropdown-menu-end shadow" [class.show]="notifMenuOpen"
                     style="width: 300px; position: absolute; top: 100%; right: 0;">
                     <h6 class="dropdown-header">Notificações</h6>
-                    <a class="dropdown-item py-2 d-flex align-items-center" href="javascript:void(0)">
-                        <div class="text-bg-warning rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center"
-                            style="width: 32px; height: 32px;">
-                            <i class="bi bi-exclamation-triangle"></i>
+
+                    <ng-container *ngIf="notificacoes.length > 0; else noNotifs">
+                        <a class="dropdown-item py-2 d-flex align-items-center border-bottom" href="javascript:void(0)"
+                            *ngFor="let notif of notificacoes">
+                            <div class="text-bg-{{notif.tipo}} rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center text-white"
+                                style="width: 32px; height: 32px;">
+                                <i class="bi {{notif.icone}}"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0 fw-bold small">{{notif.titulo}}</h6>
+                                <small class="text-muted d-block">{{notif.mensagem}}</small>
+                            </div>
+                        </a>
+                    </ng-container>
+                    <ng-template #noNotifs>
+                        <div class="p-3 text-center text-muted small">
+                            Nenhuma notificação no momento.
                         </div>
-                        <div class="ms-3">
-                            <h6 class="mb-0 fw-bold small">Saldo Quase no Fim</h6>
-                            <small class="text-muted d-block">Contrato 007/26</small>
-                        </div>
-                    </a>
-                    <a class="dropdown-item py-2 d-flex align-items-center border-top" href="javascript:void(0)">
-                        <div class="text-bg-info rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center text-white"
-                            style="width: 32px; height: 32px;">
-                            <i class="bi bi-truck"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="mb-0 fw-bold small">Nova Movimentação</h6>
-                            <small class="text-muted d-block">1 ticket hoje.</small>
-                        </div>
-                    </a>
+                    </ng-template>
+
                     <div class="dropdown-divider mb-0"></div>
                     <a class="dropdown-item text-center small text-primary fw-bold py-2" href="javascript:void(0)">Ver
                         todas as notificações</a>

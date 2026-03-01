@@ -13,7 +13,7 @@
         <div>
             <button routerLink="/app/usuarios" class="btn btn-outline-secondary me-2"><i
                     class="bi bi-x-circle me-1"></i> Cancelar</button>
-            <button class="btn btn-primary"><i class="bi bi-floppy me-1"></i> Salvar Usuário</button>
+            <button class="btn btn-primary" (click)="salvar()"><i class="bi bi-floppy me-1"></i> Salvar Usuário</button>
         </div>
     </div>
 
@@ -27,22 +27,26 @@
                     <form class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-dark">Nome Completo</label>
-                            <input type="text" class="form-control" placeholder="Seu Nome Aqui" required>
+                            <input type="text" class="form-control" name="nome" [(ngModel)]="usuario.nome"
+                                placeholder="Seu Nome Aqui" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-dark">E-mail Profissional (Login)</label>
-                            <input type="email" class="form-control" placeholder="nome@empresa.com.br" required>
+                            <input type="email" class="form-control" name="login" [(ngModel)]="usuario.login"
+                                placeholder="nome@empresa.com.br" required>
                         </div>
 
                         <div class="col-md-6 mt-4">
                             <label class="form-label fw-bold small text-dark">Senha de Acesso</label>
-                            <input type="password" class="form-control" placeholder="Definir nova senha">
+                            <input type="password" class="form-control" name="senha" [(ngModel)]="usuario.senha"
+                                placeholder="Definir nova senha">
                             <div class="form-text">Deixe em branco para manter a atual (se edição).</div>
                         </div>
 
                         <div class="col-md-6 mt-4">
                             <label class="form-label fw-bold small text-dark">Confirmação de Senha</label>
-                            <input type="password" class="form-control" placeholder="Repetir senha">
+                            <input type="password" class="form-control" name="confirmarSenha"
+                                [(ngModel)]="confirmarSenha" placeholder="Repetir senha">
                         </div>
                     </form>
                 </div>
@@ -57,14 +61,15 @@
                 <div class="card-body">
                     <form>
                         <label class="form-label fw-bold small text-dark">Nível de Acesso no Sistema</label>
-                        <select class="form-select mb-4">
+                        <select class="form-select mb-4" name="perfil" [(ngModel)]="usuario.perfil">
                             <option value="Administrador">Administrador Geral</option>
-                            <option value="Operador" selected>Operador Logístico</option>
+                            <option value="Operador">Operador Logístico</option>
                             <option value="Visualizador">Apenas Visualizar (Financeiro/Diretoria)</option>
                         </select>
 
                         <div class="form-check form-switch fs-5 p-3 bg-light rounded border border-success">
-                            <input class="form-check-input ms-0 me-3" type="checkbox" id="userAtivo" checked>
+                            <input class="form-check-input ms-0 me-3" type="checkbox" id="userAtivo" name="isActive"
+                                [(ngModel)]="usuario.isActive">
                             <label class="form-check-label text-dark fs-6 mt-1 fw-bold" for="userAtivo">Usuário Ativo
                                 (Pode Logar)</label>
                             <div class="form-text fs-6 small mt-1 ms-0">Ao desativar, será imediatamente desconectado.

@@ -362,6 +362,18 @@
         }
       }
     },
+    "/api/Dashboard/notificacoes": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Movimentacoes": {
       "get": {
         "tags": [
