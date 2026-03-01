@@ -9,157 +9,214 @@
                         Cliente' }}</li>
                 </ol>
             </nav>
-            <h2 class="h3 fw-bold text-dark mb-0">{{ isEditing ? 'Editar Cliente' : 'Novo Cliente (Comprador)' }}</h2>
+            <h2 class="h3 fw-bold text-dark mb-0 d-flex align-items-center">
+                {{ isEditing ? 'Editar Cliente' : 'Novo Cliente' }}
+                <span *ngIf="isEditing && cliente.nome" class="badge bg-light text-primary border ms-3 fs-6 fw-normal">
+                    {{ cliente.nome }}
+                </span>
+            </h2>
         </div>
         <div>
-            <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2" [disabled]="submitting"><i
-                    class="bi bi-x-circle me-1"></i> Cancelar</button>
+            <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2" [disabled]="submitting">
+                <i class="bi bi-arrow-left me-1"></i> Voltar
+            </button>
             <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
                 <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
-                <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar Cliente
+                <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar Alterações
             </button>
         </div>
     </div>
 
+    <!-- Navegação por Abas (Exibida apenas na Edição) -->
+    <ul *ngIf="isEditing" class="nav nav-pills mb-4 bg-light p-1 rounded-3 shadow-sm border"
+        style="width: fit-content;">
+        <li class="nav-item">
+            <button class="nav-link px-4 py-2" [class.active]="activeTab === 'boards'" (click)="setActiveTab('boards')">
+                <i class="bi bi-kanban me-2"></i> Boards de Contratos
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link px-4 py-2" [class.active]="activeTab === 'form'" (click)="setActiveTab('form')">
+                <i class="bi bi-pencil-square me-2"></i> Dados Cadastrais
+            </button>
+        </li>
+    </ul>
+
     <div class="row">
-        <div class="col-xl-8">
-            <!-- Tabs exigidas na rega de negócio -->
-            <ul class="nav nav-tabs mb-4 border-bottom-0" id="clienteTab" role="tablist">
-                <li class="nav-item d-none" role="presentation">
-                    <!-- Ocultado porque estamos adicionando novo cliente (primeira aba invisível) -->
-                    <button class="nav-link text-dark shadow-sm bg-white border border-bottom-0 rounded-top"
-                        id="boards-tab" data-bs-toggle="tab" data-bs-target="#boards" type="button" role="tab"
-                        aria-controls="boards" aria-selected="false">
-                        <i class="bi bi-kanban me-2 text-primary"></i> Boards de Contratos
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active text-primary fw-bold border-bottom-0 rounded-top shadow-sm bg-white"
-                        id="form-tab" data-bs-toggle="tab" data-bs-target="#form" type="button" role="tab"
-                        aria-controls="form" aria-selected="true">
-                        <i class="bi bi-card-text me-2"></i> Cadastro de Dados
-                    </button>
-                </li>
-            </ul>
+        <div class="col-12">
+            <!-- ABA 1: BOARDS DE CONTRATOS -->
+            <div *ngIf="isEditing && activeTab === 'boards'" class="animate__animated animate__fadeIn">
+                <div class="row g-4">
+                    <!-- Cards de Contratos -->
+                    <div *ngFor="let c of contratos" class="col-xl-4 col-md-6">
+                        <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
+                            <!-- Faixa lateral de status -->
+                            <div class="position-absolute top-0 start-0 h-100"
+                                [ngClass]="c.status === 'Finalizado' ? 'bg-success' : (c.status === 'Em Andamento' ? 'bg-primary' : 'bg-warning')"
+                                style="width: 5px;"></div>
 
-            <div class="tab-content border bg-white p-4 shadow-sm rounded-bottom rounded-end" id="clienteTabContent">
-                <!-- Aba de Boards (Invisível no form de novo) -->
-                <div class="tab-pane fade" id="boards" role="tabpanel" aria-labelledby="boards-tab">
-                    <p class="text-muted">Os boards ficarão disponíveis após salvar o cadastro do cliente.</p>
-                </div>
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="fw-bold text-dark mb-1">Contrato {{ c.numeroContrato }}</h5>
+                                        <span class="badge"
+                                            [ngClass]="c.status === 'Finalizado' ? 'bg-success-subtle text-success' : (c.status === 'Em Andamento' ? 'bg-primary-subtle text-primary' : 'bg-warning-subtle text-warning')">
+                                            {{ c.status }}
+                                        </span>
+                                    </div>
+                                    <button [routerLink]="['/app/contratos/editar', c.id]"
+                                        class="btn btn-sm btn-light border">
+                                        <i class="bi bi-box-arrow-in-up-right"></i>
+                                    </button>
+                                </div>
 
-                <!-- Aba Principal de Formulário -->
-                <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
-                    <form>
-                        <div class="row g-3">
-                            <div class="col-md-8">
-                                <label for="nome" class="form-label fw-bold text-dark">Razão Social / Nome Fantasia
-                                    *</label>
-                                <input type="text" class="form-control" id="nome" [(ngModel)]="cliente.nome" name="nome"
-                                    placeholder="Ex: Cargill Agrícola S.A" required>
-                            </div>
+                                <div class="row g-3 mb-4 mt-2">
+                                    <div class="col-6">
+                                        <small class="text-muted d-block text-uppercase fw-bold"
+                                            style="font-size: 10px;">Total Contratado</small>
+                                        <span class="fw-bold text-dark">{{ c.quantidadeTotalKg | number:'1.0-0' }}
+                                            Kg</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted d-block text-uppercase fw-bold"
+                                            style="font-size: 10px;">Total Entregue</small>
+                                        <span class="fw-bold text-primary">{{ c.quantidadeEntregueKg | number:'1.0-0' }}
+                                            Kg</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted d-block text-uppercase fw-bold"
+                                            style="font-size: 10px;">Saldo Restante</small>
+                                        <span class="fw-bold text-danger">{{ c.quantidadeRestanteKg | number:'1.0-0' }}
+                                            Kg</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted d-block text-uppercase fw-bold"
+                                            style="font-size: 10px;">Nº de Entregas</small>
+                                        <span class="fw-bold text-dark">{{ c.quantidadeEntregas }}</span>
+                                    </div>
+                                </div>
 
-                            <div class="col-md-4">
-                                <label for="cnpj" class="form-label fw-bold text-dark">CNPJ *</label>
-                                <input type="text" class="form-control" id="cnpj" [(ngModel)]="cliente.cnpj" name="cnpj"
-                                    placeholder="00.000.000/0001-00" required>
-                            </div>
-
-                            <div class="col-md-6 mt-4">
-                                <label for="inscEstadual" class="form-label fw-bold text-dark">Inscrição
-                                    Estadual</label>
-                                <input type="text" class="form-control" id="inscEstadual"
-                                    [(ngModel)]="cliente.inscricaoEstadual" name="inscEstadual"
-                                    placeholder="Isento / Documento">
-                            </div>
-
-                            <div class="col-md-6 mt-4">
-                                <label for="email" class="form-label fw-bold text-dark">E-mail de Contato</label>
-                                <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email"
-                                    name="email" placeholder="contato@empresa.com">
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <h5 class="fw-bold border-bottom pb-2 mt-2">Endereço Principal</h5>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="cep" class="form-label fw-bold text-dark">CEP</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="cep" [(ngModel)]="cliente.cep"
-                                        name="cep">
-                                    <button class="btn btn-outline-secondary" type="button"><i
-                                            class="bi bi-search"></i></button>
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <small class="fw-bold text-muted">Progresso</small>
+                                        <small class="fw-bold text-primary text-end">{{
+                                            getProgressoWidth(c.quantidadeEntregueKg, c.quantidadeTotalKg) |
+                                            number:'1.0-1' }}%</small>
+                                    </div>
+                                    <div class="progress" style="height: 10px; border-radius: 5px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                            role="progressbar"
+                                            [style.width]="getProgressoWidth(c.quantidadeEntregueKg, c.quantidadeTotalKg) + '%'"
+                                            [ngClass]="c.status === 'Finalizado' ? 'bg-success' : 'bg-primary'"></div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-7">
-                                <label for="rua" class="form-label fw-bold text-dark">Logradouro / Fazenda</label>
-                                <input type="text" class="form-control" id="rua" [(ngModel)]="cliente.logradouro"
-                                    name="rua">
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="numero" class="form-label fw-bold text-dark">Número</label>
-                                <input type="text" class="form-control" id="numero" [(ngModel)]="cliente.numero"
-                                    name="numero">
-                            </div>
-
-                            <div class="col-md-5">
-                                <label for="bairro" class="form-label fw-bold text-dark">Bairro</label>
-                                <input type="text" class="form-control" id="bairro" [(ngModel)]="cliente.bairro"
-                                    name="bairro">
-                            </div>
-
-                            <div class="col-md-5">
-                                <label for="cidade" class="form-label fw-bold text-dark">Cidade</label>
-                                <input type="text" class="form-control" id="cidade" [(ngModel)]="cliente.cidade"
-                                    name="cidade">
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="estado" class="form-label fw-bold text-dark">UF</label>
-                                <select id="estado" class="form-select" [(ngModel)]="cliente.estado" name="estado">
-                                    <option value="MT">MT</option>
-                                    <option value="PR">PR</option>
-                                    <option value="SP">SP</option>
-                                    <option value="GO">GO</option>
-                                    <option value="MS">MS</option>
-                                </select>
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <div class="form-check form-switch fs-5">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="ativo"
-                                        [(ngModel)]="cliente.isActive" name="isActive">
-                                    <label class="form-check-label ms-2 text-dark fs-6 mt-1" for="ativo">Cliente Ativo
-                                        no Sistema</label>
-                                </div>
-                            </div>
-
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Mensagem se não houver contratos -->
+                    <div *ngIf="contratos.length === 0" class="col-12 text-center py-5">
+                        <div class="bg-light rounded-4 p-5 border border-dashed">
+                            <i class="bi bi-file-earmark-text fs-1 text-muted mb-3 d-block"></i>
+                            <h4 class="fw-bold text-dark">Nenhum contrato ativo</h4>
+                            <p class="text-muted">Este cliente ainda não possui contratos registrados no sistema.</p>
+                            <button routerLink="/app/contratos/novo" class="btn btn-primary mt-2">
+                                <i class="bi bi-plus-circle me-1"></i> Criar Primeiro Contrato
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Panel Lateral Informativo -->
-        <div class="col-xl-4 mt-4 mt-xl-0 d-none d-lg-block">
-            <div class="card bg-light border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold text-primary mb-3"><i class="bi bi-info-circle me-2"></i> Orientação
-                    </h5>
-                    <p class="text-muted small">
-                        Preencha os dados primários do cliente para depois registrar os <strong>Contratos de
-                            Venda</strong>. O Dashboard e Boards só são liberados em etapa de edição.
-                    </p>
-                    <hr>
-                    <h6 class="fw-bold mt-4 text-dark mb-2">Restrições Padrão</h6>
-                    <ul class="text-muted small ps-3">
-                        <li class="mb-2">Clientes que detém contratos ativos <strong>nunca podem ser removidos</strong>
-                            do sistema (Políticas de <i>Fake Delete</i>).</li>
-                        <li class="mb-2">A troca de CNPJ implica em reavaliação de todos os contratos abertos.</li>
-                    </ul>
+            <!-- ABA 2: FORMULÁRIO DE CADASTRO -->
+            <div *ngIf="activeTab === 'form'" class="animate__animated animate__fadeIn">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4 p-xl-5">
+                        <div *ngIf="loading" class="text-center py-5">
+                            <div class="spinner-grow text-primary" role="status"></div>
+                            <p class="mt-3 text-muted fw-bold">Carregando dados do cliente...</p>
+                        </div>
+
+                        <form *ngIf="!loading">
+                            <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
+                                <i class="bi bi-info-square me-2"></i> Identificação e Contato
+                            </h5>
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-bold">Razão Social / Nome Fantasia *</label>
+                                    <input type="text" class="form-control form-control-lg" [(ngModel)]="cliente.nome"
+                                        name="nome" placeholder="Ex: AMAGGI EXPORTAÇÃO E IMPORTAÇÃO" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">CNPJ *</label>
+                                    <input type="text" class="form-control form-control-lg" [(ngModel)]="cliente.cnpj"
+                                        name="cnpj" placeholder="00.000.000/0001-00" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Inscrição Estadual</label>
+                                    <input type="text" class="form-control" [(ngModel)]="cliente.inscricaoEstadual"
+                                        name="inscEstadual">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">E-mail Corporativo</label>
+                                    <input type="email" class="form-control" [(ngModel)]="cliente.email" name="email"
+                                        placeholder="contato@empresa.com.br">
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
+                                <i class="bi bi-geo-alt me-2"></i> Endereço
+                            </h5>
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">CEP</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" [(ngModel)]="cliente.cep" name="cep">
+                                        <button class="btn btn-outline-primary" type="button"><i
+                                                class="bi bi-search"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <label class="form-label fw-bold">Logradouro / Avenida / Rua</label>
+                                    <input type="text" class="form-control" [(ngModel)]="cliente.logradouro"
+                                        name="logradouro">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Número</label>
+                                    <input type="text" class="form-control" [(ngModel)]="cliente.numero" name="numero">
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label fw-bold">Bairro</label>
+                                    <input type="text" class="form-control" [(ngModel)]="cliente.bairro" name="bairro">
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label fw-bold">Cidade</label>
+                                    <input type="text" class="form-control" [(ngModel)]="cliente.cidade" name="cidade">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Estado (UF)</label>
+                                    <select class="form-select" [(ngModel)]="cliente.estado" name="estado">
+                                        <option value="MT">MT</option>
+                                        <option value="PR">PR</option>
+                                        <option value="SP">SP</option>
+                                        <option value="GO">GO</option>
+                                        <option value="MS">MS</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="bg-light p-4 rounded-3 border">
+                                <div class="form-check form-switch fs-5 mb-0">
+                                    <input class="form-check-input" type="checkbox" id="isActive"
+                                        [(ngModel)]="cliente.isActive" name="isActive">
+                                    <label class="form-check-label ms-2 text-dark fs-6 fw-bold" for="isActive">Cliente
+                                        Ativo no Sistema</label>
+                                    <p class="text-muted small mb-0 ms-2">Clientes inativos não aparecerão em novos
+                                        lançamentos de contratos ou movimentações.</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

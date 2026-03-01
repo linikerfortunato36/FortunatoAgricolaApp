@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using FortunatoAgricola.Domain.Entities;
 using FortunatoAgricola.Infrastructure.Data;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FortunatoAgricola.API
 {

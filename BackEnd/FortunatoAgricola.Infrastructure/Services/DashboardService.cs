@@ -1,8 +1,6 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using FortunatoAgricola.Application.Interfaces;
 using FortunatoAgricola.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FortunatoAgricola.Infrastructure.Services
 {

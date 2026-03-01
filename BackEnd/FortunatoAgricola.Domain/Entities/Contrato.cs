@@ -12,5 +12,6 @@ namespace FortunatoAgricola.Domain.Entities
         public decimal QuantidadeEntregueKg { get; set; }
         public decimal QuantidadeRestanteKg => QuantidadeTotalKg - QuantidadeEntregueKg;
         public bool IsActive { get; set; } = true;
+        public virtual ICollection<Movimentacao> Movimentacoes { get; set; } = new List<Movimentacao>();
     }
 }

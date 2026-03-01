@@ -340,6 +340,29 @@
         }
       }
     },
+    "/api/Contratos/by-cliente/{clienteId}": {
+      "get": {
+        "tags": [
+          "Contratos"
+        ],
+        "parameters": [
+          {
+            "name": "clienteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Dashboard/stats": {
       "get": {
         "tags": [
