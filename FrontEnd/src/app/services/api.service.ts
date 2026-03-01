@@ -60,11 +60,11 @@ export interface Contrato {
   quantidadeTotalKg: number;
   quantidadeEntregueKg: number;
   quantidadeRestanteKg: number;
+  quantidadeEntregas: number;
+  valorTotalNfe: number;
+  percentualEntregue: number;
   isActive: boolean;
   createdAt?: string;
-  createdByName?: string;
-  updatedAt?: string;
-  updatedByName?: string;
 }
 
 export interface Usuario {
@@ -80,13 +80,16 @@ export interface Movimentacao {
   data: string;
   contratoId: string;
   contratoNumero: string;
+  clienteNome: string;
   produtorOrigemId: string;
   produtorOrigemNome: string;
   quantidadeOrigemKg: number;
+  quantidadeSacas: number;
   pesoDescargaKg: number;
+  diferencaPesoKg: number;
   umidadeKg: number;
-  impurezaKg: number;
   umidadePorcentagem: number;
+  impurezaKg: number;
   impurezaPorcentagem: number;
   pesoFinal: number;
   pesoLiquidofazenda: number;
@@ -95,14 +98,29 @@ export interface Movimentacao {
   transportadoraNome: string;
   vendedorId: string;
   vendedorNome: string;
+
+  // Financeiro
   custoFretePorSaca: number;
   valorCompraPorSaca: number;
+  valorTotalCompra: number;
+  valorTotalFrete: number;
+  valorPorSacaArmazem: number;
+  valorTotalArmazem: number;
+  quemPagaArmazem: string;
   valorVendaPorSaca: number;
+  valorTotalVenda: number;
+  nfe: string;
+  valorNfe: number;
+  totalCompra: number;
+  ganhoBruto: number;
+  imposto: number;
+  totalComissaoLd: number;
   ganhoLiquido: number;
+
+  observacao?: string;
+  dataPrevistaPagamento?: string;
+  dataEntrega?: string;
   createdAt?: string;
-  createdByName?: string;
-  updatedAt?: string;
-  updatedByName?: string;
 }
 
 export interface CreateMovimentacaoPayload {
@@ -119,6 +137,22 @@ export interface CreateMovimentacaoPayload {
   motorista: string;
   transportadoraId: string;
   vendedorId: string;
+
+  // Novos campos
+  custoFretePorSaca: number;
+  valorCompraPorSaca: number;
+  valorPorSacaArmazem: number;
+  quemPagaArmazem: string;
+  valorVendaPorSaca: number;
+  nfe: string;
+  valorNfe: number;
+  observacao?: string;
+  dataPrevistaPagamento?: string;
+  dataEntrega?: string;
+
+  // Configs
+  valorImpostoPorSaca: number;
+  comissaoLdPorSaca: number;
 }
 
 @Injectable({

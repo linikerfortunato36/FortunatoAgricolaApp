@@ -15,6 +15,7 @@ export class ContratoDetalheComponent implements OnInit {
   contrato: Contrato | null = null;
   movimentacoes: Movimentacao[] = [];
   contratoId: string = '';
+  selectedMovimentacao: Movimentacao | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -22,25 +23,26 @@ export class ContratoDetalheComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.contratoId = this.route.snapshot.paramMap.get('id') || '';
-    if (this.contratoId) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.contratoId = id;
       this.carregarContrato();
       this.carregarMovimentacoes();
     }
   }
 
   carregarContrato(): void {
-    this.apiService.getContratoById(this.contratoId).subscribe(
-      (data) => this.contrato = data,
-      (error) => console.error('Erro ao buscar contrato:', error)
-    );
+    this.apiService.getContratoById(this.contratoId).subscribe({
+      next: (data) => this.contrato = data,
+      error: (error) => console.error('Erro ao buscar contrato:', error)
+    });
   }
 
   carregarMovimentacoes(): void {
-    this.apiService.getMovimentacoesByContrato(this.contratoId).subscribe(
-      (data) => this.movimentacoes = data,
-      (error) => console.error('Erro ao buscar movimentações:', error)
-    );
+    this.apiService.getMovimentacoesByContrato(this.contratoId).subscribe({
+      next: (data) => this.movimentacoes = data,
+      error: (error) => console.error('Erro ao buscar movimentações:', error)
+    });
   }
 
   excluirMovimentacao(id: string): void {
@@ -52,6 +54,14 @@ export class ContratoDetalheComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao excluir movimentação:', err)
     });
+  }
+
+  visualizarMovimento(m: Movimentacao): void {
+    this.selectedMovimentacao = m;
+  }
+
+  fecharModal(): void {
+    this.selectedMovimentacao = null;
   }
 
   getProgressoPct(): number {

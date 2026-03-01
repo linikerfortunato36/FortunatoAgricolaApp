@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FortunatoAgricola.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1afd37c430b043a54926d9636adca21703b135da")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14a7bf207a6a8934f158e23ffb3e042483cb8b66")]
 [assembly: System.Reflection.AssemblyProductAttribute("FortunatoAgricola.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FortunatoAgricola.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

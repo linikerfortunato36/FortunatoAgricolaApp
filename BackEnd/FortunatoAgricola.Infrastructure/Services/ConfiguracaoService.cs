@@ -26,8 +26,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                 MargemLucro = c.MargemLucro,
                 ToleranciaQuebraPeso = c.ToleranciaQuebraPeso,
                 ToleranciaUmidade = c.ToleranciaUmidade,
-                ValorBaseComissaoVendaPorSaca = c.ValorBaseComissaoVendaPorSaca,
-                PorcentagemImposto = c.PorcentagemImposto,
+                ValorImpostoPorSaca = c.ValorImpostoPorSaca,
+                ValorComissaoPorSaca = c.ValorComissaoPorSaca,
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
                 UpdatedAt = c.UpdatedAt,
@@ -40,7 +40,6 @@ namespace FortunatoAgricola.Infrastructure.Services
             var c = await _context.Configuracoes.FindAsync(dto.Id);
             if (c == null)
             {
-                // Cria se não existir
                 c = new Configuracao
                 {
                     RazaoSocial = dto.RazaoSocial,
@@ -48,8 +47,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                     MargemLucro = dto.MargemLucro,
                     ToleranciaQuebraPeso = dto.ToleranciaQuebraPeso,
                     ToleranciaUmidade = dto.ToleranciaUmidade,
-                    ValorBaseComissaoVendaPorSaca = dto.ValorBaseComissaoVendaPorSaca,
-                    PorcentagemImposto = dto.PorcentagemImposto
+                    ValorImpostoPorSaca = dto.ValorImpostoPorSaca,
+                    ValorComissaoPorSaca = dto.ValorComissaoPorSaca
                 };
                 await _context.Configuracoes.AddAsync(c);
             }
@@ -60,8 +59,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                 c.MargemLucro = dto.MargemLucro;
                 c.ToleranciaQuebraPeso = dto.ToleranciaQuebraPeso;
                 c.ToleranciaUmidade = dto.ToleranciaUmidade;
-                c.ValorBaseComissaoVendaPorSaca = dto.ValorBaseComissaoVendaPorSaca;
-                c.PorcentagemImposto = dto.PorcentagemImposto;
+                c.ValorImpostoPorSaca = dto.ValorImpostoPorSaca;
+                c.ValorComissaoPorSaca = dto.ValorComissaoPorSaca;
                 c.UpdatedAt = DateTime.UtcNow;
                 _context.Configuracoes.Update(c);
             }

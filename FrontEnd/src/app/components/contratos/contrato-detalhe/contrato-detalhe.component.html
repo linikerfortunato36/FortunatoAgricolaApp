@@ -14,39 +14,37 @@
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf me-1"></i> Exportar
                 Fechamento</button>
-            <button routerLink="/app/movimentacoes/novo" [queryParams]="{contratoId: contratoId}"
+            <button [routerLink]="['/app/movimentacoes/novo']" [queryParams]="{contratoId: contratoId}"
                 class="btn btn-primary fw-bold">
                 <i class="bi bi-plus-circle me-1"></i> Nova Movimentação
             </button>
         </div>
     </div>
 
-    <!-- Cartões de Resumo do Contrato -->
+    <!-- Stats Cards Section -->
     <div class="row g-4 mb-5">
-        <!-- Cliente Destino -->
         <div class="col-md-3">
             <div class="card h-100 shadow-sm border-0 border-start border-primary border-4">
                 <div class="card-body">
                     <h6 class="text-muted text-uppercase fw-bold mb-3 small">Cliente Destino</h6>
-                    <h5 class="fw-bold mb-1 text-dark">{{ contrato?.clienteNome || '—' }}</h5>
-                    <p class="mb-0 small text-muted"><i class="bi bi-tag me-1"></i> Status: {{ contrato?.status || '—'
-                        }}</p>
+                    <h5 class="fw-bold mb-1 text-dark text-truncate">{{ contrato?.clienteNome || '—' }}</h5>
+                    <span class="badge" [ngClass]="contrato?.status === 'Finalizado' ? 'bg-success' : 'bg-primary'">{{
+                        contrato?.status || '—' }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Status do Atendimento da Meta -->
         <div class="col-md-5">
             <div class="card h-100 shadow-sm border-0 bg-light">
-                <div class="card-body d-flex flex-column justify-content-center pt-4">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <div class="d-flex justify-content-between align-items-end mb-2">
                         <div>
                             <h6 class="text-muted fw-bold mb-1 small text-uppercase">Volumetria Negociada vs Entregue
                             </h6>
-                            <span class="fs-4 fw-bolder text-dark">{{ ((contrato?.quantidadeEntregueKg || 0) / 1000) |
-                                number:'1.0-0' }} t</span>
-                            <span class="text-muted">/ {{ ((contrato?.quantidadeTotalKg || 0) / 1000) | number:'1.0-0'
-                                }} t</span>
+                            <span class="fs-4 fw-bolder text-dark">{{ (contrato?.quantidadeEntregueKg || 0) |
+                                number:'1.0-0' }} Kg</span>
+                            <span class="text-muted">/ {{ (contrato?.quantidadeTotalKg || 0) | number:'1.0-0' }}
+                                Kg</span>
                         </div>
                         <div class="text-end">
                             <span class="badge bg-primary fs-6 px-3 rounded-pill shadow-sm">{{ getProgressoPct() |
@@ -57,142 +55,175 @@
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
                             role="progressbar" [style.width]="getProgressoPct() + '%'"></div>
                     </div>
-                    <p class="text-danger small mt-2 fw-bold mb-0 text-end"><i
-                            class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{ ((contrato?.quantidadeRestanteKg
-                        || 0) / 1000) | number:'1.0-0' }} t para bater a meta</p>
+                    <p class="text-danger small mt-2 fw-bold mb-0 text-end"
+                        *ngIf="(contrato?.quantidadeRestanteKg || 0) > 0">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{ (contrato?.quantidadeRestanteKg
+                        || 0) | number:'1.0-0' }} Kg para bater a meta
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Balanço Financeiro Base -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm border-0 bg-primary text-white text-end">
                 <div class="card-body">
-                    <h6 class="text-uppercase fw-bold mb-3 small opacity-75">Valores & Entregas (Nfe)</h6>
-                    <h4 class="fw-bold mb-1">R$ 5.200.000,00</h4>
-                    <p class="mb-0 small opacity-75"><i class="bi bi-graph-up-arrow me-1 text-secondary"></i>
-                        Faturamento Estimado (Bruto)</p>
+                    <h6 class="text-uppercase fw-bold mb-2 small opacity-75">Valores & Entregas (NF-e)</h6>
+                    <h3 class="fw-bold mb-1">R$ {{ (contrato?.valorTotalNfe || 0) | number:'1.2-2' }}</h3>
+                    <p class="mb-0 small opacity-75">Faturamento Bruto Consolidado</p>
                     <hr class="my-2 border-white opacity-25">
-                    <p class="mb-0 small"><strong>1.250</strong> Caminhões / Viagens Feitas</p>
+                    <p class="mb-0 small"><strong>{{ contrato?.quantidadeEntregas || 0 }}</strong> Tickets / Viagens
+                        Feitas</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tabela de Inserção Expressa e Movimentações (Requisito) -->
+    <!-- Movements Grid Section -->
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-journal-arrow-up text-primary me-2"></i> Adicionar
-                Entrega ao Contrato</h5>
-            <button routerLink="/app/movimentacoes/novo" class="btn btn-sm btn-outline-primary fw-bold px-3">Modo
-                Completo (Avançado)</button>
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold text-dark mb-0 d-flex align-items-center">
+                <i class="bi bi-journal-text text-primary me-2"></i> Histórico de Carregamentos
+                <span class="badge bg-light text-dark border ms-2 fw-normal fs-6">{{ movimentacoes.length }}
+                    registros</span>
+            </h5>
         </div>
-
         <div class="card-body p-0">
-            <!-- Formulário Horizontal Rápido de Movimentação (inserção) -->
-            <div class="bg-light p-3 border-bottom">
-                <form class="row g-2 align-items-end">
-                    <div class="col-md-2">
-                        <label class="form-label small fw-bold text-dark mb-1">Data</label>
-                        <input type="date" class="form-control form-control-sm border-0 shadow-sm">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold text-dark mb-1">Produtor (Origem)</label>
-                        <select class="form-select form-select-sm border-0 shadow-sm">
-                            <option selected>Selecione a Fazenda...</option>
-                            <option>Fazenda Boa Vista</option>
-                            <option>Grupo Sperafico</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label small fw-bold text-dark mb-1">Transportadora</label>
-                        <select class="form-select form-select-sm border-0 shadow-sm">
-                            <option selected>Selecione...</option>
-                            <option>TransGrãos LTDA</option>
-                            <option>Expresso Safra</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label small fw-bold text-dark mb-1">Motorista/Placa</label>
-                        <input type="text" class="form-control form-control-sm border-0 shadow-sm"
-                            placeholder="João / ABC-1234">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label small fw-bold text-dark mb-1">Net (Liq) Fazenda (Kg)</label>
-                        <input type="number"
-                            class="form-control form-control-sm border-0 shadow-sm text-end text-primary fw-bold"
-                            placeholder="0,00">
-                    </div>
-                    <div class="col-md-1 d-grid">
-                        <button class="btn btn-sm btn-primary shadow-sm"><i class="bi bi-plus-lg fw-bold"></i>
-                            Salvar</button>
-                    </div>
-                </form>
-                <!-- Dropdown de Descontos Ocultos (Impurezas/Umidade) -->
-                <div class="mt-2 text-end">
-                    <a href="#" class="text-decoration-none small text-muted"><i class="bi bi-sliders me-1"></i>
-                        Informar Umidade e Impureza / Frete Custo</a>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="table-light text-muted small">
+                        <tr>
+                            <th class="ps-3 text-start">DATA</th>
+                            <th class="text-start">PRODUTOR ORIGEM</th>
+                            <th class="text-start">TRANSPORTADORA</th>
+                            <th>P. ORIGEM (Kg)</th>
+                            <th>QUEBRA (Kg)</th>
+                            <th>P. FINAL (Kg)</th>
+                            <th>NF-e</th>
+                            <th>VEND.</th>
+                            <th class="pe-3 text-end">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let m of movimentacoes" class="animate__animated animate__fadeIn">
+                            <td class="ps-3 text-start fw-bold">{{ m.data | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-start">
+                                <span class="d-block">{{ m.produtorOrigemNome }}</span>
+                            </td>
+                            <td class="text-start">
+                                <span class="d-block">{{ m.transportadoraNome }}</span>
+                                <small class="text-muted">{{ m.motorista }}</small>
+                            </td>
+                            <td>{{ m.quantidadeOrigemKg | number }}</td>
+                            <td [ngClass]="m.diferencaPesoKg > 0 ? 'text-danger' : 'text-success'">
+                                {{ m.diferencaPesoKg | number }}
+                            </td>
+                            <td class="fw-bold text-primary">{{ m.pesoFinal | number }}</td>
+                            <td>{{ m.nfe || '—' }}</td>
+                            <td>{{ m.vendedorNome || '—' }}</td>
+                            <td class="pe-3 text-end">
+                                <button (click)="visualizarMovimento(m)" class="btn btn-sm btn-light border me-1"
+                                    title="Visualizar Detalhes">
+                                    <i class="bi bi-eye text-primary"></i>
+                                </button>
+                                <button (click)="excluirMovimentacao(m.id)" class="btn btn-sm btn-light border"
+                                    title="Excluir">
+                                    <i class="bi bi-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="movimentacoes.length === 0">
+                            <td colspan="10" class="py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+                                Nenhuma movimentação registrada.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+    </div>
 
-            <!-- Histórico de Carregamentos Deste Contrato -->
-            <div class="p-4">
-                <h6 class="fw-bold text-secondary text-uppercase mb-3 mt-1">Carregamentos (Tickets) Associados</h6>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover bg-white mb-0 align-middle text-center small">
-                        <thead class="table-light text-muted">
-                            <tr>
-                                <th class="text-start ps-3">DATA</th>
-                                <th class="text-start">PRODUTOR ORIGEM</th>
-                                <th class="text-start">VEÍCULO / TRANS.</th>
-                                <th>P. O. (Kg)</th>
-                                <th>DESC. (Kg)</th>
-                                <th title="Umidade (kg e %)">UMID.</th>
-                                <th title="Impureza (kg e %)">IMPUR.</th>
-                                <th class="text-primary fw-bold">P. LÍQ FINAL</th>
-                                <th class="text-end pe-3">OPÇÕES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Linha vazia quando não há movimentações -->
-                            <tr *ngIf="movimentacoes.length === 0">
-                                <td colspan="9" class="text-center py-5 text-muted">
-                                    <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
-                                    Nenhuma movimentação registrada para este contrato ainda.<br>
-                                    <small>Use o botão <strong>Nova Movimentação</strong> acima para registrar a
-                                        primeira entrega.</small>
-                                </td>
-                            </tr>
-                            <!-- Linhas dinâmicas da API -->
-                            <tr *ngFor="let m of movimentacoes">
-                                <td class="text-start ps-3 fw-bold">{{ m.data | date:'dd/MM/yyyy' }}</td>
-                                <td class="text-start">{{ m.produtorOrigemNome }}</td>
-                                <td class="text-start">{{ m.transportadoraNome }} {{ m.motorista ? '(' + m.motorista +
-                                    ')' : '' }}</td>
-                                <td>{{ m.quantidadeOrigemKg | number:'1.0-0' }}</td>
-                                <td
-                                    [ngClass]="m.quantidadeOrigemKg - m.pesoDescargaKg > 0 ? 'text-danger' : 'text-success'">
-                                    {{ m.quantidadeOrigemKg - m.pesoDescargaKg > 0 ? '-' : '' }}{{ (m.quantidadeOrigemKg
-                                    - m.pesoDescargaKg) | number:'1.0-0' }}
-                                </td>
-                                <td>{{ m.umidadeKg | number:'1.0-0' }} kg ({{ m.umidadePorcentagem | number:'1.1-1' }}%)
-                                </td>
-                                <td>{{ m.impurezaKg | number:'1.0-0' }} kg ({{ m.impurezaPorcentagem | number:'1.1-1'
-                                    }}%)</td>
-                                <td class="text-primary fw-bold fs-6 bg-light">{{ m.pesoFinal | number:'1.0-0' }} Kg
-                                </td>
-                                <td class="text-end pe-3">
-                                    <button class="btn btn-sm text-secondary p-1" title="Ver detalhes">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm text-danger p-1" title="Excluir movimentação"
-                                        (click)="excluirMovimentacao(m.id)">
-                                        <i class="bi bi-x-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <!-- Movement Detail Modal (Custom Implementation) -->
+    <div *ngIf="selectedMovimentacao" class="modal-backdrop fade show"></div>
+    <div *ngIf="selectedMovimentacao" class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-text me-2"></i>Detalhes da Movimentação
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="fecharModal()"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6 border-end">
+                            <h6 class="fw-bold text-primary mb-3">CONTRATO & ORIGEM</h6>
+                            <p class="mb-1"><span class="text-muted">Contrato:</span> {{
+                                selectedMovimentacao.contratoNumero }}</p>
+                            <p class="mb-1"><span class="text-muted">Cliente:</span> {{ selectedMovimentacao.clienteNome
+                                }}</p>
+                            <p class="mb-1"><span class="text-muted">Produtor:</span> {{
+                                selectedMovimentacao.produtorOrigemNome }}</p>
+                            <p class="mb-1"><span class="text-muted">Transporte:</span> {{
+                                selectedMovimentacao.transportadoraNome }}</p>
+                            <p class="mb-1"><span class="text-muted">Motorista:</span> {{ selectedMovimentacao.motorista
+                                }}</p>
+                            <p class="mb-0"><span class="text-muted">Vendedor:</span> {{
+                                selectedMovimentacao.vendedorNome }}</p>
+
+                            <h6 class="fw-bold text-primary mt-4 mb-3">VOLUMETRIA (KG)</h6>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Origem:</span>
+                                <span>{{ selectedMovimentacao.quantidadeOrigemKg | number }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Sacas:</span>
+                                <span>{{ selectedMovimentacao.quantidadeSacas | number:'1.0-1' }} sc</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Descarga:</span>
+                                <span>{{ selectedMovimentacao.pesoDescargaKg | number }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1 text-danger">
+                                <span class="text-muted">Quebra:</span>
+                                <span>{{ selectedMovimentacao.diferencaPesoKg | number }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between border-top pt-2 fw-bold text-primary">
+                                <span>PESO FINAL:</span>
+                                <span>{{ selectedMovimentacao.pesoFinal | number }} Kg</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-primary mb-3">FINANCEIRO E NF-E</h6>
+                            <p class="mb-1"><span class="text-muted">Nota Fiscal:</span> {{ selectedMovimentacao.nfe ||
+                                '—' }}</p>
+                            <p class="mb-1"><span class="text-muted">Valor NF-e:</span> R$ {{
+                                selectedMovimentacao.valorNfe | number:'1.2-2' }}</p>
+                            <p class="mb-1"><span class="text-muted">Venda por Saca:</span> R$ {{
+                                selectedMovimentacao.valorVendaPorSaca | number:'1.2-2' }}</p>
+                            <p class="mb-1"><span class="text-muted">Venda Total:</span> R$ {{
+                                selectedMovimentacao.valorTotalVenda | number:'1.2-2' }}</p>
+                            <hr>
+                            <p class="mb-1"><span class="text-muted">Ganho Bruto:</span> R$ {{
+                                selectedMovimentacao.ganhoBruto | number:'1.2-2' }}</p>
+                            <p class="mb-1"><span class="text-muted">Imposto Est.:</span> R$ {{
+                                selectedMovimentacao.imposto | number:'1.2-2' }}</p>
+                            <p class="mb-1"><span class="text-muted">Comissão LD:</span> R$ {{
+                                selectedMovimentacao.totalComissaoLd | number:'1.2-2' }}</p>
+                            <div class="mt-3 p-2 bg-light rounded text-center">
+                                <span class="d-block small text-muted text-uppercase fw-bold">Ganho Líquido</span>
+                                <span class="fs-4 fw-bold text-success">R$ {{ selectedMovimentacao.ganhoLiquido |
+                                    number:'1.2-2' }}</span>
+                            </div>
+                            <div class="mt-4">
+                                <h6 class="fw-bold text-muted small mb-1">Observações:</h6>
+                                <p class="small text-muted mb-0 fst-italic">{{ selectedMovimentacao.observacao ||
+                                    'Nenhuma observação informada.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-primary px-4" (click)="fecharModal()">Fechar</button>
                 </div>
             </div>
         </div>

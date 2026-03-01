@@ -74,7 +74,21 @@ namespace FortunatoAgricola.Infrastructure.Services
                 PesoLiquidofazenda = dto.PesoLiquidofazenda,
                 Motorista = dto.Motorista,
                 TransportadoraId = dto.TransportadoraId,
-                VendedorId = dto.VendedorId
+                VendedorId = dto.VendedorId,
+                
+                // Novos campos
+                CustoFretePorSaca = dto.CustoFretePorSaca,
+                ValorCompraPorSaca = dto.ValorCompraPorSaca,
+                ValorPorSacaArmazem = dto.ValorPorSacaArmazem,
+                QuemPagaArmazem = dto.QuemPagaArmazem,
+                ValorVendaPorSaca = dto.ValorVendaPorSaca,
+                Nfe = dto.Nfe,
+                ValorNfe = dto.ValorNfe,
+                Observacao = dto.Observacao,
+                DataPrevistaPagamento = dto.DataPrevistaPagamento,
+                DataEntrega = dto.DataEntrega,
+                ValorImpostoPorSaca = dto.ValorImpostoPorSaca,
+                ComissaoLdPorSaca = dto.ComissaoLdPorSaca
             };
 
             await _context.Movimentacoes.AddAsync(mov);
@@ -141,13 +155,16 @@ namespace FortunatoAgricola.Infrastructure.Services
             Data = m.Data,
             ContratoId = m.ContratoId,
             ContratoNumero = m.Contrato?.NumeroContrato ?? string.Empty,
+            ClienteNome = m.Contrato?.Cliente?.Nome ?? string.Empty,
             ProdutorOrigemId = m.ProdutorOrigemId,
             ProdutorOrigemNome = m.ProdutorOrigem?.Nome ?? string.Empty,
             QuantidadeOrigemKg = m.QuantidadeOrigemKg,
+            QuantidadeSacas = m.QuantidadeSacas,
             PesoDescargaKg = m.PesoDescargaKg,
+            DiferencaPesoKg = m.DiferencaPesoKg,
             UmidadeKg = m.UmidadeKg,
-            ImpurezaKg = m.ImpurezaKg,
             UmidadePorcentagem = m.UmidadePorcentagem,
+            ImpurezaKg = m.ImpurezaKg,
             ImpurezaPorcentagem = m.ImpurezaPorcentagem,
             PesoFinal = m.PesoFinal,
             PesoLiquidofazenda = m.PesoLiquidofazenda,
@@ -158,8 +175,25 @@ namespace FortunatoAgricola.Infrastructure.Services
             VendedorNome = m.Vendedor?.Nome ?? string.Empty,
             CustoFretePorSaca = m.CustoFretePorSaca,
             ValorCompraPorSaca = m.ValorCompraPorSaca,
+            ValorTotalCompra = (m.ValorCompraPorSaca + m.CustoFretePorSaca + (m.QuemPagaArmazem == "Nos" ? m.ValorPorSacaArmazem : 0)) * m.QuantidadeSacas, // Redundante mas útil no DTO
+            ValorTotalFrete = m.QuantidadeSacas * m.CustoFretePorSaca,
+            ValorPorSacaArmazem = m.ValorPorSacaArmazem,
+            ValorTotalArmazem = m.QuantidadeSacas * m.ValorPorSacaArmazem,
+            QuemPagaArmazem = m.QuemPagaArmazem,
             ValorVendaPorSaca = m.ValorVendaPorSaca,
-            GanhoLiquido = m.GanhoLiquido
+            ValorTotalVenda = m.ValorTotalVenda,
+            Nfe = m.Nfe,
+            ValorNfe = m.ValorNfe,
+            TotalCompra = m.TotalCompra,
+            GanhoBruto = m.GanhoBruto,
+            ValorImpostoPorSaca = m.ValorImpostoPorSaca,
+            Imposto = m.Imposto,
+            ComissaoLdPorSaca = m.ComissaoLdPorSaca,
+            TotalComissaoLd = m.TotalComissaoLd,
+            GanhoLiquido = m.GanhoLiquido,
+            Observacao = m.Observacao,
+            DataPrevistaPagamento = m.DataPrevistaPagamento,
+            DataEntrega = m.DataEntrega
         };
     }
 }

@@ -14,13 +14,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class MovimentacaoFormComponent implements OnInit {
 
-  // Lists for dropdowns
   contratos: Contrato[] = [];
   produtores: Produtor[] = [];
   transportadoras: Transportadora[] = [];
   vendedores: Usuario[] = [];
+  config: any;
 
-  // Form model
   form: CreateMovimentacaoPayload = {
     data: new Date().toISOString().split('T')[0],
     contratoId: '',
@@ -34,21 +33,68 @@ export class MovimentacaoFormComponent implements OnInit {
     pesoLiquidofazenda: 0,
     motorista: '',
     transportadoraId: '',
-    vendedorId: ''
+    vendedorId: '',
+    custoFretePorSaca: 0,
+    valorCompraPorSaca: 0,
+    valorPorSacaArmazem: 0,
+    quemPagaArmazem: 'Nos',
+    valorVendaPorSaca: 0,
+    nfe: '',
+    valorNfe: 0,
+    valorImpostoPorSaca: 0,
+    comissaoLdPorSaca: 0
   };
 
-  // UI state
   isSubmitting = false;
   submitSuccess = false;
   submitError = '';
 
-  // Computed from form
-  get pesoFinalCalculado(): number {
+  // Propriedades Computadas
+  get sacas(): number {
+    return this.form.quantidadeOrigemKg / 60;
+  }
+
+  get pesoFinal(): number {
     return this.form.pesoDescargaKg - this.form.umidadeKg - this.form.impurezaKg;
   }
 
   get diferencaPeso(): number {
     return this.form.quantidadeOrigemKg - this.form.pesoDescargaKg;
+  }
+
+  get valorTotalFrete(): number {
+    return this.sacas * this.form.custoFretePorSaca;
+  }
+
+  get valorTotalArmazem(): number {
+    return this.sacas * this.form.valorPorSacaArmazem;
+  }
+
+  get totalCompra(): number {
+    const custoProd = this.form.valorCompraPorSaca;
+    const custoFrete = this.form.custoFretePorSaca;
+    const custoArmazem = this.form.quemPagaArmazem === 'Nos' ? this.form.valorPorSacaArmazem : 0;
+    return (custoProd + custoFrete + custoArmazem) * this.sacas;
+  }
+
+  get valorTotalVenda(): number {
+    return this.sacas * this.form.valorVendaPorSaca;
+  }
+
+  get ganhoBruto(): number {
+    return this.valorTotalVenda - this.totalCompra;
+  }
+
+  get imposto(): number {
+    return this.sacas * this.form.valorImpostoPorSaca;
+  }
+
+  get comissaoLd(): number {
+    return this.sacas * this.form.comissaoLdPorSaca;
+  }
+
+  get ganhoLiquido(): number {
+    return this.ganhoBruto - this.imposto - this.comissaoLd;
   }
 
   get contratoSelecionado(): Contrato | undefined {
@@ -62,7 +108,6 @@ export class MovimentacaoFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Pre-populate contratoId from query params if navigating from contrato detalhe
     const contratoId = this.route.snapshot.queryParamMap.get('contratoId');
     if (contratoId) {
       this.form.contratoId = contratoId;
@@ -83,17 +128,29 @@ export class MovimentacaoFormComponent implements OnInit {
     this.apiService.getUsuarios().subscribe(data => {
       this.vendedores = data.filter(u => u.isActive);
     });
+
+    this.apiService.getConfiguracao().subscribe(data => {
+      if (data && data.length > 0) {
+        this.config = data[0];
+        // Preencher valores de configuração padrão
+        this.form.valorImpostoPorSaca = this.config.valorImpostoPorSaca || 0;
+        this.form.comissaoLdPorSaca = this.config.valorComissaoPorSaca || 0;
+      }
+    });
   }
 
-  // Auto-calculate umidade and impureza from percentages when peso changes
   calcularDescontos(): void {
     if (this.form.pesoDescargaKg > 0) {
-      this.form.umidadeKg = parseFloat(
-        (this.form.pesoDescargaKg * (this.form.umidadePorcentagem / 100)).toFixed(2)
-      );
-      this.form.impurezaKg = parseFloat(
-        (this.form.pesoDescargaKg * (this.form.impurezaPorcentagem / 100)).toFixed(2)
-      );
+      // O usuário pediu que umidade e impureza em KG NÃO sejam calculados automaticamente?
+      // "na tela de clientes, os valores de umidade e impurezas, não serão calculados automaticamente" -> Isso se refere a tela de CLIENTES (aquele board que eu fiz?)
+      // Mas em "nova movimentação", ele listou: "umidade (em kg e %, sendo dois campos), impurezas (em kg e porcentagem, sendo dois campos)"
+      // E disse "peso final (com descontos, calculado automaticamente)".
+      // Geralmente KG = % * Peso. Vou manter o cálculo automático aqui na movimentação, a menos que ele queira manual.
+      // Re-lendo: "na tela de clientes, os valores de umidade e impurezas, não serão calculados automaticamente"
+      // No ClienteFormComponent eu não calculei umidade/impureza nos boards, apenas progresso de entrega.
+      // Vou manter automatizado aqui na Movimentação para ajudar o usuário, mas permitindo edição.
+      this.form.umidadeKg = parseFloat((this.form.pesoDescargaKg * (this.form.umidadePorcentagem / 100)).toFixed(2));
+      this.form.impurezaKg = parseFloat((this.form.pesoDescargaKg * (this.form.impurezaPorcentagem / 100)).toFixed(2));
     }
   }
 
@@ -102,19 +159,14 @@ export class MovimentacaoFormComponent implements OnInit {
       this.submitError = 'Preencha todos os campos obrigatórios (Contrato, Produtor, Transportadora e Vendedor).';
       return;
     }
-    if (this.form.pesoDescargaKg <= 0) {
-      this.submitError = 'Informe o Peso de Descarga em Kg.';
-      return;
-    }
 
     this.isSubmitting = true;
     this.submitError = '';
 
     this.apiService.createMovimentacao(this.form).subscribe({
-      next: (result) => {
+      next: () => {
         this.isSubmitting = false;
         this.submitSuccess = true;
-        // Navigate back to contrato detail after 2s
         setTimeout(() => {
           if (this.form.contratoId) {
             this.router.navigate(['/app/contratos/detalhe', this.form.contratoId]);
@@ -132,9 +184,8 @@ export class MovimentacaoFormComponent implements OnInit {
   }
 
   cancelar(): void {
-    const contratoId = this.form.contratoId;
-    if (contratoId) {
-      this.router.navigate(['/app/contratos/detalhe', contratoId]);
+    if (this.form.contratoId) {
+      this.router.navigate(['/app/contratos/detalhe', this.form.contratoId]);
     } else {
       this.router.navigate(['/app/contratos']);
     }

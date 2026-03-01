@@ -11,6 +11,8 @@ namespace FortunatoAgricola.Application.DTOs
         public decimal QuantidadeEntregueKg { get; set; }
         public decimal QuantidadeRestanteKg { get; set; }
         public int QuantidadeEntregas { get; set; }
+        public decimal ValorTotalNfe { get; set; }
+        public decimal PercentualEntregue => QuantidadeTotalKg > 0 ? (QuantidadeEntregueKg / QuantidadeTotalKg) * 100 : 0;
         public bool IsActive { get; set; }
     }
 }

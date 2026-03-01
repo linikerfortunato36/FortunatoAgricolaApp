@@ -29,13 +29,20 @@ namespace FortunatoAgricola.Domain.Entities
         public decimal ValorTotalVenda => QuantidadeSacas * ValorVendaPorSaca;
         public string Nfe { get; set; } = string.Empty;
         public decimal ValorNfe { get; set; }
-        public decimal TotalCompra => ValorTotalCompra + ValorTotalFrete + (QuemPagaArmazem == "Nos" ? ValorTotalArmazem : 0);
+        
+        // Total da Compra = (Compra Saca + Frete Saca + (QuemPagaArmazem == "Nos" ? Armazem Saca : 0)) * Sacas
+        public decimal TotalCompra => (ValorCompraPorSaca + CustoFretePorSaca + (QuemPagaArmazem == "Nos" ? ValorPorSacaArmazem : 0)) * QuantidadeSacas;
+        
         public decimal GanhoBruto => ValorTotalVenda - TotalCompra;
-        public decimal PorcentagemImposto { get; set; }
-        public decimal Imposto => GanhoBruto * (PorcentagemImposto / 100);
-        public decimal ComissaoLdPorSaca { get; set; }
+        
+        public decimal ValorImpostoPorSaca { get; set; } // Vem das configurações
+        public decimal Imposto => QuantidadeSacas * ValorImpostoPorSaca;
+        
+        public decimal ComissaoLdPorSaca { get; set; } // Vem das configurações
         public decimal TotalComissaoLd => QuantidadeSacas * ComissaoLdPorSaca;
+        
         public decimal GanhoLiquido => GanhoBruto - Imposto - TotalComissaoLd;
+        
         public Guid VendedorId { get; set; }
         public Usuario Vendedor { get; set; }
         public string Observacao { get; set; } = string.Empty;

@@ -9,7 +9,9 @@ namespace FortunatoAgricola.Domain.Entities
         public decimal MargemLucro { get; set; }
         public decimal ToleranciaQuebraPeso { get; set; }
         public decimal ToleranciaUmidade { get; set; }
-        public decimal ValorBaseComissaoVendaPorSaca { get; set; }
-        public decimal PorcentagemImposto { get; set; }
+        
+        // Novos campos financeiros globais
+        public decimal ValorImpostoPorSaca { get; set; }
+        public decimal ValorComissaoPorSaca { get; set; }
     }
 }

@@ -1015,6 +1015,10 @@
           "transportadoraId": {
             "type": "string",
             "format": "uuid"
+          },
+          "vendedorId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
