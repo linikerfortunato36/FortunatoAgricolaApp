@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 import { ApiService, Cliente } from '../../../services/api.service';
 import Swal from 'sweetalert2';
 
@@ -14,16 +15,14 @@ import Swal from 'sweetalert2';
 export class ClientesListComponent implements OnInit {
   clientes: Cliente[] = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadClientes();
   }
 
   loadClientes(): void {
-    this.apiService.getClientes().subscribe(data => {
-      this.clientes = data;
-    });
+    this.apiService.getClientes().subscribe(data => this.clientes = data);
   }
 
   onDelete(id: string, nome: string): void {
@@ -40,12 +39,12 @@ export class ClientesListComponent implements OnInit {
       if (result.isConfirmed) {
         this.apiService.deleteCliente(id).subscribe({
           next: () => {
-            Swal.fire('Sucesso!', 'Cliente atualizado com sucesso.', 'success');
+            Swal.fire('Sucesso!', 'Operação realizada com sucesso.', 'success');
             this.loadClientes();
           },
           error: (err) => {
             console.error('Erro ao excluir cliente:', err);
-            const msg = err.error?.Message || err.error?.message || 'Não foi possível excluir o cliente no momento.';
+            const msg = err.error?.Message || err.error?.message || 'Não foi possível realizar a operação no momento.';
             Swal.fire('Atenção', msg, 'warning');
           }
         });

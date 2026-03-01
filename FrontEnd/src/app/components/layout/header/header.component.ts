@@ -43,8 +43,24 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    this.userMenuOpen = false;
+    const target = event.target as HTMLElement;
+    // Don't close if clicking inside the toggle buttons or the menu itself
+    if (!target.closest('.dropdown-toggle') && !target.closest('.dropdown-menu')) {
+      this.userMenuOpen = false;
+      this.notifMenuOpen = false;
+    }
+  }
+
+  toggleUserMenu(event: Event): void {
+    event.stopPropagation();
+    this.userMenuOpen = !this.userMenuOpen;
     this.notifMenuOpen = false;
+  }
+
+  toggleNotifMenu(event: Event): void {
+    event.stopPropagation();
+    this.notifMenuOpen = !this.notifMenuOpen;
+    this.userMenuOpen = false;
   }
 
   onGlobalSearch(): void {

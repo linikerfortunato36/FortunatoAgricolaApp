@@ -20,8 +20,7 @@
         <div class="flex-shrink-0 d-flex align-items-center position-relative">
             <!-- Dropdown Notificações -->
             <div class="dropdown me-2 position-relative">
-                <a href="javascript:void(0)"
-                    (click)="notifMenuOpen = !notifMenuOpen; userMenuOpen = false; $event.stopPropagation()"
+                <a href="javascript:void(0)" (click)="toggleNotifMenu($event)"
                     class="btn btn-outline-secondary rounded-circle border-0 position-relative pt-2 pb-2 dropdown-toggle">
                     <i class="bi bi-bell fs-5"></i>
                     <span *ngIf="notificacoes.length > 0"
@@ -60,8 +59,7 @@
 
             <!-- Dropdown Usuário -->
             <div class="dropdown d-none d-md-block position-relative">
-                <a href="javascript:void(0)"
-                    (click)="userMenuOpen = !userMenuOpen; notifMenuOpen = false; $event.stopPropagation()"
+                <a href="javascript:void(0)" (click)="toggleUserMenu($event)"
                     class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle">
                     <img [src]="'https://ui-avatars.com/api/?name=' + (usuario?.nome || 'User') + '&background=f1c40f&color=0d4a22'"
                         alt="Avatar" width="32" height="32" class="rounded-circle me-2">

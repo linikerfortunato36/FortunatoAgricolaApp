@@ -1,7 +1,7 @@
 <div class="container-fluid g-4 pb-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3 fw-bold text-primary mb-0">Visão Geral</h2>
-        <div class="btn-group shadow-sm">
+        <div class="btn-group shadow-sm" *ngIf="authService.canModify()">
             <button class="btn btn-primary d-flex align-items-center" routerLink="/app/contratos/novo">
                 <i class="bi bi-file-earmark-plus me-2"></i> Novo Contrato
             </button>

@@ -21,7 +21,8 @@ export class AppComponent {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event) => {
       const navEnd = event as NavigationEnd;
-      this.isPublicPage = navEnd.urlAfterRedirects.startsWith('/login');
+      // Trata como página pública se não estiver na rota /app/...
+      this.isPublicPage = !navEnd.urlAfterRedirects.startsWith('/app');
     });
   }
 }

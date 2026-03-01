@@ -15,13 +15,16 @@ import { ConfiguracoesComponent } from './components/configuracoes/configuracoes
 import { MovimentacaoFormComponent } from './components/movimentacoes/movimentacao-form/movimentacao-form.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LandingPageComponent } from './components/public/landing-page/landing-page.component';
 
 export const routes: Routes = [
+    // Landing Page (Página Inicial Pública)
+    { path: '', component: LandingPageComponent },
+
     // Rota de Login pública
     { path: 'login', component: LoginComponent },
 
-    // Redireciona raiz para login (ou dashboard se logado)
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    // Redireciona raiz do app para dashboard se logado
     { path: 'app', redirectTo: '/app/dashboard', pathMatch: 'full' },
 
     // Rotas protegidas pelo AuthGuard

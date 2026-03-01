@@ -193,7 +193,11 @@ namespace FortunatoAgricola.Infrastructure.Services
             GanhoLiquido = m.GanhoLiquido,
             Observacao = m.Observacao,
             DataPrevistaPagamento = m.DataPrevistaPagamento,
-            DataEntrega = m.DataEntrega
+            DataEntrega = m.DataEntrega,
+            CreatedAt = m.CreatedAt,
+            CreatedByName = m.CreatedByName,
+            UpdatedAt = m.UpdatedAt,
+            UpdatedByName = m.UpdatedByName
         };
     }
 }

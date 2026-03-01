@@ -16,13 +16,19 @@ namespace FortunatoAgricola.Infrastructure.Services
 
         public Guid? GetUserId()
         {
-            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = _httpContextAccessor.HttpContext?.User;
+            var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                        ?? user?.FindFirst("sub")?.Value 
+                        ?? user?.FindFirst("id")?.Value;
             return Guid.TryParse(userId, out var guid) ? guid : null;
         }
 
         public string? GetUserName()
         {
-            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
+            var user = _httpContextAccessor.HttpContext?.User;
+            return user?.FindFirst(ClaimTypes.Name)?.Value 
+                   ?? user?.FindFirst("name")?.Value 
+                   ?? user?.Identity?.Name;
         }
     }
 }

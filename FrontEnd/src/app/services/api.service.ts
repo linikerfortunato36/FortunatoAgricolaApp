@@ -68,6 +68,9 @@ export interface Contrato {
   percentualEntregue: number;
   isActive: boolean;
   createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface Usuario {
@@ -76,6 +79,10 @@ export interface Usuario {
   login: string;
   perfil: string;
   isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdByName?: string;
+  updatedByName?: string;
 }
 
 export interface Movimentacao {
@@ -124,6 +131,9 @@ export interface Movimentacao {
   dataPrevistaPagamento?: string;
   dataEntrega?: string;
   createdAt?: string;
+  createdByName?: string;
+  updatedAt?: string;
+  updatedByName?: string;
 }
 
 export interface CreateMovimentacaoPayload {

@@ -1,21 +1,22 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FortunatoAgricola.Application.DTOs;
 using FortunatoAgricola.Application.Interfaces;
 
 namespace FortunatoAgricola.API.Controllers
 {
-    [ApiController]
+        [ApiController]
     [Route("api/[controller]")]
     public class ClientesController : ControllerBase
     {
         private readonly IClienteService _service;
         public ClientesController(IClienteService service) => _service = service;
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -23,6 +24,7 @@ namespace FortunatoAgricola.API.Controllers
             return c == null ? NotFound() : Ok(c);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateClienteDto dto)
         {
@@ -30,6 +32,7 @@ namespace FortunatoAgricola.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = c.Id }, c);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateClienteDto dto)
         {
@@ -37,6 +40,7 @@ namespace FortunatoAgricola.API.Controllers
             return Ok(await _service.UpdateAsync(dto));
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

@@ -31,7 +31,11 @@ namespace FortunatoAgricola.Infrastructure.Services
                 Nome = p.Nome,
                 CpfCnpj = p.CpfCnpj,
                 InscricaoEstadual = p.InscricaoEstadual,
-                IsActive = p.IsActive
+                IsActive = p.IsActive,
+                CreatedAt = p.CreatedAt,
+                CreatedByName = p.CreatedByName,
+                UpdatedAt = p.UpdatedAt,
+                UpdatedByName = p.UpdatedByName
             });
         }
 
@@ -46,7 +50,11 @@ namespace FortunatoAgricola.Infrastructure.Services
                 Nome = p.Nome,
                 CpfCnpj = p.CpfCnpj,
                 InscricaoEstadual = p.InscricaoEstadual,
-                IsActive = p.IsActive
+                IsActive = p.IsActive,
+                CreatedAt = p.CreatedAt,
+                CreatedByName = p.CreatedByName,
+                UpdatedAt = p.UpdatedAt,
+                UpdatedByName = p.UpdatedByName
             };
         }
 

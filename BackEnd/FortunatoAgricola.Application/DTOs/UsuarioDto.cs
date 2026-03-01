@@ -7,5 +7,10 @@ namespace FortunatoAgricola.Application.DTOs
         public string Login { get; set; } = string.Empty;
         public string Perfil { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public string? CreatedByName { get; set; }
+        public string? UpdatedByName { get; set; }
     }
 }
+

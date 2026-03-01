@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService, Produtor } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,7 +15,7 @@ import Swal from 'sweetalert2';
 export class ProdutoresListComponent implements OnInit {
   produtores: Produtor[] = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadProdutores();

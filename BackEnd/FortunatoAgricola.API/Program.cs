@@ -14,7 +14,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        policy.SetIsOriginAllowed(_ => true)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -61,7 +64,8 @@ else
 }
 
 // Autenticação JWT
-var key = Encoding.ASCII.GetBytes("SuperSecretKeyThatIsAtLeast32BytesLongForHS256");
+var secretKey = builder.Configuration["JwtSettings:SecretKey"] ?? "SuperSecretKeyThatIsAtLeast32BytesLongForHS256";
+var key = Encoding.UTF8.GetBytes(secretKey);
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -89,9 +93,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    // NÃO usar Redirection em DEV para evitar erro 307 que remove headers de autenticação
 }
-
-app.UseHttpsRedirection();
+else 
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

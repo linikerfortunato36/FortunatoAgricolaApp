@@ -25,6 +25,7 @@
                             <th class="ps-4">NOME / E-MAIL</th>
                             <th>PERFIL DE ACESSO</th>
                             <th>STATUS</th>
+                            <th>ÚLTIMA ALTERAÇÃO</th>
                             <th class="text-end pe-4">AÇÕES</th>
                         </tr>
                     </thead>
@@ -35,7 +36,7 @@
                             </td>
                             <td>
                                 <span class="badge px-3 rounded-pill"
-                                    [ngClass]="u.perfil === 'Admin' ? 'bg-danger bg-opacity-10 text-danger' : 'bg-info bg-opacity-10 text-primary'">
+                                    [ngClass]="u.perfil === 'Administrador' ? 'bg-danger bg-opacity-10 text-danger' : 'bg-info bg-opacity-10 text-primary'">
                                     {{ u.perfil }}
                                 </span>
                             </td>
@@ -45,22 +46,37 @@
                                     {{ u.isActive ? 'Ativo' : 'Inativo' }}
                                 </span>
                             </td>
+                            <td>
+                                <div class="small fw-bold text-dark" *ngIf="u.updatedAt; else showCreated">
+                                    <i class="bi bi-person text-muted me-1"></i>{{ u.updatedByName || 'Sistema' }}
+                                    <div class="text-muted small fw-normal">{{ u.updatedAt | date:'dd/MM/yy HH:mm' }}
+                                    </div>
+                                </div>
+                                <ng-template #showCreated>
+                                    <div class="small fw-bold text-dark" *ngIf="u.createdAt">
+                                        <i class="bi bi-person text-muted me-1"></i>{{ u.createdByName || 'Sistema' }}
+                                        <div class="text-muted small fw-normal">{{ u.createdAt | date:'dd/MM/yy HH:mm'
+                                            }}</div>
+                                    </div>
+                                    <div class="small text-muted" *ngIf="!u.createdAt">-</div>
+                                </ng-template>
+                            </td>
                             <td class="text-end pe-4">
-                                <div class="btn-group">
+                                <div class="btn-group" *ngIf="authService.getUsuario()?.perfil === 'Administrador'">
                                     <button [routerLink]="['/app/usuarios/editar', u.id]"
                                         class="btn btn-sm btn-outline-secondary" title="Editar Usuário">
                                         <i class="bi bi-pencil-fill"></i> Editar
                                     </button>
                                     <button (click)="deleteUsuario(u.id)"
                                         class="btn btn-sm btn-outline-danger shadow-sm"
-                                        [disabled]="u.perfil === 'Admin'" title="Inativar/Excluir">
+                                        [disabled]="u.perfil === 'Administrador'" title="Inativar/Excluir">
                                         <i class="bi bi-ban"></i>
                                     </button>
                                 </div>
                             </td>
                         </tr>
                         <tr *ngIf="usuarios.length === 0">
-                            <td colspan="4" class="text-center py-4 text-muted">Ainda não há usuários cadastrados.</td>
+                            <td colspan="5" class="text-center py-4 text-muted">Ainda não há usuários cadastrados.</td>
                         </tr>
                     </tbody>
                 </table>

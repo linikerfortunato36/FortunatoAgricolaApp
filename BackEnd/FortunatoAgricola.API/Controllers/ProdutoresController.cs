@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FortunatoAgricola.Application.DTOs;
 using FortunatoAgricola.Application.Interfaces;
 
 namespace FortunatoAgricola.API.Controllers
 {
-    [ApiController]
+        [ApiController]
     [Route("api/[controller]")]
     public class ProdutoresController : ControllerBase
     {
@@ -16,14 +17,14 @@ namespace FortunatoAgricola.API.Controllers
         {
             _produtorService = produtorService;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var produtores = await _produtorService.GetAllAsync();
             return Ok(produtores);
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -32,6 +33,7 @@ namespace FortunatoAgricola.API.Controllers
             return Ok(produtor);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProdutorDto dto)
         {
@@ -39,6 +41,7 @@ namespace FortunatoAgricola.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = p.Id }, p);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateProdutorDto dto)
         {
@@ -48,6 +51,7 @@ namespace FortunatoAgricola.API.Controllers
             return Ok(p);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

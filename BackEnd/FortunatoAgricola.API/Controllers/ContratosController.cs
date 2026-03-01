@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FortunatoAgricola.Application.DTOs;
 using FortunatoAgricola.Application.Interfaces;
 
 namespace FortunatoAgricola.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ContratosController : ControllerBase
@@ -16,7 +18,6 @@ namespace FortunatoAgricola.API.Controllers
         {
             _contratoService = contratoService;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

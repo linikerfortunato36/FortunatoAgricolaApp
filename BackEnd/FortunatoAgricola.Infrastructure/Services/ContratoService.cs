@@ -39,7 +39,11 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
                 QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
-                IsActive = c.IsActive
+                IsActive = c.IsActive,
+                CreatedAt = c.CreatedAt,
+                CreatedByName = c.CreatedByName,
+                UpdatedAt = c.UpdatedAt,
+                UpdatedByName = c.UpdatedByName
             });
         }
 
@@ -64,7 +68,11 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
                 QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
-                IsActive = c.IsActive
+                IsActive = c.IsActive,
+                CreatedAt = c.CreatedAt,
+                CreatedByName = c.CreatedByName,
+                UpdatedAt = c.UpdatedAt,
+                UpdatedByName = c.UpdatedByName
             };
         }
 
@@ -124,7 +132,11 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
                 QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
-                IsActive = c.IsActive
+                IsActive = c.IsActive,
+                CreatedAt = c.CreatedAt,
+                CreatedByName = c.CreatedByName,
+                UpdatedAt = c.UpdatedAt,
+                UpdatedByName = c.UpdatedByName
             });
         }
 

@@ -101,6 +101,7 @@
                             <th>P. FINAL (Kg)</th>
                             <th>NF-e</th>
                             <th>VEND.</th>
+                            <th>ÚLTIMA ALTERAÇÃO</th>
                             <th class="pe-3 text-end">AÇÕES</th>
                         </tr>
                     </thead>
@@ -121,6 +122,17 @@
                             <td class="fw-bold text-primary">{{ m.pesoFinal | number }}</td>
                             <td>{{ m.nfe || '—' }}</td>
                             <td>{{ m.vendedorNome || '—' }}</td>
+                            <td class="small text-muted">
+                                <div *ngIf="m.updatedByName">
+                                    <i class="bi bi-person text-muted me-1"></i>{{ m.updatedByName }}
+                                    <div class="x-small">{{ m.updatedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                                </div>
+                                <div *ngIf="!m.updatedByName && m.createdByName">
+                                    <i class="bi bi-person text-muted me-1"></i>{{ m.createdByName }}
+                                    <div class="x-small">{{ m.createdAt | date:'dd/MM/yyyy' }}</div>
+                                </div>
+                                <div *ngIf="!m.updatedByName && !m.createdByName">--</div>
+                            </td>
                             <td class="pe-3 text-end">
                                 <button (click)="visualizarMovimento(m)" class="btn btn-sm btn-light border me-1"
                                     title="Visualizar Detalhes">

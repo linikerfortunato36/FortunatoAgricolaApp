@@ -67,4 +67,9 @@ export class AuthService {
         const str = localStorage.getItem('usuario');
         return str ? JSON.parse(str) : null;
     }
+
+    canModify(): boolean {
+        const usuario = this.getUsuario();
+        return usuario?.perfil === 'Administrador' || usuario?.perfil === 'Operador';
+    }
 }

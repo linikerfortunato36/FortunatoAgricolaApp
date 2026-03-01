@@ -48,5 +48,10 @@ namespace FortunatoAgricola.Application.DTOs
         public string Observacao { get; set; } = string.Empty;
         public DateTime? DataPrevistaPagamento { get; set; }
         public DateTime? DataEntrega { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
+        public string? CreatedByName { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public string? UpdatedByName { get; set; }
     }
 }

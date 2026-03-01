@@ -16,13 +16,33 @@ namespace FortunatoAgricola.Infrastructure.Services
         public UsuarioService(ApplicationDbContext context) => _context = context;
 
         private static UsuarioDto ToDto(Usuario u) =>
-            new UsuarioDto { Id = u.Id, Nome = u.Nome, Login = u.Login, Perfil = u.Perfil, IsActive = u.IsActive };
+            new UsuarioDto { 
+                Id = u.Id, 
+                Nome = u.Nome, 
+                Login = u.Login, 
+                Perfil = u.Perfil, 
+                IsActive = u.IsActive, 
+                CreatedAt = u.CreatedAt, 
+                UpdatedAt = u.UpdatedAt,
+                CreatedByName = u.CreatedByName,
+                UpdatedByName = u.UpdatedByName
+            };
 
         public async Task<IEnumerable<UsuarioDto>> GetAllAsync()
         {
             return await _context.Usuarios
                 .OrderBy(u => u.Nome)
-                .Select(u => new UsuarioDto { Id = u.Id, Nome = u.Nome, Login = u.Login, Perfil = u.Perfil, IsActive = u.IsActive })
+                .Select(u => new UsuarioDto { 
+                    Id = u.Id, 
+                    Nome = u.Nome, 
+                    Login = u.Login, 
+                    Perfil = u.Perfil, 
+                    IsActive = u.IsActive,
+                    CreatedAt = u.CreatedAt,
+                    UpdatedAt = u.UpdatedAt,
+                    CreatedByName = u.CreatedByName,
+                    UpdatedByName = u.UpdatedByName
+                })
                 .ToListAsync();
         }
 

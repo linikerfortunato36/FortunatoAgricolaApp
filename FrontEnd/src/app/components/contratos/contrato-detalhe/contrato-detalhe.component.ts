@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Contrato, Movimentacao } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-contrato-detalhe',
@@ -20,7 +21,8 @@ export class ContratoDetalheComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -84,13 +86,10 @@ export class ContratoDetalheComponent implements OnInit {
         // Add Logo
         if (this.configuracao?.logoBase64) {
           try {
-            // Assuming the logo is a base64 image (either data:image/... or just raw base64)
-            // If it doesn't have the data URL prefix, one might be needed, but usually it's saved with it.
             let logoStr = this.configuracao.logoBase64;
             if (!logoStr.startsWith('data:image')) {
               logoStr = 'data:image/png;base64,' + logoStr;
             }
-            // Adding a small logo at top right corner
             doc.addImage(logoStr, 'PNG', 150, 10, 40, 20, undefined, 'FAST');
           } catch (e) {
             console.error('Erro ao incluir logo', e);
@@ -111,7 +110,6 @@ export class ContratoDetalheComponent implements OnInit {
         doc.text(`Total Entregue: ${c.quantidadeEntregueKg.toLocaleString('pt-BR')} Kg`, 100, 38);
         doc.text(`Status Atual: ${c.status}`, 100, 44);
 
-        // Calculate some totals
         const totalVenda = this.movimentacoes.reduce((sum, m) => sum + (m.valorTotalVenda || 0), 0);
         const totalCustoFrete = this.movimentacoes.reduce((sum, m) => sum + (m.valorTotalFrete || 0), 0);
         const totalNFes = this.movimentacoes.reduce((sum, m) => sum + (m.valorNfe || 0), 0);
@@ -151,4 +149,3 @@ export class ContratoDetalheComponent implements OnInit {
     return (this.contrato.quantidadeEntregueKg / this.contrato.quantidadeTotalKg) * 100;
   }
 }
-

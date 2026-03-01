@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using FortunatoAgricola.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace FortunatoAgricola.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class DashboardController : ControllerBase
@@ -17,7 +19,6 @@ namespace FortunatoAgricola.API.Controllers
             var stats = await _dashboardService.GetDashboardStatsAsync();
             return Ok(stats);
         }
-
         [HttpGet("notificacoes")]
         public async Task<IActionResult> GetNotificacoes()
         {

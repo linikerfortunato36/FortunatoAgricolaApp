@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Contrato, Cliente } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-contratos-list',
@@ -20,7 +21,7 @@ export class ContratosListComponent implements OnInit {
   filtroClienteId: string | null = null;
   filtroNumero = '';
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.carregarContratos();

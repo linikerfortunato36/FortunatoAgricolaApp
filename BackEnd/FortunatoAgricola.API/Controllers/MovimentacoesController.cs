@@ -1,11 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FortunatoAgricola.Application.DTOs;
 using FortunatoAgricola.Application.Interfaces;
+using System.Linq;
 
 namespace FortunatoAgricola.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MovimentacoesController : ControllerBase
@@ -16,7 +19,6 @@ namespace FortunatoAgricola.API.Controllers
         {
             _movimentacaoService = movimentacaoService;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -63,6 +65,7 @@ namespace FortunatoAgricola.API.Controllers
             await _movimentacaoService.DeleteAsync(id);
             return NoContent();
         }
+
         [HttpGet("by-produtor/{produtorId}")]
         public async Task<IActionResult> GetByProdutor(Guid produtorId)
         {
