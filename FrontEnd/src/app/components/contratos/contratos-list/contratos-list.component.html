@@ -4,9 +4,17 @@
             <h2 class="h3 fw-bold text-dark mb-1">Contratos</h2>
             <p class="text-muted mb-0 small">Visualização de contratos firmados e seu acompanhamento diário.</p>
         </div>
-        <button routerLink="/app/contratos/novo" class="btn btn-primary d-flex align-items-center">
-            <i class="bi bi-file-earmark-plus me-2"></i> Novo Contrato
-        </button>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-success d-flex align-items-center gap-2" (click)="exportarPDF()"
+                [disabled]="getContratosFiltrados().length === 0" title="Exportar lista filtrada como PDF">
+                <i class="bi bi-file-earmark-pdf-fill"></i>
+                <span>Exportar PDF</span>
+                <span class="badge bg-success text-white ms-1">{{ getContratosFiltrados().length }}</span>
+            </button>
+            <button routerLink="/app/contratos/novo" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-plus"></i> Novo Contrato
+            </button>
+        </div>
     </div>
 
     <div class="card shadow-sm border-0">
