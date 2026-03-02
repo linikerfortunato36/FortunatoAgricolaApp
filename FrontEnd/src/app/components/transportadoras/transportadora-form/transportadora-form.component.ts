@@ -27,6 +27,8 @@ export class TransportadoraFormComponent implements OnInit {
 
   loading = false;
   submitting = false;
+  cnpjCarregando = false;
+  cnpjErro = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +53,32 @@ export class TransportadoraFormComponent implements OnInit {
         }
       });
     }
+  }
+
+  buscarCnpj(): void {
+    const cnpj = (this.transportadora.cpfCnpj ?? '').replace(/\D/g, '');
+    if (cnpj.length !== 14) return;
+    this.cnpjCarregando = true;
+    this.cnpjErro = '';
+    this.apiService.getBrasilApiCNPJ(cnpj).subscribe({
+      next: (data: any) => {
+        if (data) {
+          if (data.razaoSocial || data.razao_social) this.transportadora.nome = data.razaoSocial ?? data.razao_social;
+          if (data.email) this.transportadora.email = data.email;
+          if (data.cep) this.transportadora.cep = data.cep;
+          if (data.logradouro) this.transportadora.logradouro = data.logradouro;
+          if (data.numero) this.transportadora.numero = data.numero;
+          if (data.bairro) this.transportadora.bairro = data.bairro;
+          if (data.municipio || data.cidade) this.transportadora.cidade = data.municipio ?? data.cidade;
+          if (data.uf || data.estado) this.transportadora.estado = data.uf ?? data.estado;
+        }
+        this.cnpjCarregando = false;
+      },
+      error: () => {
+        this.cnpjErro = 'CNPJ não encontrado ou inválido.';
+        this.cnpjCarregando = false;
+      }
+    });
   }
 
   onSubmit(): void {

@@ -114,8 +114,23 @@
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-dark">CNPJ / CPF *</label>
-                                <input type="text" class="form-control" [(ngModel)]="transportadora.cpfCnpj"
-                                    name="cpfCnpj" placeholder="00.000.000/0001-00" required>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" [(ngModel)]="transportadora.cpfCnpj"
+                                        name="cpfCnpj" placeholder="00.000.000/0001-00" required (blur)="buscarCnpj()">
+                                    <span class="input-group-text" *ngIf="cnpjCarregando">
+                                        <span class="spinner-border spinner-border-sm text-success"></span>
+                                    </span>
+                                    <span class="input-group-text text-success"
+                                        *ngIf="!cnpjCarregando && !cnpjErro && transportadora.nome">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </span>
+                                </div>
+                                <div *ngIf="cnpjErro" class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ cnpjErro }}
+                                </div>
+                                <div *ngIf="cnpjCarregando" class="text-muted small mt-1">
+                                    <i class="bi bi-search me-1"></i>Consultando CNPJ na Receita Federal...
+                                </div>
                             </div>
 
                             <div class="col-md-2">

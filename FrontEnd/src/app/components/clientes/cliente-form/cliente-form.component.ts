@@ -31,8 +31,10 @@ export class ClienteFormComponent implements OnInit {
 
   loading = false;
   submitting = false;
-  activeTab = 'form'; // 'boards' ou 'form'
+  activeTab = 'form';
   contratos: any[] = [];
+  cnpjCarregando = false;
+  cnpjErro = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -73,6 +75,32 @@ export class ClienteFormComponent implements OnInit {
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+  }
+
+  buscarCnpj(): void {
+    const cnpj = (this.cliente.cnpj ?? '').replace(/\D/g, '');
+    if (cnpj.length !== 14) return; // só CNPJ tem 14 dígitos
+    this.cnpjCarregando = true;
+    this.cnpjErro = '';
+    this.apiService.getBrasilApiCNPJ(cnpj).subscribe({
+      next: (data: any) => {
+        if (data) {
+          if (data.razaoSocial || data.razao_social) this.cliente.nome = data.razaoSocial ?? data.razao_social;
+          if (data.email) this.cliente.email = data.email;
+          if (data.cep) this.cliente.cep = data.cep;
+          if (data.logradouro) this.cliente.logradouro = data.logradouro;
+          if (data.numero) this.cliente.numero = data.numero;
+          if (data.bairro) this.cliente.bairro = data.bairro;
+          if (data.municipio || data.cidade) this.cliente.cidade = data.municipio ?? data.cidade;
+          if (data.uf || data.estado) this.cliente.estado = data.uf ?? data.estado;
+        }
+        this.cnpjCarregando = false;
+      },
+      error: () => {
+        this.cnpjErro = 'CNPJ não encontrado ou inválido.';
+        this.cnpjCarregando = false;
+      }
+    });
   }
 
   getProgressoWidth(entregue: number, total: number): number {

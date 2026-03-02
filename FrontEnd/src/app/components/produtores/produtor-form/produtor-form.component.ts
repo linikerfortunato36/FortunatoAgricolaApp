@@ -31,6 +31,8 @@ export class ProdutorFormComponent implements OnInit {
 
   loading = false;
   submitting = false;
+  cnpjCarregando = false;
+  cnpjErro = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -112,6 +114,29 @@ export class ProdutorFormComponent implements OnInit {
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+  }
+
+  buscarCnpj(): void {
+    const cnpj = (this.produtor.cpfCnpj ?? '').replace(/\D/g, '');
+    if (cnpj.length !== 14) return; // só CNPJ; CPF tem 11 dígitos e não é consultado
+    this.cnpjCarregando = true;
+    this.cnpjErro = '';
+    this.apiService.getBrasilApiCNPJ(cnpj).subscribe({
+      next: (data: any) => {
+        if (data) {
+          if (data.razaoSocial || data.razao_social) this.produtor.nome = data.razaoSocial ?? data.razao_social;
+          if (data.email) this.produtor.email = data.email;
+          if (data.telefone || data.ddd_telefone_1) {
+            this.produtor.telefone = data.telefone ?? data.ddd_telefone_1;
+          }
+        }
+        this.cnpjCarregando = false;
+      },
+      error: () => {
+        this.cnpjErro = 'CNPJ não encontrado ou inválido.';
+        this.cnpjCarregando = false;
+      }
+    });
   }
 
   getProgressoWidth(entregue: number, total: number): number {

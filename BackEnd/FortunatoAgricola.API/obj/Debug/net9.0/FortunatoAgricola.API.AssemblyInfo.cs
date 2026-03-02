@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FortunatoAgricola.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2703bbd20cd0728d389c847d9a4232ca39c129fa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5998f130e11e48ce8f64e76d3f674ccb9d0593a")]
 [assembly: System.Reflection.AssemblyProductAttribute("FortunatoAgricola.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FortunatoAgricola.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

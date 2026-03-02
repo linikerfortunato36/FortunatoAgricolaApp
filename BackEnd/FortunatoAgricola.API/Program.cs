@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProdutorService, ProdutorService>();
 builder.Services.AddScoped<IContratoService, ContratoService>();
 builder.Services.AddScoped<IMovimentacaoService, MovimentacaoService>();
@@ -32,6 +32,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
+builder.Services.AddScoped<IBrasilApiService, BrasilApiService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

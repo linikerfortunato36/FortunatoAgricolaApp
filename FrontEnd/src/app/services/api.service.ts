@@ -315,4 +315,10 @@ export class ApiService {
   updateConfiguracao(config: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/Configuracoes`, config);
   }
+
+  // BrasilAPI — Consulta de CNPJ
+  getBrasilApiCNPJ(cnpj: string): Observable<any> {
+    const cnpjLimpo = cnpj.replace(/\D/g, '');
+    return this.http.get<any>(`${this.baseUrl}/BrasilApi/${cnpjLimpo}`);
+  }
 }
