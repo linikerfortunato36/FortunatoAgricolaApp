@@ -6,6 +6,7 @@ using FortunatoAgricola.Infrastructure.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,11 +47,22 @@ var useMySql = builder.Configuration.GetValue<bool>("UseMySQL", false);
 
 if (useMySql)
 {
+    // IMPORTANTE: Não usar ServerVersion.AutoDetect() em produção — faz uma conexão de rede
+    // antes da API inicializar e causa timeout se o banco for remoto.
+    // Use a versão exata do seu MySQL (verifique com: SELECT VERSION() no Workbench)
+    var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-               .EnableSensitiveDataLogging()
-               .EnableDetailedErrors();
+        options.UseMySql(connectionString, serverVersion, mySqlOptions =>
+        {
+            mySqlOptions.CommandTimeout(60);          // Timeout por query (segundos)
+            mySqlOptions.EnableRetryOnFailure(        // Reconectão automática
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        })
+        .EnableDetailedErrors();
     });
     Console.WriteLine("✅ Banco de dados: MySQL (modo produção)");
 }
@@ -109,7 +121,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    FortunatoAgricola.API.DbInitializer.Initialize(services);
+    await FortunatoAgricola.API.DbInitializer.InitializeAsync(services);
 }
 
 app.Run();

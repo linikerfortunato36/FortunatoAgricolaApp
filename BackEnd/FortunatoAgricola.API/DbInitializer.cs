@@ -1,64 +1,84 @@
 using FortunatoAgricola.Domain.Entities;
 using FortunatoAgricola.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FortunatoAgricola.API
 {
     public static class DbInitializer
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
             using var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
-            
-            context.Database.EnsureCreated();
 
-            if (context.Contratos.Any())
+            // ── Aplicar migrations / criar banco ──────────────────────────
+            // MigrateAsync aplica todas as migrations pendentes (MySQL/relacional).
+            // Para InMemory, EnsureCreatedAsync é suficiente (não suporta migrations).
+            var isRelational = context.Database.IsRelational();
+            if (isRelational)
             {
-                return;   // DB has been seeded
+                try
+                {
+                    Console.WriteLine("⏳ Verificando e aplicando migrations pendentes...");
+                    await context.Database.MigrateAsync();
+                    Console.WriteLine("✅ Migrations aplicadas com sucesso.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Erro ao aplicar migrations: {ex.Message}");
+                    throw;
+                }
             }
+            else
+            {
+                await context.Database.EnsureCreatedAsync();
+                Console.WriteLine("✅ Banco InMemory inicializado.");
+            }
+
+            // ── Seed de dados iniciais (apenas se banco estiver vazio) ────
+            if (await context.Contratos.AnyAsync())
+                return; // DB já foi populado
+
+            Console.WriteLine("🌱 Populando dados iniciais...");
 
             var cliente1 = new Cliente { Id = Guid.NewGuid(), Nome = "Cargill Agrícola", Cnpj = "11.222.333/0001-44" };
             var cliente2 = new Cliente { Id = Guid.NewGuid(), Nome = "Bunge Alimentos", Cnpj = "55.666.777/0001-88" };
-            
             context.Clientes.AddRange(cliente1, cliente2);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             var contrato1 = new Contrato
             {
                 Id = Guid.NewGuid(),
                 ClienteId = cliente1.Id,
                 NumeroContrato = "003/26",
-                QuantidadeTotalKg = 20000000, // 20.000 t
+                QuantidadeTotalKg = 20000000,
                 QuantidadeEntregueKg = 0,
                 Status = "Aberto"
             };
-
             var contrato2 = new Contrato
             {
                 Id = Guid.NewGuid(),
                 ClienteId = cliente1.Id,
                 NumeroContrato = "001/26",
-                QuantidadeTotalKg = 60000000, // 60.000 t
-                QuantidadeEntregueKg = 40000000, // 40.000 t
+                QuantidadeTotalKg = 60000000,
+                QuantidadeEntregueKg = 40000000,
                 Status = "Em Andamento"
             };
-            
             var contrato3 = new Contrato
             {
                 Id = Guid.NewGuid(),
                 ClienteId = cliente2.Id,
                 NumeroContrato = "014/25",
-                QuantidadeTotalKg = 10000000, 
+                QuantidadeTotalKg = 10000000,
                 QuantidadeEntregueKg = 10000000,
                 Status = "Finalizado"
             };
-
             context.Contratos.AddRange(contrato1, contrato2, contrato3);
-            context.SaveChanges();
-            
+            await context.SaveChangesAsync();
+
             var produtor = new Produtor { Id = Guid.NewGuid(), Nome = "Fazenda Boa Vista", CpfCnpj = "12.345.678/0001-90" };
             var produtor2 = new Produtor { Id = Guid.NewGuid(), Nome = "Grupo Sperafico", CpfCnpj = "98.765.432/0001-10" };
             context.Produtores.AddRange(produtor, produtor2);
-            
+
             var transportadora = new Transportadora { Id = Guid.NewGuid(), Nome = "Expresso Safra LTDA", CpfCnpj = "98.765.432/0001-01" };
             var transportadora2 = new Transportadora { Id = Guid.NewGuid(), Nome = "Transgrãos Mato Grosso", CpfCnpj = "11.222.333/0001-99" };
             context.Transportadoras.AddRange(transportadora, transportadora2);
@@ -75,7 +95,8 @@ namespace FortunatoAgricola.API
             };
             context.Usuarios.Add(adminUser);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            Console.WriteLine("✅ Dados iniciais inseridos com sucesso.");
         }
     }
 }
