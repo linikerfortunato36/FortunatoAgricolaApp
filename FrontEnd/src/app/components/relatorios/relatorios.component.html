@@ -319,6 +319,8 @@
                             <th class="text-end">Total Frete</th>
                             <th class="text-end">Armazém (nós)</th>
                             <th class="text-end">Armazém (cliente)</th>
+                            <th class="text-end">Imposto</th>
+                            <th class="text-end">Comissão</th>
                             <th class="text-end">Ganho Bruto</th>
                             <th class="text-end">Ganho Líquido</th>
                         </tr>
@@ -334,6 +336,10 @@
                             <td class="text-end text-danger">{{ c.totalNos | currency:'BRL':'symbol':'1.2-2' }}</td>
                             <td class="text-end text-success">{{ c.totalCliente | currency:'BRL':'symbol':'1.2-2' }}
                             </td>
+                            <td class="text-end text-warning fw-bold">{{ c.totalImposto |
+                                currency:'BRL':'symbol':'1.2-2' }}</td>
+                            <td class="text-end" style="color:#7c3aed;font-weight:600">{{ c.totalComissao |
+                                currency:'BRL':'symbol':'1.2-2' }}</td>
                             <td class="text-end fw-bold">{{ c.ganhoBruto | currency:'BRL':'symbol':'1.2-2' }}</td>
                             <td class="text-end fw-bold text-success">{{ c.ganhoLiquido |
                                 currency:'BRL':'symbol':'1.2-2' }}</td>
@@ -349,6 +355,10 @@
                             <td class="text-end">{{ balancoContratosTotais.armazem | currency:'BRL':'symbol':'1.2-2' }}
                             </td>
                             <td></td>
+                            <td class="text-end">{{ balancoContratosTotais.imposto | currency:'BRL':'symbol':'1.2-2' }}
+                            </td>
+                            <td class="text-end">{{ balancoContratosTotais.comissao | currency:'BRL':'symbol':'1.2-2' }}
+                            </td>
                             <td class="text-end">{{ balancoContratosTotais.ganhoBruto | currency:'BRL':'symbol':'1.2-2'
                                 }}</td>
                             <td class="text-end text-success">{{ balancoContratosTotais.ganhoLiquido |

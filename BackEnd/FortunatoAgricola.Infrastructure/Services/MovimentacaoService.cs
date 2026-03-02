@@ -23,9 +23,11 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var movimentacoes = await _context.Movimentacoes
                 .Include(m => m.Contrato)
+                    .ThenInclude(c => c.Cliente)
                 .Include(m => m.ProdutorOrigem)
                 .Include(m => m.Transportadora)
                 .Include(m => m.Vendedor)
+                .Where(m => !m.IsDeleted)
                 .OrderByDescending(m => m.Data)
                 .ToListAsync();
 
@@ -36,10 +38,11 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var movimentacoes = await _context.Movimentacoes
                 .Include(m => m.Contrato)
+                    .ThenInclude(c => c.Cliente)
                 .Include(m => m.ProdutorOrigem)
                 .Include(m => m.Transportadora)
                 .Include(m => m.Vendedor)
-                .Where(m => m.ContratoId == contratoId)
+                .Where(m => m.ContratoId == contratoId && !m.IsDeleted)
                 .OrderByDescending(m => m.Data)
                 .ToListAsync();
             return movimentacoes.Select(m => MapToDto(m));
@@ -49,10 +52,11 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var m = await _context.Movimentacoes
                 .Include(mov => mov.Contrato)
+                    .ThenInclude(c => c.Cliente)
                 .Include(mov => mov.ProdutorOrigem)
                 .Include(mov => mov.Transportadora)
                 .Include(mov => mov.Vendedor)
-                .FirstOrDefaultAsync(mov => mov.Id == id);
+                .FirstOrDefaultAsync(mov => mov.Id == id && !mov.IsDeleted);
 
             if (m == null) return null;
             return MapToDto(m);
@@ -191,10 +195,16 @@ namespace FortunatoAgricola.Infrastructure.Services
             await _context.SaveChangesAsync();
         }
 
+        private static readonly TimeZoneInfo BrasiliaZone =
+            TimeZoneInfo.FindSystemTimeZoneById(OperatingSystem.IsWindows() ? "E. South America Standard Time" : "America/Sao_Paulo");
+
+        private static DateTime ToBrasilia(DateTime utcDate)
+            => TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utcDate, DateTimeKind.Utc), BrasiliaZone);
+
         private static MovimentacaoDto MapToDto(Movimentacao m) => new MovimentacaoDto
         {
             Id = m.Id,
-            Data = m.Data,
+            Data = ToBrasilia(m.Data),
             ContratoId = m.ContratoId,
             ContratoNumero = m.Contrato?.NumeroContrato ?? string.Empty,
             ClienteNome = m.Contrato?.Cliente?.Nome ?? string.Empty,

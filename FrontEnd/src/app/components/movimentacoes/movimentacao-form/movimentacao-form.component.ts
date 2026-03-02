@@ -130,11 +130,14 @@ export class MovimentacaoFormComponent implements OnInit {
     });
 
     this.apiService.getConfiguracao().subscribe(data => {
-      if (data && data.length > 0) {
-        this.config = data[0];
-        // Preencher valores de configuração padrão
-        this.form.valorImpostoPorSaca = this.config.valorImpostoPorSaca || 0;
-        this.form.comissaoLdPorSaca = this.config.valorComissaoPorSaca || 0;
+      if (data) {
+        // getConfiguracao retorna objeto único, não array
+        const cfg = Array.isArray(data) ? data[0] : data;
+        if (cfg) {
+          this.config = cfg;
+          this.form.valorImpostoPorSaca = cfg.valorImpostoPorSaca || 0;
+          this.form.comissaoLdPorSaca = cfg.valorComissaoPorSaca || 0;
+        }
       }
     });
   }

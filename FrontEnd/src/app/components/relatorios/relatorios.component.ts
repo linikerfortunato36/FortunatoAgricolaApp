@@ -28,6 +28,8 @@ interface BalancoContrato {
     totalArmazem: number;
     totalNos: number;
     totalCliente: number;
+    totalImposto: number;
+    totalComissao: number;
     ganhoBruto: number;
     ganhoLiquido: number;
     numMovimentacoes: number;
@@ -219,6 +221,7 @@ export class RelatoriosComponent implements OnInit {
                     totalVenda: 0, totalCompra: 0,
                     totalFrete: 0, totalArmazem: 0,
                     totalNos: 0, totalCliente: 0,
+                    totalImposto: 0, totalComissao: 0,
                     ganhoBruto: 0, ganhoLiquido: 0,
                     numMovimentacoes: 0
                 });
@@ -230,6 +233,8 @@ export class RelatoriosComponent implements OnInit {
             c.totalCompra += m.valorTotalCompra;
             c.totalFrete += m.valorTotalFrete;
             c.totalArmazem += m.valorTotalArmazem;
+            c.totalImposto += m.imposto || 0;
+            c.totalComissao += m.totalComissaoLd || 0;
             c.ganhoBruto += m.ganhoBruto;
             c.ganhoLiquido += m.ganhoLiquido;
             if (m.quemPagaArmazem === 'Nos') c.totalNos += m.valorTotalArmazem;
@@ -246,6 +251,8 @@ export class RelatoriosComponent implements OnInit {
             venda: c.reduce((s, x) => s + x.totalVenda, 0),
             frete: c.reduce((s, x) => s + x.totalFrete, 0),
             armazem: c.reduce((s, x) => s + x.totalArmazem, 0),
+            imposto: c.reduce((s, x) => s + x.totalImposto, 0),
+            comissao: c.reduce((s, x) => s + x.totalComissao, 0),
             ganhoBruto: c.reduce((s, x) => s + x.ganhoBruto, 0),
             ganhoLiquido: c.reduce((s, x) => s + x.ganhoLiquido, 0),
         };
