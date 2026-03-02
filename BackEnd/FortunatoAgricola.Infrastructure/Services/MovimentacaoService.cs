@@ -92,16 +92,20 @@ namespace FortunatoAgricola.Infrastructure.Services
             };
 
             await _context.Movimentacoes.AddAsync(mov);
-            
-            // Aqui precisaria validar regras de negócio e subtrair valor no contrato
+
+            // Atualiza saldo do contrato
             var contrato = await _context.Contratos.FindAsync(dto.ContratoId);
             if (contrato != null)
             {
-                contrato.QuantidadeEntregueKg += mov.PesoFinal; // Usando o peso de cálculo oficial
+                contrato.QuantidadeEntregueKg += mov.PesoFinal;
                 _context.Contratos.Update(contrato);
             }
 
             await _context.SaveChangesAsync();
+
+            // Atualiza o status do contrato automaticamente
+            if (contrato != null)
+                await AtualizarStatusContratoAsync(contrato.Id);
 
             return await GetByIdAsync(mov.Id);
         }
@@ -134,19 +138,57 @@ namespace FortunatoAgricola.Infrastructure.Services
             var mov = await _context.Movimentacoes.FindAsync(id);
             if (mov != null)
             {
+                var contratoId = mov.ContratoId;
                 mov.IsDeleted = true;
                 mov.UpdatedAt = DateTime.UtcNow;
 
-                var contrato = await _context.Contratos.FindAsync(mov.ContratoId);
-                if(contrato != null)
+                var contrato = await _context.Contratos.FindAsync(contratoId);
+                if (contrato != null)
                 {
                     contrato.QuantidadeEntregueKg -= mov.PesoFinal;
+                    if (contrato.QuantidadeEntregueKg < 0)
+                        contrato.QuantidadeEntregueKg = 0;
                     _context.Contratos.Update(contrato);
                 }
 
                 _context.Movimentacoes.Update(mov);
                 await _context.SaveChangesAsync();
+
+                // Atualiza o status do contrato automaticamente
+                await AtualizarStatusContratoAsync(contratoId);
             }
+        }
+
+        /// <summary>
+        /// Atualiza o status do contrato com base nas movimentações:
+        /// - "Aberto" = sem movimentações
+        /// - "Em Andamento" = tem movimentações mas não atingiu o total
+        /// - "Finalizado" = atingiu ou ultrapassou a quantidade total
+        /// </summary>
+        private async Task AtualizarStatusContratoAsync(Guid contratoId)
+        {
+            var contrato = await _context.Contratos.FindAsync(contratoId);
+            if (contrato == null) return;
+
+            var totalMovimentacoes = await _context.Movimentacoes
+                .Where(m => m.ContratoId == contratoId && !m.IsDeleted)
+                .CountAsync();
+
+            if (totalMovimentacoes == 0)
+            {
+                contrato.Status = "Aberto";
+            }
+            else if (contrato.QuantidadeEntregueKg >= contrato.QuantidadeTotalKg)
+            {
+                contrato.Status = "Finalizado";
+            }
+            else
+            {
+                contrato.Status = "Em Andamento";
+            }
+
+            _context.Contratos.Update(contrato);
+            await _context.SaveChangesAsync();
         }
 
         private static MovimentacaoDto MapToDto(Movimentacao m) => new MovimentacaoDto

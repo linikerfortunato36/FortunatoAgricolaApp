@@ -16,6 +16,7 @@ import { MovimentacaoFormComponent } from './components/movimentacoes/movimentac
 import { LoginComponent } from './components/auth/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { LandingPageComponent } from './components/public/landing-page/landing-page.component';
+import { RelatoriosComponent } from './components/relatorios/relatorios.component';
 
 export const routes: Routes = [
     // Landing Page (Página Inicial Pública)
@@ -50,7 +51,8 @@ export const routes: Routes = [
             { path: 'usuarios', component: UsuariosListComponent },
             { path: 'usuarios/novo', component: UsuarioFormComponent },
             { path: 'usuarios/editar/:id', component: UsuarioFormComponent },
-            { path: 'configuracoes', component: ConfiguracoesComponent }
+            { path: 'configuracoes', component: ConfiguracoesComponent },
+            { path: 'relatorios', component: RelatoriosComponent }
         ]
     }
 ];

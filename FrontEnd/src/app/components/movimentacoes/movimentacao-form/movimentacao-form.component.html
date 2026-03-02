@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold small">Transportadora *</label>
-                            <ng-select [items]="transportadoras" bindLabel="nome" bindValue="id"
+                            <ng-select [items]="transportadoras" bindLabel="nome" bindValue="id" appendTo="body"
                                 [(ngModel)]="form.transportadoraId"
                                 placeholder="Selecione a transportadora..."></ng-select>
                         </div>
