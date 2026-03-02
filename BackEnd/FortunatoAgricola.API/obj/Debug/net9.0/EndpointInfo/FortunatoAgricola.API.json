@@ -36,6 +36,28 @@
         }
       }
     },
+    "/api/BrasilApi/{cnpj}": {
+      "get": {
+        "tags": [
+          "BrasilApi"
+        ],
+        "parameters": [
+          {
+            "name": "cnpj",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Clientes": {
       "get": {
         "tags": [

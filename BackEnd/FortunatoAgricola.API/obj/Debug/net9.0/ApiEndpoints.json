@@ -16,6 +16,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "FortunatoAgricola.API.Controllers.BrasilApiController",
+    "Method": "GetAll",
+    "RelativePath": "api/BrasilApi/{cnpj}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cnpj",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "FortunatoAgricola.API.Controllers.ClientesController",
     "Method": "GetAll",
     "RelativePath": "api/Clientes",

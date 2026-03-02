@@ -30,8 +30,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
+builder.Services.AddHttpClient(); // Registra IHttpClientFactory para BrasilApiService
 builder.Services.AddScoped<IBrasilApiService, BrasilApiService>();
 
 builder.Services.AddControllers();
