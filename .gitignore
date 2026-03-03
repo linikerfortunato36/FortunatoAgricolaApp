@@ -93,3 +93,5 @@
 /BackEnd/FortunatoAgricola.Infrastructure/obj/Debug/net9.0/FortunatoAgricola.Infrastructure.csproj.CoreCompileInputs.cache
 /BackEnd/FortunatoAgricola.Application/obj/Debug/net9.0/FortunatoAgricola.Application.csproj.CoreCompileInputs.cache
 /BackEnd/FortunatoAgricola.Domain/obj/Debug/net9.0/FortunatoAgricola.Domain.csproj.CoreCompileInputs.cache
+/FrontEnd/build_error.log
+*.log
