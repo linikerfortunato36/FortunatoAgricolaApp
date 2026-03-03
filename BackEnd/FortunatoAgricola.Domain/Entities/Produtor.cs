@@ -10,5 +10,7 @@ namespace FortunatoAgricola.Domain.Entities
         public string? Telefone { get; set; }
         public string? Email { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public virtual ICollection<ContratoProdutor> ContratosVinculados { get; set; } = new List<ContratoProdutor>();
     }
 }

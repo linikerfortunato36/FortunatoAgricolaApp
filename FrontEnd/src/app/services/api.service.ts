@@ -54,6 +54,15 @@ export interface Cliente {
   valorTotalNegociado?: number;
 }
 
+export interface ContratoProdutor {
+  contratoId: string;
+  produtorId: string;
+  produtorNome: string;
+  quantidadeCotaKg: number;
+  quantidadeEntregueKg: number;
+  quantidadeRestanteKg: number;
+}
+
 export interface Contrato {
   id: string;
   clienteId: string;
@@ -71,6 +80,7 @@ export interface Contrato {
   createdByName?: string;
   updatedAt?: string;
   updatedByName?: string;
+  produtoresVinculados?: ContratoProdutor[];
 }
 
 export interface Usuario {

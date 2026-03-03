@@ -79,6 +79,45 @@
         </div>
     </div>
 
+    <!-- Produtores Vinculados Section -->
+    <div class="row mb-5" *ngIf="(contrato?.produtoresVinculados?.length || 0) > 0">
+        <div class="col-12">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-people me-2 text-secondary"></i>Produtores Participantes
+                (Cotas)</h5>
+            <div class="row g-3">
+                <div class="col-md-4 col-sm-6" *ngFor="let p of (contrato?.produtoresVinculados || [])">
+                    <div class="card h-100 shadow-sm border-0 border-start border-3 border-secondary bg-light">
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold text-primary mb-1 text-truncate" title="{{ p.produtorNome }}">{{
+                                p.produtorNome }}</h6>
+                            <div class="d-flex justify-content-between mb-1 mt-3 small">
+                                <span class="text-muted">Entregue: <strong class="text-dark">{{ p.quantidadeEntregueKg |
+                                        number:'1.0-0' }} Kg</strong></span>
+                                <span class="text-muted">Cota: <strong>{{ p.quantidadeCotaKg | number:'1.0-0' }}
+                                        Kg</strong></span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-primary" role="progressbar"
+                                    [style.width]="(p.quantidadeCotaKg > 0 ? (p.quantidadeEntregueKg / p.quantidadeCotaKg * 100) : 0) + '%'">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 small text-danger"
+                                *ngIf="p.quantidadeRestanteKg > 0">
+                                <span class="fw-bold"><i class="bi bi-clock-history me-1"></i>Faltam:</span>
+                                <strong class="text-danger">{{ p.quantidadeRestanteKg | number:'1.0-0' }} Kg</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 small text-success"
+                                *ngIf="p.quantidadeRestanteKg <= 0">
+                                <span class="fw-bold"><i class="bi bi-check-circle me-1"></i>Cota Atingida /
+                                    Excedida</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Movements Grid Section -->
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white py-3">

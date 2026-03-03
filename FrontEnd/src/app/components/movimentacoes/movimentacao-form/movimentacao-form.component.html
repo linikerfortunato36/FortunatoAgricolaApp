@@ -59,7 +59,8 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small">Contrato / Cliente *</label>
                                 <ng-select [items]="contratos" bindLabel="numeroContrato" bindValue="id"
-                                    [(ngModel)]="form.contratoId" placeholder="Selecione o contrato..." appendTo="body">
+                                    [(ngModel)]="form.contratoId" placeholder="Selecione o contrato..." appendTo="body"
+                                    (change)="onContratoChange()">
                                     <ng-template ng-option-tmp let-item="item">
                                         {{ item.numeroContrato }} — {{ item.clienteNome }}
                                         <small class="d-block text-muted">Saldo restante: {{ item.quantidadeRestanteKg |
@@ -69,9 +70,14 @@
                             </div>
                             <div class="col-md-5">
                                 <label class="form-label fw-bold small">Produtor (Origem) *</label>
-                                <ng-select [items]="produtores" bindLabel="nome" bindValue="id"
-                                    [(ngModel)]="form.produtorOrigemId" placeholder="Selecione o produtor origem..."
-                                    appendTo="body"></ng-select>
+                                <ng-select [items]="produtoresFiltrados" bindLabel="nome" bindValue="id"
+                                    [(ngModel)]="form.produtorOrigemId"
+                                    placeholder="Selecione o produtor origem (escolha contrato primeiro)..."
+                                    appendTo="body" [disabled]="!form.contratoId"></ng-select>
+                                <div *ngIf="cotaProdutorSelecionado" class="mt-1 small"
+                                    [class.text-danger]="remainingQuota <= 0" [class.text-muted]="remainingQuota > 0">
+                                    Cota Restante no Contrato: <strong>{{ remainingQuota | number:'1.0-0' }} Kg</strong>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small">Transportadora *</label>

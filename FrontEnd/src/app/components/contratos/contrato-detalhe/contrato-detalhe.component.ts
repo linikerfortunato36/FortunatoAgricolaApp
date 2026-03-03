@@ -234,7 +234,42 @@ export class ContratoDetalheComponent implements OnInit {
         doc.text(`Conclus\u00e3o: ${pct}%`, 255, y + 6.5);
         y += 16;
 
-        // ── TABELA ─────────────────────────────────────
+        // ── PRODUTORES VINCULADOS ──────────────────────
+        if (c.produtoresVinculados && c.produtoresVinculados.length > 0) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9);
+          doc.setTextColor(30, 41, 59);
+          doc.text('PRODUTORES PARTICIPANTES (COTAS)', 14, y);
+          doc.setFillColor(201, 168, 76);
+          doc.rect(14, y + 2, 70, 0.5, 'F');
+          y += 7;
+
+          autoTable(doc, {
+            startY: y,
+            head: [['Produtor', 'Cota Total', 'Entregue', 'Faltante / Restante', 'Conclus\u00e3o']],
+            body: c.produtoresVinculados.map(p => {
+              const pct = p.quantidadeCotaKg > 0 ? ((p.quantidadeEntregueKg / p.quantidadeCotaKg) * 100).toFixed(1) : '0.0';
+              return [
+                p.produtorNome || '-',
+                fmt(p.quantidadeCotaKg) + ' kg',
+                fmt(p.quantidadeEntregueKg) + ' kg',
+                fmt(p.quantidadeRestanteKg) + ' kg',
+                `${pct}%`
+              ];
+            }),
+            styles: { fontSize: 7, cellPadding: 2.5, valign: 'middle', lineColor: [226, 232, 240], lineWidth: 0.25 },
+            headStyles: { fillColor: [26, 46, 28], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 7 },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            columnStyles: {
+              1: { halign: 'right' }, 2: { halign: 'right' }, 3: { halign: 'right', textColor: [220, 38, 38], fontStyle: 'bold' }, 4: { halign: 'center', fontStyle: 'bold' }
+            },
+            margin: { left: 14, right: 14 },
+          });
+
+          y = (doc as any).lastAutoTable.finalY + 12;
+        }
+
+        // ── TABELA DE MOVIMENTAÇÕES ────────────────────
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(30, 41, 59);

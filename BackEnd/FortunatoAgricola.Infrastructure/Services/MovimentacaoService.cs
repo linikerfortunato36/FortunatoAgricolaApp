@@ -97,12 +97,19 @@ namespace FortunatoAgricola.Infrastructure.Services
 
             await _context.Movimentacoes.AddAsync(mov);
 
-            // Atualiza saldo do contrato
+            // Atualiza saldo do contrato e do produtor vinculado
             var contrato = await _context.Contratos.FindAsync(dto.ContratoId);
             if (contrato != null)
             {
                 contrato.QuantidadeEntregueKg += mov.PesoFinal;
                 _context.Contratos.Update(contrato);
+            }
+
+            var cp = await _context.ContratoProdutores.FirstOrDefaultAsync(x => x.ContratoId == dto.ContratoId && x.ProdutorId == dto.ProdutorOrigemId);
+            if (cp != null)
+            {
+                cp.QuantidadeEntregueKg += mov.PesoFinal;
+                _context.ContratoProdutores.Update(cp);
             }
 
             await _context.SaveChangesAsync();
@@ -153,6 +160,15 @@ namespace FortunatoAgricola.Infrastructure.Services
                     if (contrato.QuantidadeEntregueKg < 0)
                         contrato.QuantidadeEntregueKg = 0;
                     _context.Contratos.Update(contrato);
+                }
+
+                var cp = await _context.ContratoProdutores.FirstOrDefaultAsync(x => x.ContratoId == contratoId && x.ProdutorId == mov.ProdutorOrigemId);
+                if (cp != null)
+                {
+                    cp.QuantidadeEntregueKg -= mov.PesoFinal;
+                    if (cp.QuantidadeEntregueKg < 0) 
+                        cp.QuantidadeEntregueKg = 0;
+                    _context.ContratoProdutores.Update(cp);
                 }
 
                 _context.Movimentacoes.Update(mov);

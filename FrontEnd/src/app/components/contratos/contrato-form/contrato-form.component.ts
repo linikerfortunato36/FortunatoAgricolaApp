@@ -17,13 +17,19 @@ export class ContratoFormComponent implements OnInit {
     isEditing = false;
     contratoId: string | null = null;
     clientes: Cliente[] = [];
+    produtores: any[] = [];
+
+    // UI state for adding new produtor logic
+    selectedProdutorId: string | null = null;
+    quotaInput: number | null = null;
 
     contrato: any = {
         clienteId: null,
         numeroContrato: '',
         quantidadeTotalKg: 0,
         status: 'Aberto',
-        isActive: true
+        isActive: true,
+        produtoresVinculados: []
     };
 
     loading = false;
@@ -46,6 +52,7 @@ export class ContratoFormComponent implements OnInit {
         }
 
         this.carregarClientes();
+        this.carregarProdutores();
 
         if (this.isEditing && this.contratoId) {
             this.loading = true;
@@ -66,9 +73,52 @@ export class ContratoFormComponent implements OnInit {
         this.apiService.getClientes().subscribe(data => this.clientes = data);
     }
 
+    carregarProdutores(): void {
+        this.apiService.getProdutores().subscribe(data => this.produtores = data);
+    }
+
+    get sumQuotas(): number {
+        return this.contrato.produtoresVinculados.reduce((sum: number, p: any) => sum + (p.quantidadeCotaKg || 0), 0);
+    }
+
+    addProdutor(): void {
+        if (!this.selectedProdutorId || !this.quotaInput) return;
+
+        const existing = this.contrato.produtoresVinculados.find((p: any) => p.produtorId === this.selectedProdutorId);
+        if (existing) {
+            alert('Produtor já adicionado!');
+            return;
+        }
+
+        if (this.sumQuotas + this.quotaInput > this.contrato.quantidadeTotalKg) {
+            alert('A soma das cotas não pode exceder o total do contrato!');
+            return;
+        }
+
+        const prod = this.produtores.find(p => p.id === this.selectedProdutorId);
+        this.contrato.produtoresVinculados.push({
+            produtorId: this.selectedProdutorId,
+            produtorNome: prod?.nome || '',
+            quantidadeCotaKg: this.quotaInput,
+            quantidadeEntregueKg: 0
+        });
+
+        this.selectedProdutorId = null;
+        this.quotaInput = null;
+    }
+
+    removeProdutor(produtorId: string): void {
+        this.contrato.produtoresVinculados = this.contrato.produtoresVinculados.filter((p: any) => p.produtorId !== produtorId);
+    }
+
     onSubmit(): void {
         if (!this.contrato.clienteId || !this.contrato.numeroContrato || this.contrato.quantidadeTotalKg <= 0) {
             alert('Preencha todos os campos obrigatórios corretamente.');
+            return;
+        }
+
+        if (this.sumQuotas > this.contrato.quantidadeTotalKg) {
+            alert('A soma das cotas dos produtores excede a cota total do contrato!');
             return;
         }
 

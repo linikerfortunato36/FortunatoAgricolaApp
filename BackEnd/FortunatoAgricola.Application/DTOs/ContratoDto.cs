@@ -18,5 +18,6 @@ namespace FortunatoAgricola.Application.DTOs
         public string? CreatedByName { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedByName { get; set; }
+        public List<ContratoProdutorDto> ProdutoresVinculados { get; set; } = new List<ContratoProdutorDto>();
     }
 }

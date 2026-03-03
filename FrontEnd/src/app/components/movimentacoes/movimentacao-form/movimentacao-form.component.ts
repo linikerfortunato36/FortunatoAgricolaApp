@@ -17,6 +17,7 @@ export class MovimentacaoFormComponent implements OnInit {
 
   contratos: Contrato[] = [];
   produtores: Produtor[] = [];
+  produtoresFiltrados: any[] = [];
   transportadoras: Transportadora[] = [];
   vendedores: Usuario[] = [];
   config: any;
@@ -102,6 +103,32 @@ export class MovimentacaoFormComponent implements OnInit {
     return this.contratos.find(c => c.id === this.form.contratoId);
   }
 
+  onContratoChange(): void {
+    if (this.contratoSelecionado && this.contratoSelecionado.produtoresVinculados) {
+      const vinculadosIds = this.contratoSelecionado.produtoresVinculados.map(p => p.produtorId);
+      this.produtoresFiltrados = this.produtores.filter(p => vinculadosIds.includes(p.id));
+
+      // Clear selected produtor if not in the new filtered list
+      if (this.form.produtorOrigemId && !vinculadosIds.includes(this.form.produtorOrigemId)) {
+        this.form.produtorOrigemId = '';
+      }
+    } else {
+      this.produtoresFiltrados = [];
+      this.form.produtorOrigemId = '';
+    }
+  }
+
+  get cotaProdutorSelecionado(): any {
+    if (!this.form.produtorOrigemId || !this.contratoSelecionado || !this.contratoSelecionado.produtoresVinculados) return null;
+    return this.contratoSelecionado.produtoresVinculados.find(p => p.produtorId === this.form.produtorOrigemId);
+  }
+
+  get remainingQuota(): number {
+    const cota = this.cotaProdutorSelecionado;
+    if (!cota) return 0;
+    return cota.quantidadeCotaKg - cota.quantidadeEntregueKg;
+  }
+
   constructor(
     private apiService: ApiService,
     private router: Router,
@@ -121,10 +148,12 @@ export class MovimentacaoFormComponent implements OnInit {
 
     this.apiService.getContratos().subscribe(data => {
       this.contratos = data.filter(c => c.status !== 'Finalizado' && c.isActive);
+      this.updateProdutoresFiltrados();
     });
 
     this.apiService.getProdutores().subscribe(data => {
       this.produtores = data.filter(p => p.isActive);
+      this.updateProdutoresFiltrados();
     });
 
     this.apiService.getTransportadoras().subscribe(data => {
@@ -146,6 +175,12 @@ export class MovimentacaoFormComponent implements OnInit {
         }
       }
     });
+  }
+
+  updateProdutoresFiltrados(): void {
+    if (this.contratos.length > 0 && this.produtores.length > 0 && this.form.contratoId) {
+      this.onContratoChange();
+    }
   }
 
   calcularDescontos(): void {

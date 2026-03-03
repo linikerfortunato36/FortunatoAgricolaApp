@@ -44,6 +44,7 @@ namespace FortunatoAgricola.Infrastructure.Data
         public DbSet<Transportadora> Transportadoras { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Contrato> Contratos { get; set; }
+        public DbSet<ContratoProdutor> ContratoProdutores { get; set; }
         public DbSet<Movimentacao> Movimentacoes { get; set; }
         public DbSet<Configuracao> Configuracoes { get; set; }
         public DbSet<LogAcaoUsuario> LogAcoesUsuarios { get; set; }
@@ -58,6 +59,7 @@ namespace FortunatoAgricola.Infrastructure.Data
             modelBuilder.Entity<Transportadora>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Usuario>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Contrato>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<ContratoProdutor>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Movimentacao>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Configuracao>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<LogAcaoUsuario>().HasQueryFilter(x => !x.IsDeleted);

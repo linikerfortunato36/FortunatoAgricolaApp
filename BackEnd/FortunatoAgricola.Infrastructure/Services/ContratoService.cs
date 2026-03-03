@@ -24,6 +24,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             var contratos = await _context.Contratos
                 .Include(c => c.Cliente)
                 .Include(c => c.Movimentacoes)
+                .Include(c => c.ProdutoresVinculados).ThenInclude(pv => pv.Produtor)
                 .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
 
@@ -43,7 +44,16 @@ namespace FortunatoAgricola.Infrastructure.Services
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
                 UpdatedAt = c.UpdatedAt,
-                UpdatedByName = c.UpdatedByName
+                UpdatedByName = c.UpdatedByName,
+                ProdutoresVinculados = c.ProdutoresVinculados.Select(pv => new ContratoProdutorDto
+                {
+                    ContratoId = pv.ContratoId,
+                    ProdutorId = pv.ProdutorId,
+                    ProdutorNome = pv.Produtor?.Nome ?? string.Empty,
+                    QuantidadeCotaKg = pv.QuantidadeCotaKg,
+                    QuantidadeEntregueKg = pv.QuantidadeEntregueKg,
+                    QuantidadeRestanteKg = pv.QuantidadeRestanteKg
+                }).ToList()
             });
         }
 
@@ -52,6 +62,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             var c = await _context.Contratos
                 .Include(co => co.Cliente)
                 .Include(co => co.Movimentacoes)
+                .Include(co => co.ProdutoresVinculados).ThenInclude(pv => pv.Produtor)
                 .FirstOrDefaultAsync(co => co.Id == id);
 
             if (c == null) return null;
@@ -72,7 +83,16 @@ namespace FortunatoAgricola.Infrastructure.Services
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
                 UpdatedAt = c.UpdatedAt,
-                UpdatedByName = c.UpdatedByName
+                UpdatedByName = c.UpdatedByName,
+                ProdutoresVinculados = c.ProdutoresVinculados.Select(pv => new ContratoProdutorDto
+                {
+                    ContratoId = pv.ContratoId,
+                    ProdutorId = pv.ProdutorId,
+                    ProdutorNome = pv.Produtor?.Nome ?? string.Empty,
+                    QuantidadeCotaKg = pv.QuantidadeCotaKg,
+                    QuantidadeEntregueKg = pv.QuantidadeEntregueKg,
+                    QuantidadeRestanteKg = pv.QuantidadeRestanteKg
+                }).ToList()
             };
         }
 
@@ -91,12 +111,30 @@ namespace FortunatoAgricola.Infrastructure.Services
             await _context.Contratos.AddAsync(contrato);
             await _context.SaveChangesAsync();
 
+            if (dto.ProdutoresVinculados != null && dto.ProdutoresVinculados.Any())
+            {
+                foreach (var pv in dto.ProdutoresVinculados)
+                {
+                    await _context.ContratoProdutores.AddAsync(new ContratoProdutor
+                    {
+                        ContratoId = contrato.Id,
+                        ProdutorId = pv.ProdutorId,
+                        QuantidadeCotaKg = pv.QuantidadeCotaKg,
+                        QuantidadeEntregueKg = 0
+                    });
+                }
+                await _context.SaveChangesAsync();
+            }
+
             return await GetByIdAsync(contrato.Id);
         }
 
         public async Task<ContratoDto> UpdateAsync(UpdateContratoDto dto)
         {
-            var c = await _context.Contratos.FindAsync(dto.Id);
+            var c = await _context.Contratos
+                .Include(co => co.ProdutoresVinculados)
+                .FirstOrDefaultAsync(co => co.Id == dto.Id);
+                
             if (c == null) throw new Exception("Contrato não encontrado.");
 
             c.NumeroContrato = dto.NumeroContrato;
@@ -106,6 +144,37 @@ namespace FortunatoAgricola.Infrastructure.Services
             c.UpdatedAt = DateTime.UtcNow;
 
             _context.Contratos.Update(c);
+            
+            if (dto.ProdutoresVinculados != null)
+            {
+                var existingProdutores = c.ProdutoresVinculados.ToList();
+                var incomingProdutorIds = dto.ProdutoresVinculados.Select(p => p.ProdutorId).ToList();
+
+                // Remove unselected
+                var toRemove = existingProdutores.Where(ep => !incomingProdutorIds.Contains(ep.ProdutorId)).ToList();
+                _context.ContratoProdutores.RemoveRange(toRemove);
+
+                foreach (var pv in dto.ProdutoresVinculados)
+                {
+                    var existing = existingProdutores.FirstOrDefault(ep => ep.ProdutorId == pv.ProdutorId);
+                    if (existing != null)
+                    {
+                        existing.QuantidadeCotaKg = pv.QuantidadeCotaKg;
+                        _context.ContratoProdutores.Update(existing);
+                    }
+                    else
+                    {
+                        await _context.ContratoProdutores.AddAsync(new ContratoProdutor
+                        {
+                            ContratoId = c.Id,
+                            ProdutorId = pv.ProdutorId,
+                            QuantidadeCotaKg = pv.QuantidadeCotaKg,
+                            QuantidadeEntregueKg = 0
+                        });
+                    }
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return await GetByIdAsync(c.Id);
@@ -116,6 +185,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             var contratos = await _context.Contratos
                 .Include(c => c.Cliente)
                 .Include(c => c.Movimentacoes)
+                .Include(c => c.ProdutoresVinculados).ThenInclude(pv => pv.Produtor)
                 .Where(c => c.ClienteId == clienteId)
                 .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
@@ -136,7 +206,16 @@ namespace FortunatoAgricola.Infrastructure.Services
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
                 UpdatedAt = c.UpdatedAt,
-                UpdatedByName = c.UpdatedByName
+                UpdatedByName = c.UpdatedByName,
+                ProdutoresVinculados = c.ProdutoresVinculados.Select(pv => new ContratoProdutorDto
+                {
+                    ContratoId = pv.ContratoId,
+                    ProdutorId = pv.ProdutorId,
+                    ProdutorNome = pv.Produtor?.Nome ?? string.Empty,
+                    QuantidadeCotaKg = pv.QuantidadeCotaKg,
+                    QuantidadeEntregueKg = pv.QuantidadeEntregueKg,
+                    QuantidadeRestanteKg = pv.QuantidadeRestanteKg
+                }).ToList()
             });
         }
 

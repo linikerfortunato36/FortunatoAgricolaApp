@@ -7,5 +7,6 @@
         public decimal QuantidadeTotalKg { get; set; }
         public string Status { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+        public List<CreateContratoProdutorDto> ProdutoresVinculados { get; set; } = new List<CreateContratoProdutorDto>();
     }
 }
