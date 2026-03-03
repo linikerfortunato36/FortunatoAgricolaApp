@@ -11,7 +11,8 @@
                 <span>Exportar PDF</span>
                 <span class="badge bg-success text-white ms-1">{{ getContratosFiltrados().length }}</span>
             </button>
-            <button routerLink="/app/contratos/novo" class="btn btn-primary d-flex align-items-center gap-2">
+            <button *ngIf="authService.canModify()" routerLink="/app/contratos/novo"
+                class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="bi bi-file-earmark-plus"></i> Novo Contrato
             </button>
         </div>

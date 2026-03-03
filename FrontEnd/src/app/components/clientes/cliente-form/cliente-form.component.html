@@ -20,7 +20,8 @@
             <button routerLink="/app/clientes" class="btn btn-outline-secondary me-2" [disabled]="submitting">
                 <i class="bi bi-arrow-left me-1"></i> Voltar
             </button>
-            <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+            <button *ngIf="authService.canModify()" class="btn btn-primary" (click)="onSubmit()"
+                [disabled]="submitting">
                 <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
                 <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar Alterações
             </button>
@@ -120,7 +121,8 @@
                             <i class="bi bi-file-earmark-text fs-1 text-muted mb-3 d-block"></i>
                             <h4 class="fw-bold text-dark">Nenhum contrato ativo</h4>
                             <p class="text-muted">Este cliente ainda não possui contratos registrados no sistema.</p>
-                            <button routerLink="/app/contratos/novo" class="btn btn-primary mt-2">
+                            <button *ngIf="authService.canModify()" routerLink="/app/contratos/novo"
+                                class="btn btn-primary mt-2">
                                 <i class="bi bi-plus-circle me-1"></i> Criar Primeiro Contrato
                             </button>
                         </div>
@@ -138,99 +140,129 @@
                         </div>
 
                         <form *ngIf="!loading">
-                            <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
-                                <i class="bi bi-info-square me-2"></i> Identificação e Contato
-                            </h5>
-                            <div class="row g-4 mb-5">
-                                <div class="col-md-8">
-                                    <label class="form-label fw-bold">Razão Social / Nome Fantasia *</label>
-                                    <input type="text" class="form-control form-control-lg" [(ngModel)]="cliente.nome"
-                                        name="nome" placeholder="Ex: AMAGGI EXPORTAÇÃO E IMPORTAÇÃO" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">CNPJ *</label>
-                                    <div class="input-group">
+                            <fieldset [disabled]="!authService.canModify()">
+                                <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
+                                    <i class="bi bi-info-square me-2"></i> Identificação e Contato
+                                </h5>
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold">CNPJ *</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-lg"
+                                                [(ngModel)]="cliente.cnpj" name="cnpj" placeholder="00.000.000/0001-00"
+                                                required (blur)="buscarCnpj()">
+                                            <span class="input-group-text" *ngIf="cnpjCarregando">
+                                                <span class="spinner-border spinner-border-sm text-success"></span>
+                                            </span>
+                                            <span class="input-group-text text-success"
+                                                *ngIf="!cnpjCarregando && !cnpjErro && cliente.nome">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div *ngIf="cnpjErro" class="text-danger small mt-1">
+                                            <i class="bi bi-exclamation-circle me-1"></i>{{ cnpjErro }}
+                                        </div>
+                                        <div *ngIf="cnpjCarregando" class="text-muted small mt-1">
+                                            <i class="bi bi-search me-1"></i>Consultando CNPJ na Receita Federal...
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label fw-bold">Razão Social / Nome Fantasia *</label>
                                         <input type="text" class="form-control form-control-lg"
-                                            [(ngModel)]="cliente.cnpj" name="cnpj" placeholder="00.000.000/0001-00"
-                                            required (blur)="buscarCnpj()">
-                                        <span class="input-group-text" *ngIf="cnpjCarregando">
-                                            <span class="spinner-border spinner-border-sm text-success"></span>
-                                        </span>
-                                        <span class="input-group-text text-success"
-                                            *ngIf="!cnpjCarregando && !cnpjErro && cliente.nome">
-                                            <i class="bi bi-check-circle-fill"></i>
-                                        </span>
+                                            [(ngModel)]="cliente.nome" name="nome"
+                                            placeholder="Ex: AMAGGI EXPORTAÇÃO E IMPORTAÇÃO" required>
                                     </div>
-                                    <div *ngIf="cnpjErro" class="text-danger small mt-1">
-                                        <i class="bi bi-exclamation-circle me-1"></i>{{ cnpjErro }}
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Inscrição Estadual</label>
+                                        <input type="text" class="form-control" [(ngModel)]="cliente.inscricaoEstadual"
+                                            name="inscEstadual">
                                     </div>
-                                    <div *ngIf="cnpjCarregando" class="text-muted small mt-1">
-                                        <i class="bi bi-search me-1"></i>Consultando CNPJ na Receita Federal...
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">E-mail Corporativo</label>
+                                        <input type="email" class="form-control" [(ngModel)]="cliente.email"
+                                            name="email" placeholder="contato@empresa.com.br">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Inscrição Estadual</label>
-                                    <input type="text" class="form-control" [(ngModel)]="cliente.inscricaoEstadual"
-                                        name="inscEstadual">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">E-mail Corporativo</label>
-                                    <input type="email" class="form-control" [(ngModel)]="cliente.email" name="email"
-                                        placeholder="contato@empresa.com.br">
-                                </div>
-                            </div>
 
-                            <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
-                                <i class="bi bi-geo-alt me-2"></i> Endereço
-                            </h5>
-                            <div class="row g-4 mb-5">
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">CEP</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" [(ngModel)]="cliente.cep" name="cep">
-                                        <button class="btn btn-outline-primary" type="button"><i
-                                                class="bi bi-search"></i></button>
+                                <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
+                                    <i class="bi bi-geo-alt me-2"></i> Endereço
+                                </h5>
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold">CEP</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" [(ngModel)]="cliente.cep"
+                                                name="cep">
+                                            <button class="btn btn-outline-primary" type="button"><i
+                                                    class="bi bi-search"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label class="form-label fw-bold">Logradouro / Avenida / Rua</label>
+                                        <input type="text" class="form-control" [(ngModel)]="cliente.logradouro"
+                                            name="logradouro">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label fw-bold">Número</label>
+                                        <input type="text" class="form-control" [(ngModel)]="cliente.numero"
+                                            name="numero">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label fw-bold">Bairro</label>
+                                        <input type="text" class="form-control" [(ngModel)]="cliente.bairro"
+                                            name="bairro">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label fw-bold">Cidade</label>
+                                        <input type="text" class="form-control" [(ngModel)]="cliente.cidade"
+                                            name="cidade">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label fw-bold">Estado (UF)</label>
+                                        <select class="form-select" [(ngModel)]="cliente.estado" name="estado">
+                                            <option value="AC">AC</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AP">AP</option>
+                                            <option value="AM">AM</option>
+                                            <option value="BA">BA</option>
+                                            <option value="CE">CE</option>
+                                            <option value="DF">DF</option>
+                                            <option value="ES">ES</option>
+                                            <option value="GO">GO</option>
+                                            <option value="MA">MA</option>
+                                            <option value="MT">MT</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MG">MG</option>
+                                            <option value="PA">PA</option>
+                                            <option value="PB">PB</option>
+                                            <option value="PR">PR</option>
+                                            <option value="PE">PE</option>
+                                            <option value="PI">PI</option>
+                                            <option value="RJ">RJ</option>
+                                            <option value="RN">RN</option>
+                                            <option value="RS">RS</option>
+                                            <option value="RO">RO</option>
+                                            <option value="RR">RR</option>
+                                            <option value="SC">SC</option>
+                                            <option value="SP">SP</option>
+                                            <option value="SE">SE</option>
+                                            <option value="TO">TO</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="col-md-7">
-                                    <label class="form-label fw-bold">Logradouro / Avenida / Rua</label>
-                                    <input type="text" class="form-control" [(ngModel)]="cliente.logradouro"
-                                        name="logradouro">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Número</label>
-                                    <input type="text" class="form-control" [(ngModel)]="cliente.numero" name="numero">
-                                </div>
-                                <div class="col-md-5">
-                                    <label class="form-label fw-bold">Bairro</label>
-                                    <input type="text" class="form-control" [(ngModel)]="cliente.bairro" name="bairro">
-                                </div>
-                                <div class="col-md-5">
-                                    <label class="form-label fw-bold">Cidade</label>
-                                    <input type="text" class="form-control" [(ngModel)]="cliente.cidade" name="cidade">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Estado (UF)</label>
-                                    <select class="form-select" [(ngModel)]="cliente.estado" name="estado">
-                                        <option value="MT">MT</option>
-                                        <option value="PR">PR</option>
-                                        <option value="SP">SP</option>
-                                        <option value="GO">GO</option>
-                                        <option value="MS">MS</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="bg-light p-4 rounded-3 border">
-                                <div class="form-check form-switch fs-5 mb-0">
-                                    <input class="form-check-input" type="checkbox" id="isActive"
-                                        [(ngModel)]="cliente.isActive" name="isActive">
-                                    <label class="form-check-label ms-2 text-dark fs-6 fw-bold" for="isActive">Cliente
-                                        Ativo no Sistema</label>
-                                    <p class="text-muted small mb-0 ms-2">Clientes inativos não aparecerão em novos
-                                        lançamentos de contratos ou movimentações.</p>
+                                <div class="bg-light p-4 rounded-3 border">
+                                    <div class="form-check form-switch fs-5 mb-0">
+                                        <input class="form-check-input" type="checkbox" id="isActive"
+                                            [(ngModel)]="cliente.isActive" name="isActive">
+                                        <label class="form-check-label ms-2 text-dark fs-6 fw-bold"
+                                            for="isActive">Cliente
+                                            Ativo no Sistema</label>
+                                        <p class="text-muted small mb-0 ms-2">Clientes inativos não aparecerão em novos
+                                            lançamentos de contratos ou movimentações.</p>
+                                    </div>
                                 </div>
-                            </div>
+                            </fieldset>
                         </form>
                     </div>
                 </div>

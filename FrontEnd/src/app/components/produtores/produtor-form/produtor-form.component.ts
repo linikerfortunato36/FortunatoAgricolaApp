@@ -3,6 +3,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Produtor, Movimentacao } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-produtor-form',
@@ -37,12 +38,18 @@ export class ProdutorFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
     this.produtorId = this.route.snapshot.paramMap.get('id');
     this.isEditing = !!this.produtorId;
+
+    if (!this.authService.canModify() && !this.isEditing) {
+      this.router.navigate(['/app/produtores']);
+      return;
+    }
 
     if (this.isEditing && this.produtorId) {
       this.activeTab = 'boards'; // Mostrar aba de boards apenas na edição

@@ -33,7 +33,7 @@
             <button type="button" (click)="cancelar()" class="btn btn-outline-secondary me-2">
                 <i class="bi bi-x-circle me-1"></i> Cancelar
             </button>
-            <button type="button" (click)="onSubmit()" class="btn btn-primary fw-bold"
+            <button *ngIf="authService.canModify()" type="button" (click)="onSubmit()" class="btn btn-primary fw-bold"
                 [disabled]="isSubmitting || submitSuccess">
                 <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
                 <i *ngIf="!isSubmitting" class="bi bi-floppy me-1"></i> Salvar Registro
@@ -43,179 +43,181 @@
 
     <div class="row">
         <div class="col-xl-9">
-
-            <!-- SEÇÃO 1: IDENTIFICAÇÃO E ORIGEM -->
-            <div class="card shadow-sm border-0 mb-4 overflow-hidden">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-truck me-2"></i>Identificação da Viagem e
-                        Origem</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold small">Data do Ticket *</label>
-                            <input type="date" class="form-control" [(ngModel)]="form.data" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Contrato / Cliente *</label>
-                            <ng-select [items]="contratos" bindLabel="numeroContrato" bindValue="id"
-                                [(ngModel)]="form.contratoId" placeholder="Selecione o contrato...">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{ item.numeroContrato }} — {{ item.clienteNome }}
-                                    <small class="d-block text-muted">Saldo restante: {{ item.quantidadeRestanteKg |
-                                        number }} kg</small>
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                        <div class="col-md-5">
-                            <label class="form-label fw-bold small">Produtor (Origem) *</label>
-                            <ng-select [items]="produtores" bindLabel="nome" bindValue="id"
-                                [(ngModel)]="form.produtorOrigemId"
-                                placeholder="Selecione o produtor origem..."></ng-select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Transportadora *</label>
-                            <ng-select [items]="transportadoras" bindLabel="nome" bindValue="id" appendTo="body"
-                                [(ngModel)]="form.transportadoraId"
-                                placeholder="Selecione a transportadora..."></ng-select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Nome do Motorista</label>
-                            <input type="text" class="form-control" [(ngModel)]="form.motorista"
-                                placeholder="Nome completo do condutor">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Vendedor (Usuário) *</label>
-                            <ng-select [items]="vendedores" bindLabel="nome" bindValue="id" appendTo="body"
-                                [(ngModel)]="form.vendedorId" placeholder="Vendedor responsável..."></ng-select>
-                        </div>
+            <fieldset [disabled]="!authService.canModify()">
+                <!-- SEÇÃO 1: IDENTIFICAÇÃO E ORIGEM -->
+                <div class="card shadow-sm border-0 mb-4 overflow-hidden">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-truck me-2"></i>Identificação da Viagem e
+                            Origem</h5>
                     </div>
-                </div>
-            </div>
-
-            <!-- SEÇÃO 2: VOLUMETRIA E TÉCNICO -->
-            <div class="card shadow-sm border-0 mb-4 bg-light bg-opacity-50">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-speedometer2 me-2"></i>Volumes de Balança e
-                        Descontos Técnicos</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-4 mb-4 border-bottom pb-4">
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold text-primary">Peso Bruto na Origem (Kg) *</label>
-                            <input type="number" class="form-control form-control-lg text-end fw-bold"
-                                [(ngModel)]="form.quantidadeOrigemKg" placeholder="0">
-                            <div class="form-text">Resultará em <strong>{{ sacas | number:'1.0-1' }} sacas</strong>.
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small">Data do Ticket *</label>
+                                <input type="date" class="form-control" [(ngModel)]="form.data" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Contrato / Cliente *</label>
+                                <ng-select [items]="contratos" bindLabel="numeroContrato" bindValue="id"
+                                    [(ngModel)]="form.contratoId" placeholder="Selecione o contrato..." appendTo="body">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        {{ item.numeroContrato }} — {{ item.clienteNome }}
+                                        <small class="d-block text-muted">Saldo restante: {{ item.quantidadeRestanteKg |
+                                            number }} kg</small>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold small">Produtor (Origem) *</label>
+                                <ng-select [items]="produtores" bindLabel="nome" bindValue="id"
+                                    [(ngModel)]="form.produtorOrigemId" placeholder="Selecione o produtor origem..."
+                                    appendTo="body"></ng-select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Transportadora *</label>
+                                <ng-select [items]="transportadoras" bindLabel="nome" bindValue="id" appendTo="body"
+                                    [(ngModel)]="form.transportadoraId"
+                                    placeholder="Selecione a transportadora..."></ng-select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Nome do Motorista</label>
+                                <input type="text" class="form-control" [(ngModel)]="form.motorista"
+                                    placeholder="Nome completo do condutor">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Vendedor (Usuário) *</label>
+                                <ng-select [items]="vendedores" bindLabel="nome" bindValue="id" appendTo="body"
+                                    [(ngModel)]="form.vendedorId" placeholder="Vendedor responsável..."></ng-select>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold text-success">Peso Líquido Fazenda (Kg)</label>
-                            <input type="number" class="form-control form-control-lg text-end"
-                                [(ngModel)]="form.pesoLiquidofazenda" placeholder="0">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold text-primary">Peso de Descarga / Destino (Kg) *</label>
-                            <input type="number" class="form-control form-control-lg text-end fw-bold"
-                                [(ngModel)]="form.pesoDescargaKg" (ngModelChange)="calcularDescontos()" placeholder="0">
-                            <div *ngIf="diferencaPeso > 0" class="form-text text-danger fw-bold">Quebra total de {{
-                                diferencaPeso | number }} Kg.</div>
-                        </div>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold small text-muted">Umidade (%)</label>
-                            <input type="number" class="form-control text-center" [(ngModel)]="form.umidadePorcentagem"
-                                (ngModelChange)="calcularDescontos()">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold small text-muted">Umidade (Kg)</label>
-                            <input type="number" class="form-control text-end" [(ngModel)]="form.umidadeKg">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold small text-muted">Impureza (%)</label>
-                            <input type="number" class="form-control text-center" [(ngModel)]="form.impurezaPorcentagem"
-                                (ngModelChange)="calcularDescontos()">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold small text-muted">Impureza (Kg)</label>
-                            <input type="number" class="form-control text-end" [(ngModel)]="form.impurezaKg">
-                        </div>
                     </div>
                 </div>
-                <div
-                    class="card-footer bg-white border-0 py-3 text-end d-flex justify-content-between align-items-center">
-                    <span class="fw-bold text-muted">PESO FINAL CALCULADO (COM DESCONTOS):</span>
-                    <span class="fs-4 fw-bold text-primary">{{ pesoFinal | number:'1.0-0' }} Kg</span>
+
+                <!-- SEÇÃO 2: VOLUMETRIA E TÉCNICO -->
+                <div class="card shadow-sm border-0 mb-4 bg-light bg-opacity-50">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-speedometer2 me-2"></i>Volumes de Balança e
+                            Descontos Técnicos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4 mb-4 border-bottom pb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-primary">Peso Bruto na Origem (Kg) *</label>
+                                <input type="number" class="form-control form-control-lg text-end fw-bold"
+                                    [(ngModel)]="form.quantidadeOrigemKg" placeholder="0">
+                                <div class="form-text">Resultará em <strong>{{ sacas | number:'1.0-1' }} sacas</strong>.
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-success">Peso Líquido Fazenda (Kg)</label>
+                                <input type="number" class="form-control form-control-lg text-end"
+                                    [(ngModel)]="form.pesoLiquidofazenda" placeholder="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-primary">Peso de Descarga / Destino (Kg) *</label>
+                                <input type="number" class="form-control form-control-lg text-end fw-bold"
+                                    [(ngModel)]="form.pesoDescargaKg" (ngModelChange)="calcularDescontos()"
+                                    placeholder="0">
+                                <div *ngIf="diferencaPeso > 0" class="form-text text-danger fw-bold">Quebra total de {{
+                                    diferencaPeso | number }} Kg.</div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Umidade (%)</label>
+                                <input type="number" class="form-control text-center"
+                                    [(ngModel)]="form.umidadePorcentagem" (ngModelChange)="calcularDescontos()">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Umidade (Kg)</label>
+                                <input type="number" class="form-control text-end" [(ngModel)]="form.umidadeKg">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Impureza (%)</label>
+                                <input type="number" class="form-control text-center"
+                                    [(ngModel)]="form.impurezaPorcentagem" (ngModelChange)="calcularDescontos()">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Impureza (Kg)</label>
+                                <input type="number" class="form-control text-end" [(ngModel)]="form.impurezaKg">
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="card-footer bg-white border-0 py-3 text-end d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-muted">PESO FINAL CALCULADO (COM DESCONTOS):</span>
+                        <span class="fs-4 fw-bold text-primary">{{ pesoFinal | number:'1.0-0' }} Kg</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- SEÇÃO 3: FINANCEIRO E NF-E -->
-            <div class="card shadow-sm border-0 mb-4 border-top border-4 border-warning">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-cash-stack me-2"></i>Dados Financeiros e
-                        Faturamento</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Número da NF-e</label>
-                            <input type="text" class="form-control" [(ngModel)]="form.nfe"
-                                placeholder="Nº da Nota Fiscal">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Valor da NF-e (R$)</label>
-                            <input type="number" class="form-control text-end" [(ngModel)]="form.valorNfe"
-                                placeholder="0,00">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Venda por Saca (R$)</label>
-                            <input type="number" class="form-control text-end fw-bold text-success"
-                                [(ngModel)]="form.valorVendaPorSaca" placeholder="0,00">
-                        </div>
+                <!-- SEÇÃO 3: FINANCEIRO E NF-E -->
+                <div class="card shadow-sm border-0 mb-4 border-top border-4 border-warning">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-cash-stack me-2"></i>Dados Financeiros e
+                            Faturamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Número da NF-e</label>
+                                <input type="text" class="form-control" [(ngModel)]="form.nfe"
+                                    placeholder="Nº da Nota Fiscal">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Valor da NF-e (R$)</label>
+                                <input type="number" class="form-control text-end" [(ngModel)]="form.valorNfe"
+                                    placeholder="0,00">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Venda por Saca (R$)</label>
+                                <input type="number" class="form-control text-end fw-bold text-success"
+                                    [(ngModel)]="form.valorVendaPorSaca" placeholder="0,00">
+                            </div>
 
-                        <div class="col-md-3 mt-4">
-                            <label class="form-label fw-bold small">Compra por Saca (R$)</label>
-                            <input type="number" class="form-control text-end" [(ngModel)]="form.valorCompraPorSaca"
-                                placeholder="0,00">
-                        </div>
-                        <div class="col-md-3 mt-4">
-                            <label class="form-label fw-bold small">Frete por Saca (R$)</label>
-                            <input type="number" class="form-control text-end" [(ngModel)]="form.custoFretePorSaca"
-                                placeholder="0,00">
-                        </div>
-                        <div class="col-md-3 mt-4">
-                            <label class="form-label fw-bold small">Armazém por Saca (R$)</label>
-                            <input type="number" class="form-control text-end" [(ngModel)]="form.valorPorSacaArmazem"
-                                placeholder="0,00">
-                        </div>
-                        <div class="col-md-3 mt-4">
-                            <label class="form-label fw-bold small">Quem paga Armazém?</label>
-                            <select class="form-select" [(ngModel)]="form.quemPagaArmazem">
-                                <option value="Nos">Nós</option>
-                                <option value="Cliente">Cliente</option>
-                            </select>
-                        </div>
+                            <div class="col-md-3 mt-4">
+                                <label class="form-label fw-bold small">Compra por Saca (R$)</label>
+                                <input type="number" class="form-control text-end" [(ngModel)]="form.valorCompraPorSaca"
+                                    placeholder="0,00">
+                            </div>
+                            <div class="col-md-3 mt-4">
+                                <label class="form-label fw-bold small">Frete por Saca (R$)</label>
+                                <input type="number" class="form-control text-end" [(ngModel)]="form.custoFretePorSaca"
+                                    placeholder="0,00">
+                            </div>
+                            <div class="col-md-3 mt-4">
+                                <label class="form-label fw-bold small">Armazém por Saca (R$)</label>
+                                <input type="number" class="form-control text-end"
+                                    [(ngModel)]="form.valorPorSacaArmazem" placeholder="0,00">
+                            </div>
+                            <div class="col-md-3 mt-4">
+                                <label class="form-label fw-bold small">Quem paga Armazém?</label>
+                                <select class="form-select" [(ngModel)]="form.quemPagaArmazem">
+                                    <option value="Nos">Nós</option>
+                                    <option value="Cliente">Cliente</option>
+                                </select>
+                            </div>
 
-                        <div class="col-12">
-                            <h6 class="fw-bold mt-4 mb-3 border-bottom pb-2 text-muted">Datas e Observações</h6>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Data Prevista de Pgto.</label>
-                            <input type="date" class="form-control" [(ngModel)]="form.dataPrevistaPagamento">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Data de Entrega</label>
-                            <input type="date" class="form-control" [(ngModel)]="form.dataEntrega">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold small">Observação Geral</label>
-                            <textarea class="form-control" rows="1" [(ngModel)]="form.observacao"
-                                placeholder="Informações adicionais..."></textarea>
+                            <div class="col-12">
+                                <h6 class="fw-bold mt-4 mb-3 border-bottom pb-2 text-muted">Datas e Observações</h6>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Data Prevista de Pgto.</label>
+                                <input type="date" class="form-control" [(ngModel)]="form.dataPrevistaPagamento">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Data de Entrega</label>
+                                <input type="date" class="form-control" [(ngModel)]="form.dataEntrega">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Observação Geral</label>
+                                <textarea class="form-control" rows="1" [(ngModel)]="form.observacao"
+                                    placeholder="Informações adicionais..."></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </fieldset>
         </div>
 
         <!-- SIDEBAR RESUMO COM CÁLCULOS AUTOMÁTICOS -->

@@ -57,18 +57,16 @@
                                 </div>
                             </td>
                             <td class="text-end pe-4">
-                                <div class="btn-group" *ngIf="authService.canModify()">
+                                <div class="btn-group">
                                     <button [routerLink]="['/app/transportadoras/editar', t.id]"
-                                        class="btn btn-sm btn-outline-secondary" title="Editar">
-                                        <i class="bi bi-pencil-square"></i>
+                                        class="btn btn-sm btn-outline-secondary" title="Ver / Editar">
+                                        <i class="bi"
+                                            [ngClass]="authService.canModify() ? 'bi-pencil-square' : 'bi-eye'"></i>
                                     </button>
-                                    <button (click)="deleteTransportadora(t.id)"
+                                    <button *ngIf="authService.canModify()" (click)="deleteTransportadora(t.id)"
                                         class="btn btn-sm btn-outline-danger shadow-sm" title="Inativar/Excluir">
                                         <i class="bi bi-ban"></i>
                                     </button>
-                                </div>
-                                <div *ngIf="!authService.canModify()" class="text-muted small">
-                                    Somente leitura
                                 </div>
                             </td>
                         </tr>

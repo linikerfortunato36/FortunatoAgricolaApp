@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Contrato, Produtor, Transportadora, CreateMovimentacaoPayload, Usuario } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
@@ -104,10 +105,15 @@ export class MovimentacaoFormComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    if (!this.authService.canModify()) {
+      this.router.navigate(['/app/contratos']);
+      return;
+    }
     const contratoId = this.route.snapshot.queryParamMap.get('contratoId');
     if (contratoId) {
       this.form.contratoId = contratoId;

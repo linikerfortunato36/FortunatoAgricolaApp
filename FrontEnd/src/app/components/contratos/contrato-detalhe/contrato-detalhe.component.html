@@ -15,8 +15,8 @@
             <button class="btn btn-outline-danger" (click)="exportarFechamento()"><i
                     class="bi bi-file-earmark-pdf me-1"></i> Exportar
                 Fechamento</button>
-            <button [routerLink]="['/app/movimentacoes/novo']" [queryParams]="{contratoId: contratoId}"
-                class="btn btn-primary fw-bold">
+            <button *ngIf="authService.canModify()" [routerLink]="['/app/movimentacoes/novo']"
+                [queryParams]="{contratoId: contratoId}" class="btn btn-primary fw-bold">
                 <i class="bi bi-plus-circle me-1"></i> Nova Movimentação
             </button>
         </div>
@@ -138,8 +138,8 @@
                                     title="Visualizar Detalhes">
                                     <i class="bi bi-eye text-primary"></i>
                                 </button>
-                                <button (click)="excluirMovimentacao(m.id)" class="btn btn-sm btn-light border"
-                                    title="Excluir">
+                                <button *ngIf="authService.canModify()" (click)="excluirMovimentacao(m.id)"
+                                    class="btn btn-sm btn-light border" title="Excluir">
                                     <i class="bi bi-trash text-danger"></i>
                                 </button>
                             </td>

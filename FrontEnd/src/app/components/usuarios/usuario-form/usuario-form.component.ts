@@ -63,7 +63,11 @@ export class UsuarioFormComponent implements OnInit {
     }
 
     if (this.usuarioId) {
-      this.apiService.updateUsuario(this.usuarioId, this.usuario).subscribe({
+      const payload = {
+        ...this.usuario,
+        novaSenha: this.usuario.senha ? this.usuario.senha : undefined
+      };
+      this.apiService.updateUsuario(this.usuarioId, payload).subscribe({
         next: () => {
           alert('Usuário atualizado com sucesso!');
           this.router.navigate(['/app/usuarios']);

@@ -60,18 +60,16 @@
                                 <div *ngIf="!cliente.updatedByName && !cliente.createdByName">--</div>
                             </td>
                             <td class="pe-4 text-end">
-                                <div class="btn-group" *ngIf="authService.canModify()">
+                                <div class="btn-group">
                                     <button [routerLink]="['/app/clientes/editar', cliente.id]"
-                                        class="btn btn-sm btn-outline-secondary" title="Editar Cliente">
-                                        <i class="bi bi-pencil-square"></i>
+                                        class="btn btn-sm btn-outline-secondary" title="Ver / Editar Cliente">
+                                        <i class="bi"
+                                            [ngClass]="authService.canModify() ? 'bi-pencil-square' : 'bi-eye'"></i>
                                     </button>
-                                    <button (click)="onDelete(cliente.id, cliente.nome)"
+                                    <button *ngIf="authService.canModify()" (click)="onDelete(cliente.id, cliente.nome)"
                                         class="btn btn-sm btn-outline-danger" title="Desativar Cliente">
                                         <i class="bi bi-ban"></i>
                                     </button>
-                                </div>
-                                <div *ngIf="!authService.canModify()" class="text-muted small">
-                                    Somente leitura
                                 </div>
                             </td>
                         </tr>

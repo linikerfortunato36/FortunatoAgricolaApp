@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApiService, Cliente } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'app-contrato-form',
@@ -31,13 +32,20 @@ export class ContratoFormComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private apiService: ApiService
+        private apiService: ApiService,
+        public authService: AuthService
     ) { }
 
     ngOnInit(): void {
-        this.carregarClientes();
         this.contratoId = this.route.snapshot.paramMap.get('id');
         this.isEditing = !!this.contratoId;
+
+        if (!this.authService.canModify() && !this.isEditing) {
+            this.router.navigate(['/app/contratos']);
+            return;
+        }
+
+        this.carregarClientes();
 
         if (this.isEditing && this.contratoId) {
             this.loading = true;

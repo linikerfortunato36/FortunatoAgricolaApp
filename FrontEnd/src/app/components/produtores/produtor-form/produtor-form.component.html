@@ -41,69 +41,72 @@
                     </div>
                     <div class="card-body">
                         <form (ngSubmit)="onSubmit()" #produtorForm="ngForm">
-                            <div class="row g-3">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted small fw-bold">Nome / Razão Social <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="nome" [(ngModel)]="produtor.nome"
-                                        required placeholder="Ex: Fazenda Boa Vista Silva">
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label text-muted small fw-bold">CPF / CNPJ <span
-                                            class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="cpfCnpj"
-                                            [(ngModel)]="produtor.cpfCnpj" required
-                                            placeholder="000.000.000-00 ou 00.000.000/0001-00" (blur)="buscarCnpj()">
-                                        <span class="input-group-text" *ngIf="cnpjCarregando">
-                                            <span class="spinner-border spinner-border-sm text-success"></span>
-                                        </span>
-                                        <span class="input-group-text text-success"
-                                            *ngIf="!cnpjCarregando && !cnpjErro && produtor.nome">
-                                            <i class="bi bi-check-circle-fill"></i>
-                                        </span>
+                            <fieldset [disabled]="!authService.canModify()">
+                                <div class="row g-3">
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label text-muted small fw-bold">CPF / CNPJ <span
+                                                class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="cpfCnpj"
+                                                [(ngModel)]="produtor.cpfCnpj" required
+                                                placeholder="000.000.000-00 ou 00.000.000/0001-00"
+                                                (blur)="buscarCnpj()">
+                                            <span class="input-group-text" *ngIf="cnpjCarregando">
+                                                <span class="spinner-border spinner-border-sm text-success"></span>
+                                            </span>
+                                            <span class="input-group-text text-success"
+                                                *ngIf="!cnpjCarregando && !cnpjErro && produtor.nome">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div *ngIf="cnpjErro" class="text-danger small mt-1">
+                                            <i class="bi bi-exclamation-circle me-1"></i>{{ cnpjErro }}
+                                        </div>
+                                        <div *ngIf="cnpjCarregando" class="text-muted small mt-1">
+                                            <i class="bi bi-search me-1"></i>Consultando CNPJ...
+                                        </div>
                                     </div>
-                                    <div *ngIf="cnpjErro" class="text-danger small mt-1">
-                                        <i class="bi bi-exclamation-circle me-1"></i>{{ cnpjErro }}
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-muted small fw-bold">Nome / Razão Social <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="nome" [(ngModel)]="produtor.nome"
+                                            required placeholder="Ex: Fazenda Boa Vista Silva">
                                     </div>
-                                    <div *ngIf="cnpjCarregando" class="text-muted small mt-1">
-                                        <i class="bi bi-search me-1"></i>Consultando CNPJ...
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label text-muted small fw-bold">Inscrição Estadual</label>
+                                        <input type="text" class="form-control" name="inscricaoEstadual"
+                                            [(ngModel)]="produtor.inscricaoEstadual" placeholder="Isento pu N.º">
                                     </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label text-muted small fw-bold">Inscrição Estadual</label>
-                                    <input type="text" class="form-control" name="inscricaoEstadual"
-                                        [(ngModel)]="produtor.inscricaoEstadual" placeholder="Isento pu N.º">
-                                </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label text-muted small fw-bold">Telefone</label>
-                                    <input type="text" class="form-control" name="telefone"
-                                        [(ngModel)]="produtor.telefone" placeholder="(00) 00000-0000">
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label text-muted small fw-bold">E-mail</label>
-                                    <input type="email" class="form-control" name="email" [(ngModel)]="produtor.email"
-                                        placeholder="contato@fazenda.com">
-                                </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small fw-bold">Telefone</label>
+                                        <input type="text" class="form-control" name="telefone"
+                                            [(ngModel)]="produtor.telefone" placeholder="(00) 00000-0000">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small fw-bold">E-mail</label>
+                                        <input type="email" class="form-control" name="email"
+                                            [(ngModel)]="produtor.email" placeholder="contato@fazenda.com">
+                                    </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label text-muted small fw-bold d-block">Status</label>
-                                    <div class="form-check form-switch mt-2">
-                                        <input class="form-check-input" type="checkbox" role="switch"
-                                            id="isActiveSwitch" name="isActive" [(ngModel)]="produtor.isActive">
-                                        <label class="form-check-label" for="isActiveSwitch">{{ produtor.isActive ?
-                                            'Ativo (Aceita recebimentos)' : 'Inativo (Bloqueado p/ contratos)'
-                                            }}</label>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small fw-bold d-block">Status</label>
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                id="isActiveSwitch" name="isActive" [(ngModel)]="produtor.isActive">
+                                            <label class="form-check-label" for="isActiveSwitch">{{ produtor.isActive ?
+                                                'Ativo (Aceita recebimentos)' : 'Inativo (Bloqueado p/ contratos)'
+                                                }}</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </fieldset>
 
                             <hr class="text-muted opacity-25 my-4">
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-outline-secondary" routerLink="/app/produtores"
                                     [disabled]="submitting">Cancelar</button>
-                                <button type="submit"
+                                <button *ngIf="authService.canModify()" type="submit"
                                     class="btn btn-primary px-4 fw-bold shadow-sm d-flex align-items-center"
                                     [disabled]="!produtorForm.form.valid || submitting">
                                     <i class="bi bi-floppy me-2 d-none d-sm-inline"></i>

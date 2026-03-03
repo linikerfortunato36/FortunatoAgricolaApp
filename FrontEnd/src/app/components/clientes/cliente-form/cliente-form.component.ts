@@ -3,6 +3,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Cliente } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-cliente-form',
@@ -39,12 +40,18 @@ export class ClienteFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
     this.clienteId = this.route.snapshot.paramMap.get('id');
     this.isEditing = !!this.clienteId;
+
+    if (!this.authService.canModify() && !this.isEditing) {
+      this.router.navigate(['/app/clientes']);
+      return;
+    }
 
     if (this.isEditing && this.clienteId) {
       this.activeTab = 'boards'; // Aba padrão quando editando
