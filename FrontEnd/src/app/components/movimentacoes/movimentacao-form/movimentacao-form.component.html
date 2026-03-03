@@ -42,7 +42,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-9">
+        <div [ngClass]="authService.isOperador() ? 'col-xl-12' : 'col-xl-9'">
             <fieldset [disabled]="!authService.canModify()">
                 <!-- SEÇÃO 1: IDENTIFICAÇÃO E ORIGEM -->
                 <div class="card shadow-sm border-0 mb-4 overflow-hidden">
@@ -152,7 +152,8 @@
                 </div>
 
                 <!-- SEÇÃO 3: FINANCEIRO E NF-E -->
-                <div class="card shadow-sm border-0 mb-4 border-top border-4 border-warning">
+                <div *ngIf="!authService.isOperador()"
+                    class="card shadow-sm border-0 mb-4 border-top border-4 border-warning">
                     <div class="card-header bg-white py-3">
                         <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-cash-stack me-2"></i>Dados Financeiros e
                             Faturamento</h5>
@@ -221,7 +222,7 @@
         </div>
 
         <!-- SIDEBAR RESUMO COM CÁLCULOS AUTOMÁTICOS -->
-        <div class="col-xl-3 sticky-top" style="top: 1rem;">
+        <div *ngIf="!authService.isOperador()" class="col-xl-3 sticky-top" style="top: 1rem;">
             <div
                 class="card shadow-sm border-0 bg-white rounded-4 overflow-hidden mb-4 border-top border-primary border-4">
                 <div class="card-header bg-white border-0 py-3 pb-0">

@@ -17,7 +17,7 @@ export class UsuarioFormComponent implements OnInit {
     nome: '',
     login: '',
     senha: '',
-    perfil: 'Operador',
+    perfil: 'Operador Master',
     isActive: true
   };
   confirmarSenha = '';

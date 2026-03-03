@@ -19,7 +19,8 @@ export class SidebarComponent {
 
   isAtLeast(role: string): boolean {
     if (this.perfil === 'Administrador') return true;
-    if (role === 'Operador' && this.perfil === 'Operador') return true;
+    if (role === 'Operador Master' && this.perfil === 'Operador Master') return true;
+    if (role === 'Operador' && (this.perfil === 'Operador' || this.perfil === 'Operador Master')) return true;
     if (role === 'Leitura') return true;
     return false;
   }

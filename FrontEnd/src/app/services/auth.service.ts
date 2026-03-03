@@ -70,6 +70,10 @@ export class AuthService {
 
     canModify(): boolean {
         const usuario = this.getUsuario();
-        return usuario?.perfil === 'Administrador' || usuario?.perfil === 'Operador';
+        return usuario?.perfil === 'Administrador' || usuario?.perfil === 'Operador Master' || usuario?.perfil === 'Operador';
+    }
+
+    isOperador(): boolean {
+        return this.getUsuario()?.perfil === 'Operador';
     }
 }

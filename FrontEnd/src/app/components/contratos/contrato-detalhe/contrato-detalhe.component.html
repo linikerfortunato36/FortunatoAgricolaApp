@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="col-md-5">
+        <div [ngClass]="authService.isOperador() ? 'col-md-9' : 'col-md-5'">
             <div class="card h-100 shadow-sm border-0 bg-light">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <div class="d-flex justify-content-between align-items-end mb-2">
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="!authService.isOperador()">
             <div class="card h-100 shadow-sm border-0 bg-primary text-white text-end">
                 <div class="card-body">
                     <h6 class="text-uppercase fw-bold mb-2 small opacity-75">Valores & Entregas (NF-e)</h6>
@@ -99,8 +99,8 @@
                             <th>P. ORIGEM (Kg)</th>
                             <th>QUEBRA (Kg)</th>
                             <th>P. FINAL (Kg)</th>
-                            <th>NF-e</th>
-                            <th>VEND.</th>
+                            <th *ngIf="!authService.isOperador()">NF-e</th>
+                            <th *ngIf="!authService.isOperador()">VEND.</th>
                             <th>ÚLTIMA ALTERAÇÃO</th>
                             <th class="pe-3 text-end">AÇÕES</th>
                         </tr>
@@ -120,8 +120,8 @@
                                 {{ m.diferencaPesoKg | number }}
                             </td>
                             <td class="fw-bold text-primary">{{ m.pesoFinal | number }}</td>
-                            <td>{{ m.nfe || '—' }}</td>
-                            <td>{{ m.vendedorNome || '—' }}</td>
+                            <td *ngIf="!authService.isOperador()">{{ m.nfe || '—' }}</td>
+                            <td *ngIf="!authService.isOperador()">{{ m.vendedorNome || '—' }}</td>
                             <td class="small text-muted">
                                 <div *ngIf="m.updatedByName">
                                     <i class="bi bi-person text-muted me-1"></i>{{ m.updatedByName }}
@@ -170,7 +170,7 @@
                 </div>
                 <div class="modal-body p-4">
                     <div class="row g-4">
-                        <div class="col-md-6 border-end">
+                        <div [ngClass]="authService.isOperador() ? 'col-md-12' : 'col-md-6 border-end'">
                             <h6 class="fw-bold text-primary mb-3">CONTRATO & ORIGEM</h6>
                             <p class="mb-1"><span class="text-muted">Contrato:</span> {{
                                 selectedMovimentacao.contratoNumero }}</p>
@@ -207,7 +207,7 @@
                                 <span>{{ selectedMovimentacao.pesoFinal | number }} Kg</span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" *ngIf="!authService.isOperador()">
                             <h6 class="fw-bold text-primary mb-3">FINANCEIRO E NF-E</h6>
                             <p class="mb-1"><span class="text-muted">Nota Fiscal:</span> {{ selectedMovimentacao.nfe ||
                                 '—' }}</p>
