@@ -95,3 +95,4 @@
 /BackEnd/FortunatoAgricola.Domain/obj/Debug/net9.0/FortunatoAgricola.Domain.csproj.CoreCompileInputs.cache
 /FrontEnd/build_error.log
 *.log
+/BackEnd/FortunatoAgricola.API/obj/Debug/net9.0/EndpointInfo/FortunatoAgricola.API.json
