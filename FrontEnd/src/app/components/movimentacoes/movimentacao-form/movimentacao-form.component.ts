@@ -108,11 +108,21 @@ export class MovimentacaoFormComponent implements OnInit {
       this.form.valorVendaPorSaca = this.contratoSelecionado.valorVendaPorSaca || 0;
 
       if (this.contratoSelecionado.produtoresVinculados) {
+        // Encontra produtores vinculados
         const vinculadosIds = this.contratoSelecionado.produtoresVinculados.map(p => p.produtorId);
-        this.produtoresFiltrados = this.produtores.filter(p => vinculadosIds.includes(p.id));
 
-        // Clear selected produtor if not in the new filtered list
-        if (this.form.produtorOrigemId && !vinculadosIds.includes(this.form.produtorOrigemId)) {
+        // Mantém apenas os produtores que estão vinculados E possuem saldo restante
+        this.produtoresFiltrados = this.produtores.filter(p => {
+          if (!vinculadosIds.includes(p.id)) return false;
+
+          const vinculo = this.contratoSelecionado!.produtoresVinculados!.find(v => v.produtorId === p.id);
+          if (!vinculo) return false;
+
+          const restante = vinculo.quantidadeCotaKg - (vinculo.quantidadeEntregueKg || 0);
+          return restante > 0;
+        });
+
+        if (this.form.produtorOrigemId && !this.produtoresFiltrados.some(p => p.id === this.form.produtorOrigemId)) {
           this.form.produtorOrigemId = '';
         }
       } else {
@@ -214,6 +224,11 @@ export class MovimentacaoFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.form.contratoId || !this.form.produtorOrigemId || !this.form.transportadoraId || !this.form.vendedorId) {
       this.submitError = 'Preencha todos os campos obrigatórios (Contrato, Produtor, Transportadora e Vendedor).';
+      return;
+    }
+
+    if (this.form.pesoLiquidofazenda > this.remainingQuota) {
+      this.submitError = `Erro: O Peso Líquido Fazenda (${this.form.pesoLiquidofazenda} Kg) não pode ser maior que o saldo restante do produtor (${this.remainingQuota} Kg).`;
       return;
     }
 

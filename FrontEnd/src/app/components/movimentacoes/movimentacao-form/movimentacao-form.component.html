@@ -34,7 +34,7 @@
                 <i class="bi bi-x-circle me-1"></i> Cancelar
             </button>
             <button *ngIf="authService.canModify()" type="button" (click)="onSubmit()" class="btn btn-primary fw-bold"
-                [disabled]="isSubmitting || submitSuccess">
+                [disabled]="isSubmitting || submitSuccess || (remainingQuota > 0 && form.pesoLiquidofazenda > remainingQuota)">
                 <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
                 <i *ngIf="!isSubmitting" class="bi bi-floppy me-1"></i> Salvar Registro
             </button>
@@ -118,7 +118,12 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-success">Peso Líquido Fazenda (Kg)</label>
                                 <input type="number" class="form-control form-control-lg text-end"
+                                    [class.is-invalid]="form.produtorOrigemId && form.pesoLiquidofazenda > remainingQuota"
                                     [(ngModel)]="form.pesoLiquidofazenda" placeholder="0">
+                                <div class="invalid-feedback fw-bold"
+                                    *ngIf="form.produtorOrigemId && form.pesoLiquidofazenda > remainingQuota">
+                                    Peso excede o saldo do produtor!
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-primary">Peso de Descarga / Destino (Kg) *</label>
