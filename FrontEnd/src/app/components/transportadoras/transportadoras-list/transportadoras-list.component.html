@@ -33,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let t of transportadoras">
+                        <tr *ngFor="let t of transportadoras | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ t.nome }}</td>
                             <td><span class="text-muted small">{{ t.cpfCnpj }}</span></td>
                             <td><span class="badge bg-secondary rounded-pill">{{ t.totalViagens || 0 }}</span></td>
@@ -79,6 +79,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-3 mb-2">
+                    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior"
+                        nextLabel="Próximo"></pagination-controls>
+                </div>
             </div>
 
         </div>

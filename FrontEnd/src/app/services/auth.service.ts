@@ -73,6 +73,11 @@ export class AuthService {
         return usuario?.perfil === 'Administrador' || usuario?.perfil === 'Operador Master' || usuario?.perfil === 'Operador';
     }
 
+    isAdminOrMaster(): boolean {
+        const usuario = this.getUsuario();
+        return usuario?.perfil === 'Administrador' || usuario?.perfil === 'Operador Master';
+    }
+
     isOperador(): boolean {
         return this.getUsuario()?.perfil === 'Operador';
     }

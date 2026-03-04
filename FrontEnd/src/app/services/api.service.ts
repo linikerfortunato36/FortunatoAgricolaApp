@@ -61,6 +61,7 @@ export interface ContratoProdutor {
   quantidadeCotaKg: number;
   quantidadeEntregueKg: number;
   quantidadeRestanteKg: number;
+  valorCompraPorSaca?: number;
 }
 
 export interface Contrato {
@@ -74,6 +75,7 @@ export interface Contrato {
   quantidadeRestanteKg: number;
   quantidadeEntregas: number;
   valorTotalNfe: number;
+  valorVendaPorSaca?: number;
   percentualEntregue: number;
   isActive: boolean;
   createdAt?: string;
@@ -268,6 +270,10 @@ export class ApiService {
 
   updateContrato(id: string, contrato: any): Observable<Contrato> {
     return this.http.put<Contrato>(`${this.baseUrl}/Contratos/${id}`, contrato);
+  }
+
+  deleteContrato(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Contratos/${id}`);
   }
 
   // Movimentacoes

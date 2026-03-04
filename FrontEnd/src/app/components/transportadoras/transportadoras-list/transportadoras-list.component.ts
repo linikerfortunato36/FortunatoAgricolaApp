@@ -4,16 +4,18 @@ import { RouterModule } from '@angular/router';
 import { ApiService, Transportadora } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-transportadoras-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgxPaginationModule],
   templateUrl: './transportadoras-list.component.html',
   styleUrl: './transportadoras-list.component.css'
 })
 export class TransportadorasListComponent implements OnInit {
   transportadoras: Transportadora[] = [];
+  p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
 

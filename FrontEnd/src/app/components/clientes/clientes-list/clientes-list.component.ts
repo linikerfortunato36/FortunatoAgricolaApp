@@ -4,16 +4,18 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { ApiService, Cliente } from '../../../services/api.service';
 import Swal from 'sweetalert2';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-clientes-list',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, NgxPaginationModule],
   templateUrl: './clientes-list.component.html',
   styleUrl: './clientes-list.component.css'
 })
 export class ClientesListComponent implements OnInit {
   clientes: Cliente[] = [];
+  p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
 

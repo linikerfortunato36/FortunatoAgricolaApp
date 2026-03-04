@@ -4,16 +4,18 @@ import { RouterModule } from '@angular/router';
 import { ApiService, Produtor } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-produtores-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgxPaginationModule],
   templateUrl: './produtores-list.component.html',
   styleUrl: './produtores-list.component.css'
 })
 export class ProdutoresListComponent implements OnInit {
   produtores: Produtor[] = [];
+  p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
 

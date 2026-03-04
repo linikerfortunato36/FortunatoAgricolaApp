@@ -11,7 +11,7 @@
                 <span>Exportar PDF</span>
                 <span class="badge bg-success text-white ms-1">{{ getContratosFiltrados().length }}</span>
             </button>
-            <button *ngIf="authService.canModify()" routerLink="/app/contratos/novo"
+            <button *ngIf="authService.isAdminOrMaster()" routerLink="/app/contratos/novo"
                 class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="bi bi-file-earmark-plus"></i> Novo Contrato
             </button>
@@ -57,6 +57,7 @@
                             <th class="ps-4">Nº CONTRATO</th>
                             <th>CLIENTE DESTINO</th>
                             <th>TOTAL ACORDADO</th>
+                            <th>FALTA COMPRAR</th>
                             <th>TOTAL ENTREGUE</th>
                             <th style="width: 20%">STATUS / METAS</th>
                             <th>ÚLTIMA ALTERAÇÃO</th>
@@ -66,13 +67,17 @@
                     <tbody>
 
                         <!-- *ngFor Contrato iteration -->
-                        <tr *ngFor="let c of getContratosFiltrados()">
+                        <tr *ngFor="let c of getContratosFiltrados() | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ c.numeroContrato }}</td>
                             <td>{{ c.clienteNome }}</td>
                             <td><span class="fw-bold">{{ (c.quantidadeTotalKg / 1000) | number:'1.0-0' }} t</span></td>
                             <td
+                                [ngClass]="{'text-danger fw-bold': getFaltaComprar(c) > 0, 'text-success fw-bold': getFaltaComprar(c) === 0}">
+                                {{ (getFaltaComprar(c) / 1000) | number:'1.0-2' }} t
+                            </td>
+                            <td
                                 [ngClass]="{'text-success fw-bold': c.quantidadeEntregueKg > 0, 'text-muted': c.quantidadeEntregueKg === 0}">
-                                {{ (c.quantidadeEntregueKg / 1000) | number:'1.0-0' }} t
+                                {{ (c.quantidadeEntregueKg / 1000) | number:'1.0-2' }} t
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between small text-primary fw-bold mb-1">
@@ -101,16 +106,81 @@
                             </td>
                             <td class="pe-4 text-end">
                                 <button [routerLink]="['/app/contratos/detalhe', c.id]"
-                                    class="btn btn-sm btn-outline-primary shadow-sm"
-                                    title="Ver Detalhes e Inserir Entregas">
+                                    class="btn btn-sm btn-outline-primary shadow-sm mb-1" title="Painel de Entregas">
                                     <i class="bi bi-arrow-right-short fs-6"></i> Acessar Painel
+                                </button>
+                                <button *ngIf="authService.canModify() && getFaltaComprar(c) > 0"
+                                    (click)="abrirCompraModal(c)" class="btn btn-sm btn-success shadow-sm ms-1 mb-1"
+                                    title="Efetuar Compra">
+                                    <i class="bi bi-cart-plus"></i> Compra
+                                </button>
+                                <button *ngIf="authService.isAdminOrMaster()"
+                                    [routerLink]="['/app/contratos/editar', c.id]"
+                                    class="btn btn-sm btn-outline-secondary shadow-sm ms-1 mb-1" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button *ngIf="authService.isAdminOrMaster()"
+                                    (click)="excluirContrato(c.id, c.numeroContrato)"
+                                    class="btn btn-sm btn-outline-danger shadow-sm ms-1 mb-1" title="Excluir">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-3">
+                    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior"
+                        nextLabel="Próximo"></pagination-controls>
+                </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- Modal Efetuar Compra -->
+<div class="modal" tabindex="-1" [ngClass]="{'show d-block': isCompraModalOpen}"
+    [style.backgroundColor]="isCompraModalOpen ? 'rgba(0,0,0,0.5)' : 'transparent'" *ngIf="isCompraModalOpen">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-cart-plus me-2"></i> Efetuar Compra (Contrato {{ compraSelecionado?.numeroContrato
+                    }})
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="fecharCompraModal()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form #compraForm="ngForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small">Produtor</label>
+                        <ng-select [items]="produtores" bindLabel="nome" bindValue="id" name="produtorId"
+                            [(ngModel)]="novaCompra.produtorId" placeholder="Selecione o Produtor" required>
+                        </ng-select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small">Cota (Kg)</label>
+                            <input type="number" class="form-control" name="cotaKg"
+                                [(ngModel)]="novaCompra.quantidadeCotaKg" placeholder="Ex: 5000" required min="1"
+                                [max]="compraSelecionado ? getFaltaComprar(compraSelecionado) : null">
+                            <div class="form-text text-danger" *ngIf="compraSelecionado">Permitido vincular: {{
+                                getFaltaComprar(compraSelecionado) | number:'1.0-0' }} kg</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small">Valor Compra / Saca (R$)</label>
+                            <input type="number" class="form-control" name="valorCompra"
+                                [(ngModel)]="novaCompra.valorCompraPorSaca" placeholder="Ex: 150.00" required min="1">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <button type="button" class="btn btn-secondary" (click)="fecharCompraModal()">Cancelar</button>
+                <button type="button" class="btn btn-success" (click)="salvarCompra()">
+                    <i class="bi bi-check-circle me-1"></i> Salvar Vínculo
+                </button>
+            </div>
         </div>
     </div>
 </div>

@@ -30,7 +30,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let u of usuarios">
+                        <tr *ngFor="let u of usuarios | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ u.nome }}
                                 <div class="text-muted small fw-normal">{{ u.login }}</div>
                             </td>
@@ -80,6 +80,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-3 mb-2">
+                    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior"
+                        nextLabel="Próximo"></pagination-controls>
+                </div>
             </div>
 
         </div>

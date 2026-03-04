@@ -4,16 +4,18 @@ import { RouterModule } from '@angular/router';
 import { ApiService, Usuario } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-usuarios-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgxPaginationModule],
   templateUrl: './usuarios-list.component.html',
   styleUrl: './usuarios-list.component.css'
 })
 export class UsuariosListComponent implements OnInit {
   usuarios: Usuario[] = [];
+  p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
 

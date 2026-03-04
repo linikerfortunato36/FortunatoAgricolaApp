@@ -22,11 +22,13 @@ export class ContratoFormComponent implements OnInit {
     // UI state for adding new produtor logic
     selectedProdutorId: string | null = null;
     quotaInput: number | null = null;
+    valorCompraInput: number | null = null;
 
     contrato: any = {
         clienteId: null,
         numeroContrato: '',
         quantidadeTotalKg: 0,
+        valorVendaPorSaca: 0,
         status: 'Aberto',
         isActive: true,
         produtoresVinculados: []
@@ -46,7 +48,7 @@ export class ContratoFormComponent implements OnInit {
         this.contratoId = this.route.snapshot.paramMap.get('id');
         this.isEditing = !!this.contratoId;
 
-        if (!this.authService.canModify() && !this.isEditing) {
+        if (!this.authService.isAdminOrMaster()) {
             this.router.navigate(['/app/contratos']);
             return;
         }
@@ -82,7 +84,7 @@ export class ContratoFormComponent implements OnInit {
     }
 
     addProdutor(): void {
-        if (!this.selectedProdutorId || !this.quotaInput) return;
+        if (!this.selectedProdutorId || !this.quotaInput || !this.valorCompraInput) return;
 
         const existing = this.contrato.produtoresVinculados.find((p: any) => p.produtorId === this.selectedProdutorId);
         if (existing) {
@@ -100,11 +102,13 @@ export class ContratoFormComponent implements OnInit {
             produtorId: this.selectedProdutorId,
             produtorNome: prod?.nome || '',
             quantidadeCotaKg: this.quotaInput,
-            quantidadeEntregueKg: 0
+            quantidadeEntregueKg: 0,
+            valorCompraPorSaca: this.valorCompraInput
         });
 
         this.selectedProdutorId = null;
         this.quotaInput = null;
+        this.valorCompraInput = null;
     }
 
     removeProdutor(produtorId: string): void {

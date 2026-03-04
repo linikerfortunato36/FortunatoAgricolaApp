@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
 
-                        <tr *ngFor="let p of produtores">
+                        <tr *ngFor="let p of produtores | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ p.nome }}</td>
                             <td><span class="text-muted small">{{ p.cpfCnpj }}</span></td>
                             <td>{{ p.inscricaoEstadual || 'ISENTO' }}</td>
@@ -73,6 +73,10 @@
 
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-3 mb-2">
+                    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior"
+                        nextLabel="Próximo"></pagination-controls>
+                </div>
             </div>
 
         </div>

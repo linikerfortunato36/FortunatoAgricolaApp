@@ -4,11 +4,12 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Contrato, Movimentacao } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-contrato-detalhe',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NgxPaginationModule],
   templateUrl: './contrato-detalhe.component.html',
   styleUrl: './contrato-detalhe.component.css'
 })
@@ -18,6 +19,7 @@ export class ContratoDetalheComponent implements OnInit {
   contratoId: string = '';
   selectedMovimentacao: Movimentacao | null = null;
   configuracao: any = null;
+  p_mov: number = 1;
 
   constructor(
     private apiService: ApiService,

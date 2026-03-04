@@ -15,7 +15,7 @@
         <div>
             <button routerLink="/app/contratos" class="btn btn-outline-secondary me-2" [disabled]="submitting"><i
                     class="bi bi-x-circle me-1"></i> Cancelar</button>
-            <button *ngIf="authService.canModify()" class="btn btn-primary" (click)="onSubmit()"
+            <button *ngIf="authService.isAdminOrMaster()" class="btn btn-primary" (click)="onSubmit()"
                 [disabled]="submitting">
                 <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
                 <i *ngIf="!submitting" class="bi bi-floppy me-1"></i> Salvar Contrato
@@ -33,7 +33,7 @@
                     </div>
 
                     <form *ngIf="!loading">
-                        <fieldset [disabled]="!authService.canModify()">
+                        <fieldset [disabled]="!authService.isAdminOrMaster()">
                             <div class="row g-4">
                                 <div class="col-md-12">
                                     <label class="form-label fw-bold text-dark">Cliente Comprador (Destino) *</label>
@@ -51,13 +51,23 @@
                                         placeholder="Ex: 001/26" required>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <label for="quantidadeTotalKg" class="form-label fw-bold text-dark">Quantidade Total
                                         (Kg) *</label>
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="quantidadeTotalKg"
                                             [(ngModel)]="contrato.quantidadeTotalKg" name="quantidadeTotalKg" required>
                                         <span class="input-group-text">Kg</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="valorVendaPorSaca" class="form-label fw-bold text-dark">Venda (R$ / Sc)
+                                        *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">R$</span>
+                                        <input type="number" class="form-control" id="valorVendaPorSaca"
+                                            [(ngModel)]="contrato.valorVendaPorSaca" name="valorVendaPorSaca" required>
                                     </div>
                                 </div>
 
@@ -86,23 +96,28 @@
                                 Vinculados (Cotas)</h5>
 
                             <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded"
-                                *ngIf="authService.canModify()">
-                                <div class="col-md-5">
+                                *ngIf="authService.isAdminOrMaster()">
+                                <div class="col-md-4">
                                     <label class="form-label fw-bold text-dark small">Selecionar Produtor</label>
                                     <ng-select [items]="produtores" bindLabel="nome" bindValue="id"
                                         [(ngModel)]="selectedProdutorId" name="selectedProdutorId"
                                         placeholder="Pesquise o produtor...">
                                     </ng-select>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold text-dark small">Cota Estimada (Kg)</label>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold text-dark small">Cota (Kg)</label>
                                     <input type="number" class="form-control" [(ngModel)]="quotaInput" name="quotaInput"
                                         placeholder="Ex: 50000">
                                 </div>
                                 <div class="col-md-3">
+                                    <label class="form-label fw-bold text-dark small">Compra (R$ / Sc)</label>
+                                    <input type="number" class="form-control" [(ngModel)]="valorCompraInput"
+                                        name="valorCompraInput" placeholder="Ex: 150.00">
+                                </div>
+                                <div class="col-md-2">
                                     <button type="button" class="btn btn-secondary w-100" (click)="addProdutor()"
-                                        [disabled]="!selectedProdutorId || !quotaInput">
-                                        <i class="bi bi-plus-circle me-1"></i> Adicionar
+                                        [disabled]="!selectedProdutorId || !quotaInput || !valorCompraInput">
+                                        <i class="bi bi-plus-circle me-1"></i> Add
                                     </button>
                                 </div>
                             </div>
@@ -112,17 +127,20 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Produtor</th>
+                                            <th class="text-end">Compra (R$/Sc)</th>
                                             <th class="text-end">Cota Definida (Kg)</th>
                                             <th class="text-center" style="width: 80px;"
-                                                *ngIf="authService.canModify()">Ação</th>
+                                                *ngIf="authService.isAdminOrMaster()">Ação</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let p of contrato.produtoresVinculados">
                                             <td>{{ p.produtorNome }}</td>
+                                            <td class="text-end fw-bold">{{ p.valorCompraPorSaca |
+                                                currency:'BRL':'symbol':'1.2-2' }}</td>
                                             <td class="text-end fw-bold">{{ p.quantidadeCotaKg | number:'1.0-0' }} Kg
                                             </td>
-                                            <td class="text-center" *ngIf="authService.canModify()">
+                                            <td class="text-center" *ngIf="authService.isAdminOrMaster()">
                                                 <button type="button" class="btn btn-sm btn-outline-danger border-0"
                                                     (click)="removeProdutor(p.produtorId)" title="Remover Produtor">
                                                     <i class="bi bi-trash"></i>
@@ -130,16 +148,16 @@
                                             </td>
                                         </tr>
                                         <tr *ngIf="contrato.produtoresVinculados.length === 0">
-                                            <td colspan="3" class="text-center text-muted py-3">Nenhum produtor
+                                            <td colspan="4" class="text-center text-muted py-3">Nenhum produtor
                                                 vinculado.</td>
                                         </tr>
                                     </tbody>
                                     <tfoot class="table-light">
                                         <tr>
-                                            <td class="fw-bold text-end">SOMA DAS COTAS:</td>
+                                            <td colspan="2" class="fw-bold text-end">SOMA DAS COTAS:</td>
                                             <td class="text-end fw-bold text-primary">{{ sumQuotas | number:'1.0-0' }}
                                                 Kg</td>
-                                            <td *ngIf="authService.canModify()"></td>
+                                            <td *ngIf="authService.isAdminOrMaster()"></td>
                                         </tr>
                                     </tfoot>
                                 </table>

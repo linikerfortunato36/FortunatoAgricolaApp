@@ -8,5 +8,6 @@ namespace FortunatoAgricola.Application.DTOs
         public decimal QuantidadeCotaKg { get; set; }
         public decimal QuantidadeEntregueKg { get; set; }
         public decimal QuantidadeRestanteKg { get; set; }
+        public decimal ValorCompraPorSaca { get; set; }
     }
 }

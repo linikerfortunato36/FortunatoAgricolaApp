@@ -46,6 +46,11 @@
                                 number:'1.0-0' }} Kg</span>
                             <span class="text-muted">/ {{ (contrato?.quantidadeTotalKg || 0) | number:'1.0-0' }}
                                 Kg</span>
+                            <div class="mt-1 small" *ngIf="contrato?.valorVendaPorSaca">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                    Venda: {{ contrato?.valorVendaPorSaca | currency:'BRL':'symbol':'1.2-2' }} / Sc
+                                </span>
+                            </div>
                         </div>
                         <div class="text-end">
                             <span class="badge bg-primary fs-6 px-3 rounded-pill shadow-sm">{{ getProgressoPct() |
@@ -90,6 +95,10 @@
                         <div class="card-body p-3">
                             <h6 class="fw-bold text-primary mb-1 text-truncate" title="{{ p.produtorNome }}">{{
                                 p.produtorNome }}</h6>
+                            <div class="text-muted small mb-2" *ngIf="p.valorCompraPorSaca">
+                                <strong>Compra:</strong> {{ p.valorCompraPorSaca | currency:'BRL':'symbol':'1.2-2' }} /
+                                Sc
+                            </div>
                             <div class="d-flex justify-content-between mb-1 mt-3 small">
                                 <span class="text-muted">Entregue: <strong class="text-dark">{{ p.quantidadeEntregueKg |
                                         number:'1.0-0' }} Kg</strong></span>
@@ -145,7 +154,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let m of movimentacoes" class="animate__animated animate__fadeIn">
+                        <tr *ngFor="let m of movimentacoes | paginate: { id: 'mov_pag', itemsPerPage: 10, currentPage: p_mov }"
+                            class="animate__animated animate__fadeIn">
                             <td class="ps-3 text-start fw-bold">{{ m.data | date:'dd/MM/yyyy' }}</td>
                             <td class="text-start">
                                 <span class="d-block">{{ m.produtorOrigemNome }}</span>
@@ -191,6 +201,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-3">
+                    <pagination-controls id="mov_pag" (pageChange)="p_mov = $event" previousLabel="Anterior"
+                        nextLabel="Próximo"></pagination-controls>
+                </div>
             </div>
         </div>
     </div>
