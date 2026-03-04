@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ApiService, Produtor } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
@@ -9,12 +10,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-produtores-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgxPaginationModule],
+  imports: [CommonModule, RouterModule, NgxPaginationModule, FormsModule],
   templateUrl: './produtores-list.component.html',
   styleUrl: './produtores-list.component.css'
 })
 export class ProdutoresListComponent implements OnInit {
   produtores: Produtor[] = [];
+  termoBusca: string = '';
   p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
@@ -27,6 +29,15 @@ export class ProdutoresListComponent implements OnInit {
     this.apiService.getProdutores().subscribe(
       (data) => this.produtores = data,
       (error) => console.error('Erro ao buscar produtores:', error)
+    );
+  }
+
+  getProdutoresFiltrados(): Produtor[] {
+    if (!this.termoBusca) return this.produtores;
+    const term = this.termoBusca.toLowerCase();
+    return this.produtores.filter(p =>
+      p.nome.toLowerCase().includes(term) ||
+      (p.cpfCnpj && p.cpfCnpj.toLowerCase().includes(term))
     );
   }
 

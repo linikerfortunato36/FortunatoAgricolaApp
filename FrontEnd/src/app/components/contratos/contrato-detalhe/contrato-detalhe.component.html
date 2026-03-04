@@ -61,11 +61,20 @@
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
                             role="progressbar" [style.width]="getProgressoPct() + '%'"></div>
                     </div>
-                    <p class="text-danger small mt-2 fw-bold mb-0 text-end"
-                        *ngIf="(contrato?.quantidadeRestanteKg || 0) > 0">
-                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{ (contrato?.quantidadeRestanteKg
-                        || 0) | number:'1.0-0' }} Kg para bater a meta
-                    </p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <p class="text-danger small fw-bold mb-0"
+                            *ngIf="getFaltaComprar() > 0">
+                            <i class="bi bi-cart-x-fill me-1"></i> Falta Comprar: {{ getFaltaComprar() | number:'1.0-0' }} Kg
+                        </p>
+                        <p class="text-success small fw-bold mb-0"
+                            *ngIf="getFaltaComprar() === 0">
+                            <i class="bi bi-check-circle-fill me-1"></i> Compras Finalizadas
+                        </p>
+                        <p class="text-danger small fw-bold mb-0 text-end ms-auto"
+                            *ngIf="(contrato?.quantidadeRestanteKg || 0) > 0">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{ (contrato?.quantidadeRestanteKg || 0) | number:'1.0-0' }} Kg para bater a meta
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -65,10 +65,15 @@ export class HeaderComponent implements OnInit {
 
   onGlobalSearch(): void {
     if (this.searchQuery.trim()) {
-      // Por enquanto, redireciona para a lista de contratos com o termo de busca (opcional futuramente)
-      console.log('Pesquisando por:', this.searchQuery);
-      this.router.navigate(['/app/contratos']);
+      // Redireciona para a lista de contratos com o termo de busca
+      this.router.navigate(['/app/contratos'], { queryParams: { q: this.searchQuery.trim() } });
+      this.searchQuery = '';
     }
+  }
+
+  goToNotificacoes(): void {
+    this.notifMenuOpen = false;
+    this.router.navigate(['/app/dashboard']);
   }
 
   get usuario() {

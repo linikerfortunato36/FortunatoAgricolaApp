@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { ApiService, Contrato, Cliente, Produtor } from '../../../services/api.service';
@@ -36,9 +36,19 @@ export class ContratosListComponent implements OnInit {
     valorCompraPorSaca: null as number | null
   };
 
-  constructor(private apiService: ApiService, public authService: AuthService) { }
+  constructor(
+    private apiService: ApiService,
+    public authService: AuthService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['q']) {
+        this.filtroNumero = params['q'];
+      }
+    });
+
     this.carregarContratos();
     this.carregarClientes();
     this.carregarProdutores();

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { ApiService, Cliente } from '../../../services/api.service';
 import Swal from 'sweetalert2';
@@ -9,12 +10,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-clientes-list',
   standalone: true,
-  imports: [RouterModule, CommonModule, NgxPaginationModule],
+  imports: [RouterModule, CommonModule, NgxPaginationModule, FormsModule],
   templateUrl: './clientes-list.component.html',
   styleUrl: './clientes-list.component.css'
 })
 export class ClientesListComponent implements OnInit {
   clientes: Cliente[] = [];
+  termoBusca: string = '';
   p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
@@ -25,6 +27,15 @@ export class ClientesListComponent implements OnInit {
 
   loadClientes(): void {
     this.apiService.getClientes().subscribe(data => this.clientes = data);
+  }
+
+  getClientesFiltrados(): Cliente[] {
+    if (!this.termoBusca) return this.clientes;
+    const term = this.termoBusca.toLowerCase();
+    return this.clientes.filter(c =>
+      c.nome.toLowerCase().includes(term) ||
+      (c.cnpj && c.cnpj.toLowerCase().includes(term))
+    );
   }
 
   onDelete(id: string, nome: string): void {

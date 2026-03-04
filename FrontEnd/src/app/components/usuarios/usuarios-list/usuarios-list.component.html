@@ -14,7 +14,8 @@
             <div class="p-3 border-bottom d-flex flex-wrap gap-3 bg-light align-items-center">
                 <div class="input-group" style="max-width: 300px;">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Nome, E-mail...">
+                    <input type="text" class="form-control border-start-0 ps-0" [(ngModel)]="termoBusca"
+                        placeholder="Nome, E-mail...">
                 </div>
             </div>
 
@@ -30,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let u of usuarios | paginate: { itemsPerPage: 10, currentPage: p }">
+                        <tr *ngFor="let u of getUsuariosFiltrados() | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ u.nome }}
                                 <div class="text-muted small fw-normal">{{ u.login }}</div>
                             </td>
@@ -75,7 +76,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr *ngIf="usuarios.length === 0">
+                        <tr *ngIf="getUsuariosFiltrados().length === 0">
                             <td colspan="5" class="text-center py-4 text-muted">Ainda não há usuários cadastrados.</td>
                         </tr>
                     </tbody>

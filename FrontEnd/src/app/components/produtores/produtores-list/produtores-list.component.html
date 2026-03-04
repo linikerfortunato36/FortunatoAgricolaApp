@@ -17,7 +17,8 @@
             <div class="p-3 border-bottom d-flex flex-wrap gap-3 bg-light align-items-center">
                 <div class="input-group" style="max-width: 300px;">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Nome, CPF/CNPJ...">
+                    <input type="text" class="form-control border-start-0 ps-0" [(ngModel)]="termoBusca"
+                        placeholder="Nome, CPF/CNPJ...">
                 </div>
             </div>
 
@@ -35,7 +36,7 @@
                     </thead>
                     <tbody>
 
-                        <tr *ngFor="let p of produtores | paginate: { itemsPerPage: 10, currentPage: p }">
+                        <tr *ngFor="let p of getProdutoresFiltrados() | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ p.nome }}</td>
                             <td><span class="text-muted small">{{ p.cpfCnpj }}</span></td>
                             <td>{{ p.inscricaoEstadual || 'ISENTO' }}</td>
@@ -71,6 +72,12 @@
                             </td>
                         </tr>
 
+                        <tr *ngIf="getProdutoresFiltrados().length === 0">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                Nenhum produtor encontrado.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-center mt-3 mb-2">

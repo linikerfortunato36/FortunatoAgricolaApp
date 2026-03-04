@@ -73,7 +73,8 @@
                                 <ng-select [items]="produtoresFiltrados" bindLabel="nome" bindValue="id"
                                     [(ngModel)]="form.produtorOrigemId"
                                     placeholder="Selecione o produtor origem (escolha contrato primeiro)..."
-                                    appendTo="body" [disabled]="!form.contratoId"></ng-select>
+                                    appendTo="body" [disabled]="!form.contratoId"
+                                    (change)="onProdutorOrigemChange()"></ng-select>
                                 <div *ngIf="cotaProdutorSelecionado" class="mt-1 small"
                                     [class.text-danger]="remainingQuota <= 0" [class.text-muted]="remainingQuota > 0">
                                     Cota Restante no Contrato: <strong>{{ remainingQuota | number:'1.0-0' }} Kg</strong>
@@ -166,28 +167,18 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label fw-bold small">Número da NF-e</label>
                                 <input type="text" class="form-control" [(ngModel)]="form.nfe"
                                     placeholder="Nº da Nota Fiscal">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label fw-bold small">Valor da NF-e (R$)</label>
                                 <input type="number" class="form-control text-end" [(ngModel)]="form.valorNfe"
                                     placeholder="0,00">
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold small">Venda por Saca (R$)</label>
-                                <input type="number" class="form-control text-end fw-bold text-success"
-                                    [(ngModel)]="form.valorVendaPorSaca" placeholder="0,00">
-                            </div>
 
-                            <div class="col-md-3 mt-4">
-                                <label class="form-label fw-bold small">Compra por Saca (R$)</label>
-                                <input type="number" class="form-control text-end" [(ngModel)]="form.valorCompraPorSaca"
-                                    placeholder="0,00">
-                            </div>
-                            <div class="col-md-3 mt-4">
+                            <div class="col-md-6 mt-4">
                                 <label class="form-label fw-bold small">Frete por Saca (R$)</label>
                                 <input type="number" class="form-control text-end" [(ngModel)]="form.custoFretePorSaca"
                                     placeholder="0,00">

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ApiService, Transportadora } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
@@ -9,12 +10,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-transportadoras-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgxPaginationModule],
+  imports: [CommonModule, RouterModule, NgxPaginationModule, FormsModule],
   templateUrl: './transportadoras-list.component.html',
   styleUrl: './transportadoras-list.component.css'
 })
 export class TransportadorasListComponent implements OnInit {
   transportadoras: Transportadora[] = [];
+  termoBusca: string = '';
   p: number = 1;
 
   constructor(private apiService: ApiService, public authService: AuthService) { }
@@ -27,6 +29,15 @@ export class TransportadorasListComponent implements OnInit {
     this.apiService.getTransportadoras().subscribe(data => {
       this.transportadoras = data;
     });
+  }
+
+  getTransportadorasFiltradas(): Transportadora[] {
+    if (!this.termoBusca) return this.transportadoras;
+    const term = this.termoBusca.toLowerCase();
+    return this.transportadoras.filter(t =>
+      t.nome.toLowerCase().includes(term) ||
+      (t.cpfCnpj && t.cpfCnpj.toLowerCase().includes(term))
+    );
   }
 
   deleteTransportadora(id: string): void {

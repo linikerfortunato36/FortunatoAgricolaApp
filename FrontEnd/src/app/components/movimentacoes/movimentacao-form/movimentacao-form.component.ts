@@ -104,17 +104,40 @@ export class MovimentacaoFormComponent implements OnInit {
   }
 
   onContratoChange(): void {
-    if (this.contratoSelecionado && this.contratoSelecionado.produtoresVinculados) {
-      const vinculadosIds = this.contratoSelecionado.produtoresVinculados.map(p => p.produtorId);
-      this.produtoresFiltrados = this.produtores.filter(p => vinculadosIds.includes(p.id));
+    if (this.contratoSelecionado) {
+      this.form.valorVendaPorSaca = this.contratoSelecionado.valorVendaPorSaca || 0;
 
-      // Clear selected produtor if not in the new filtered list
-      if (this.form.produtorOrigemId && !vinculadosIds.includes(this.form.produtorOrigemId)) {
+      if (this.contratoSelecionado.produtoresVinculados) {
+        const vinculadosIds = this.contratoSelecionado.produtoresVinculados.map(p => p.produtorId);
+        this.produtoresFiltrados = this.produtores.filter(p => vinculadosIds.includes(p.id));
+
+        // Clear selected produtor if not in the new filtered list
+        if (this.form.produtorOrigemId && !vinculadosIds.includes(this.form.produtorOrigemId)) {
+          this.form.produtorOrigemId = '';
+        }
+      } else {
+        this.produtoresFiltrados = [];
         this.form.produtorOrigemId = '';
       }
     } else {
+      this.form.valorVendaPorSaca = 0;
       this.produtoresFiltrados = [];
       this.form.produtorOrigemId = '';
+    }
+
+    this.updatePrecoCompra();
+  }
+
+  onProdutorOrigemChange(): void {
+    this.updatePrecoCompra();
+  }
+
+  updatePrecoCompra(): void {
+    const cota = this.cotaProdutorSelecionado;
+    if (cota) {
+      this.form.valorCompraPorSaca = cota.valorCompraPorSaca || 0;
+    } else {
+      this.form.valorCompraPorSaca = 0;
     }
   }
 

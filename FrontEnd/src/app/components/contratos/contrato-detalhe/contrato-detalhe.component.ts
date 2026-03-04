@@ -138,12 +138,14 @@ export class ContratoDetalheComponent implements OnInit {
         doc.setLineWidth(0.3);
         doc.roundedRect(14, y, pageW - 28, 22, 3, 3, 'S');
 
+        const faltaComprar = this.getFaltaComprar();
         const infoL = [
-          { label: 'CLIENTE DESTINO', val: c.clienteNome, x: 20, w: 70 },
-          { label: 'STATUS', val: c.status, x: 100, w: 35 },
-          { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} kg`, x: 145, w: 45 },
-          { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} kg`, x: 200, w: 40 },
-          { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} kg`, x: 250, w: 38 },
+          { label: 'CLIENTE DESTINO', val: c.clienteNome, x: 16, w: 55 },
+          { label: 'STATUS', val: c.status, x: 75, w: 30 },
+          { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} kg`, x: 110, w: 35 },
+          { label: 'FALTA COMPRAR', val: `${fmt(faltaComprar)} kg`, x: 160, w: 35 },
+          { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} kg`, x: 210, w: 35 },
+          { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} kg`, x: 250, w: 35 },
         ];
         infoL.forEach(info => {
           doc.setFont('helvetica', 'bold');
@@ -165,7 +167,7 @@ export class ContratoDetalheComponent implements OnInit {
             doc.text(c.status, info.x + 15, y + 13, { align: 'center' });
           } else {
             if (info.label === 'ENTREGUE') doc.setTextColor(22, 163, 74);
-            if (info.label === 'RESTANTE') doc.setTextColor(220, 38, 38);
+            if (info.label === 'RESTANTE' || info.label === 'FALTA COMPRAR') doc.setTextColor(220, 38, 38);
             doc.text(info.val, info.x, y + 14);
           }
         });
@@ -361,5 +363,11 @@ export class ContratoDetalheComponent implements OnInit {
   getProgressoPct(): number {
     if (!this.contrato || this.contrato.quantidadeTotalKg === 0) return 0;
     return (this.contrato.quantidadeEntregueKg / this.contrato.quantidadeTotalKg) * 100;
+  }
+
+  getFaltaComprar(): number {
+    if (!this.contrato) return 0;
+    const totalCotas = (this.contrato.produtoresVinculados || []).reduce((s, p) => s + p.quantidadeCotaKg, 0);
+    return Math.max(0, this.contrato.quantidadeTotalKg - totalCotas);
   }
 }
