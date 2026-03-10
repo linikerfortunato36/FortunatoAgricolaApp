@@ -1,87 +1,161 @@
 <header class="py-3 bg-white border-bottom shadow-sm w-100">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center d-md-none">
-            <button class="btn btn-primary btn-sm me-2">
-                <i class="bi bi-list fs-5"></i>
-            </button>
-            <span class="fs-5 fw-bold text-primary">Fortunato Agrícola</span>
-        </div>
-
-        <!-- Barra de busca no topo (Simulada para visual) -->
-        <div class="w-100 me-3 d-none d-md-flex mx-4">
-            <form class="w-100 w-md-50 position-relative" (submit)="$event.preventDefault(); onGlobalSearch()">
-                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                <input type="search" class="form-control ps-5 rounded-pill bg-light border-0" [(ngModel)]="searchQuery"
-                    name="searchQuery" placeholder="Buscar contratos, produtores, clientes..." aria-label="Search">
-            </form>
-        </div>
-
-        <!-- Notificações e atalhos -->
-        <div class="flex-shrink-0 d-flex align-items-center position-relative">
-            <!-- Dropdown Notificações -->
-            <div class="dropdown me-2 position-relative">
-                <a href="javascript:void(0)" (click)="toggleNotifMenu($event)"
-                    class="btn btn-outline-secondary rounded-circle border-0 position-relative pt-2 pb-2 dropdown-toggle">
-                    <i class="bi bi-bell fs-5"></i>
-                    <span *ngIf="notificacoes.length > 0"
-                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                        <span class="visually-hidden">Novos alertas</span>
-                    </span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end shadow" [class.show]="notifMenuOpen"
-                    style="width: 300px; position: absolute; top: 100%; right: 0;">
-                    <h6 class="dropdown-header">Notificações</h6>
-
-                    <ng-container *ngIf="notificacoes.length > 0; else noNotifs">
-                        <a class="dropdown-item py-2 d-flex align-items-center border-bottom" href="javascript:void(0)"
-                            *ngFor="let notif of notificacoes">
-                            <div class="text-bg-{{notif.tipo}} rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center text-white"
-                                style="width: 32px; height: 32px;">
-                                <i class="bi {{notif.icone}}"></i>
-                            </div>
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-bold small">{{notif.titulo}}</h6>
-                                <small class="text-muted d-block">{{notif.mensagem}}</small>
-                            </div>
-                        </a>
-                    </ng-container>
-                    <ng-template #noNotifs>
-                        <div class="p-3 text-center text-muted small">
-                            Nenhuma notificação no momento.
-                        </div>
-                    </ng-template>
-
-                    <div class="dropdown-divider mb-0"></div>
-                    <a class="dropdown-item text-center small text-primary fw-bold py-2" href="javascript:void(0)"
-                        (click)="goToNotificacoes()">Ver
-                        todas as notificações</a>
-                </div>
-            </div>
-
-            <!-- Dropdown Usuário -->
-            <div class="dropdown d-none d-md-block position-relative">
-                <a href="javascript:void(0)" (click)="toggleUserMenu($event)"
-                    class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle">
-                    <img [src]="'https://ui-avatars.com/api/?name=' + (usuario?.nome || 'User') + '&background=f1c40f&color=0d4a22'"
-                        alt="Avatar" width="32" height="32" class="rounded-circle me-2">
-                    <span class="d-none d-lg-inline small fw-bold text-dark">{{ usuario?.nome || 'Usuário' }}</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow" [class.show]="userMenuOpen"
-                    style="position: absolute; top: 100%; right: 0;">
-                    <li>
-                        <h6 class="dropdown-header small">{{ usuario?.perfil }}</h6>
-                    </li>
-                    <li><a class="dropdown-item" routerLink="/app/configuracoes" (click)="userMenuOpen = false">
-                            <i class="bi bi-gear me-2 text-primary"></i>Configurações</a></li>
-                    <li><a class="dropdown-item" routerLink="/app/usuarios" (click)="userMenuOpen = false">
-                            <i class="bi bi-person me-2 text-primary"></i>Perfil / Usuários</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item text-danger" href="javascript:void(0)" (click)="logout()">
-                            <i class="bi bi-box-arrow-left me-2"></i>Sair do Sistema</a></li>
-                </ul>
-            </div>
-        </div>
+  <div
+    class="container-fluid d-flex align-items-center justify-content-between"
+  >
+    <div class="d-flex align-items-center d-md-none">
+      <button
+        class="btn btn-primary btn-sm me-2"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#mobileSidebar"
+        aria-controls="mobileSidebar"
+      >
+        <i class="bi bi-list fs-5"></i>
+      </button>
+      <span class="fs-5 fw-bold text-primary">Fortunato Agrícola</span>
     </div>
+
+    <!-- Barra de busca no topo (Simulada para visual) -->
+    <div class="w-100 me-3 d-none d-md-flex mx-4">
+      <form
+        class="w-100 w-md-50 position-relative"
+        (submit)="$event.preventDefault(); onGlobalSearch()"
+      >
+        <i
+          class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+        ></i>
+        <input
+          type="search"
+          class="form-control ps-5 rounded-pill bg-light border-0"
+          [(ngModel)]="searchQuery"
+          name="searchQuery"
+          placeholder="Buscar contratos, produtores, clientes..."
+          aria-label="Search"
+        />
+      </form>
+    </div>
+
+    <!-- Notificações e atalhos -->
+    <div class="flex-shrink-0 d-flex align-items-center position-relative">
+      <!-- Dropdown Notificações -->
+      <div class="dropdown me-2 position-relative">
+        <a
+          href="javascript:void(0)"
+          (click)="toggleNotifMenu($event)"
+          class="btn btn-outline-secondary rounded-circle border-0 position-relative pt-2 pb-2 dropdown-toggle"
+        >
+          <i class="bi bi-bell fs-5"></i>
+          <span
+            *ngIf="notificacoes.length > 0"
+            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+          >
+            <span class="visually-hidden">Novos alertas</span>
+          </span>
+        </a>
+        <div
+          class="dropdown-menu dropdown-menu-end shadow"
+          [class.show]="notifMenuOpen"
+          style="width: 300px; position: absolute; top: 100%; right: 0"
+        >
+          <h6 class="dropdown-header">Notificações</h6>
+
+          <ng-container *ngIf="notificacoes.length > 0; else noNotifs">
+            <a
+              class="dropdown-item py-2 d-flex align-items-center border-bottom"
+              href="javascript:void(0)"
+              *ngFor="let notif of notificacoes"
+            >
+              <div
+                class="text-bg-{{
+                  notif.tipo
+                }} rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center text-white"
+                style="width: 32px; height: 32px"
+              >
+                <i class="bi {{ notif.icone }}"></i>
+              </div>
+              <div class="ms-3">
+                <h6 class="mb-0 fw-bold small">{{ notif.titulo }}</h6>
+                <small class="text-muted d-block">{{ notif.mensagem }}</small>
+              </div>
+            </a>
+          </ng-container>
+          <ng-template #noNotifs>
+            <div class="p-3 text-center text-muted small">
+              Nenhuma notificação no momento.
+            </div>
+          </ng-template>
+
+          <div class="dropdown-divider mb-0"></div>
+          <a
+            class="dropdown-item text-center small text-primary fw-bold py-2"
+            href="javascript:void(0)"
+            (click)="goToNotificacoes()"
+            >Ver todas as notificações</a
+          >
+        </div>
+      </div>
+
+      <!-- Dropdown Usuário -->
+      <div class="dropdown d-none d-md-block position-relative">
+        <a
+          href="javascript:void(0)"
+          (click)="toggleUserMenu($event)"
+          class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+        >
+          <img
+            [src]="
+              'https://ui-avatars.com/api/?name=' +
+              (usuario?.nome || 'User') +
+              '&background=f1c40f&color=0d4a22'
+            "
+            alt="Avatar"
+            width="32"
+            height="32"
+            class="rounded-circle me-2"
+          />
+          <span class="d-none d-lg-inline small fw-bold text-dark">{{
+            usuario?.nome || "Usuário"
+          }}</span>
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-end shadow"
+          [class.show]="userMenuOpen"
+          style="position: absolute; top: 100%; right: 0"
+        >
+          <li>
+            <h6 class="dropdown-header small">{{ usuario?.perfil }}</h6>
+          </li>
+          <li>
+            <a
+              class="dropdown-item"
+              routerLink="/app/configuracoes"
+              (click)="userMenuOpen = false"
+            >
+              <i class="bi bi-gear me-2 text-primary"></i>Configurações</a
+            >
+          </li>
+          <li>
+            <a
+              class="dropdown-item"
+              routerLink="/app/usuarios"
+              (click)="userMenuOpen = false"
+            >
+              <i class="bi bi-person me-2 text-primary"></i>Perfil / Usuários</a
+            >
+          </li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li>
+            <a
+              class="dropdown-item text-danger"
+              href="javascript:void(0)"
+              (click)="logout()"
+            >
+              <i class="bi bi-box-arrow-left me-2"></i>Sair do Sistema</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </header>

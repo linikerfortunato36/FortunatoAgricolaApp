@@ -1,66 +1,106 @@
 <div class="d-flex flex-column h-100 text-white w-100">
-    <div class="d-flex align-items-center mb-4 mt-2">
-        <!-- Placeholder para a Logo -->
-        <img src="images/Logo.jpeg" height="60" alt="Fortunato Agrícola Logo">
-        <span class="fs-4 fw-bold">Fortunato Agrícola</span>
-    </div>
+  <div class="d-flex align-items-center mb-4 mt-2">
+    <!-- Placeholder para a Logo -->
+    <img src="images/Logo.jpeg" height="60" alt="Fortunato Agrícola Logo" />
+    <span class="fs-4 fw-bold">Fortunato Agrícola</span>
+  </div>
 
-    <ul class="nav nav-pills flex-column mb-auto mt-2 gap-2">
-        <li class="nav-item">
-            <a routerLink="/app/dashboard" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-house-door me-2 fs-5"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a routerLink="/app/clientes" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-people me-2 fs-5"></i>
-                <span>Clientes</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a routerLink="/app/produtores" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-person-badge me-2 fs-5"></i>
-                <span>Produtores</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a routerLink="/app/contratos" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-file-earmark-text me-2 fs-5"></i>
-                <span>Contratos</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a routerLink="/app/transportadoras" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-truck me-2 fs-5"></i>
-                <span>Transportadoras</span>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="perfil !== 'Operador'">
-            <a routerLink="/app/relatorios" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-bar-chart-line me-2 fs-5"></i>
-                <span>Relatórios</span>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="perfil === 'Administrador'">
-            <a routerLink="/app/usuarios" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-shield-lock me-2 fs-5"></i>
-                <span>Usuários</span>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="perfil === 'Administrador'">
-            <a routerLink="/app/configuracoes" routerLinkActive="active"
-                class="nav-link text-white d-flex align-items-center">
-                <i class="bi bi-gear me-2 fs-5"></i>
-                <span>Configurações</span>
-            </a>
-        </li>
-    </ul>
+  <ul class="nav nav-pills flex-column mb-auto mt-2 gap-2">
+    <li class="nav-item">
+      <a
+        routerLink="/app/dashboard"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-house-door me-2 fs-5"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        routerLink="/app/clientes"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-people me-2 fs-5"></i>
+        <span>Clientes</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        routerLink="/app/produtores"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-person-badge me-2 fs-5"></i>
+        <span>Produtores</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        routerLink="/app/contratos"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-file-earmark-text me-2 fs-5"></i>
+        <span>Contratos</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        routerLink="/app/transportadoras"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-truck me-2 fs-5"></i>
+        <span>Transportadoras</span>
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="perfil !== 'Operador'">
+      <a
+        routerLink="/app/relatorios"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-bar-chart-line me-2 fs-5"></i>
+        <span>Relatórios</span>
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="perfil === 'Administrador'">
+      <a
+        routerLink="/app/usuarios"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-shield-lock me-2 fs-5"></i>
+        <span>Usuários</span>
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="perfil === 'Administrador'">
+      <a
+        routerLink="/app/configuracoes"
+        routerLinkActive="active"
+        class="nav-link text-white d-flex align-items-center"
+        data-bs-dismiss="offcanvas"
+        data-bs-target="#mobileSidebar"
+      >
+        <i class="bi bi-gear me-2 fs-5"></i>
+        <span>Configurações</span>
+      </a>
+    </li>
+  </ul>
 </div>

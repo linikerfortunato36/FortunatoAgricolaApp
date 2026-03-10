@@ -1,8 +1,34 @@
 <ng-container *ngIf="!isPublicPage; else publicLayout">
   <div class="d-flex w-100 h-100 min-vh-100">
-    <div class="bg-primary text-white p-3 d-none d-md-flex flex-column" style="width: 250px;">
+    <div
+      class="bg-primary text-white p-3 d-none d-md-flex flex-column"
+      style="width: 250px"
+    >
       <app-sidebar></app-sidebar>
     </div>
+
+    <!-- Sidebar Offcanvas for Mobile -->
+    <div
+      class="offcanvas offcanvas-start bg-primary text-white"
+      tabindex="-1"
+      id="mobileSidebar"
+      aria-labelledby="mobileSidebarLabel"
+      style="width: 280px"
+    >
+      <div class="offcanvas-header border-bottom border-light mb-2">
+        <h5 class="offcanvas-title fw-bold" id="mobileSidebarLabel">Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-3">
+        <app-sidebar></app-sidebar>
+      </div>
+    </div>
+
     <div class="d-flex flex-column flex-grow-1 overflow-hidden">
       <app-header></app-header>
       <main class="flex-grow-1 p-4 bg-light overflow-auto">
