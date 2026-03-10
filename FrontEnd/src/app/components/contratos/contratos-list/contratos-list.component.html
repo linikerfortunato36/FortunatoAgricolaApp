@@ -90,6 +90,11 @@
                             <td
                                 [ngClass]="{'text-success fw-bold': c.quantidadeEntregueKg > 0, 'text-muted': c.quantidadeEntregueKg === 0}">
                                 {{ c.quantidadeEntregueKg | number:'1.0-0':'pt-BR' }} Kg
+                                <div *ngIf="c.quantidadeEntregueKg > c.quantidadeTotalKg"
+                                    class="text-warning x-small pt-1">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Excedente:
+                                    {{ (c.quantidadeEntregueKg - c.quantidadeTotalKg) | number:'1.0-0':'pt-BR' }} Kg
+                                </div>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between small text-primary fw-bold mb-1">
@@ -108,7 +113,7 @@
                             <td>
                                 <span *ngIf="c.dataFinalEntrega" class="fw-bold text-dark">{{ c.dataFinalEntrega |
                                     date:'dd/MM/yyyy' }}</span>
-                                <span *ngIf="!c.dataFinalEntrega" class="text-muted small">Não Definida</span>
+                                <span *ngIf="!c.dataFinalEntrega" class="text-muted small">Não inf.</span>
                             </td>
                             <td class="small text-muted">
                                 <div *ngIf="c.updatedByName">

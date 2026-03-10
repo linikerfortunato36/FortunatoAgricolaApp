@@ -116,7 +116,8 @@ export class ProdutorFormComponent implements OnInit {
         dataFinalEntrega: vinculo?.dataFinalEntrega || null,
         totalEntregueKg: 0,
         totalSacas: 0,
-        totalDescargas: 0
+        totalDescargas: 0,
+        ultimaEntrega: null
       });
     });
 
@@ -132,16 +133,35 @@ export class ProdutorFormComponent implements OnInit {
           dataFinalEntrega: null,
           totalEntregueKg: 0,
           totalSacas: 0,
-          totalDescargas: 0
+          totalDescargas: 0,
+          ultimaEntrega: null
         });
       }
       const resumo = map.get(m.contratoNumero);
       resumo.totalEntregueKg += m.pesoFinal; // atualizado: usar pesoFinal que eh o liquido
       resumo.totalSacas += m.quantidadeSacas;
       resumo.totalDescargas += 1;
+
+      // Update last delivery date
+      if (m.data) {
+        const d = new Date(m.data);
+        if (!resumo.ultimaEntrega || d > new Date(resumo.ultimaEntrega)) {
+          resumo.ultimaEntrega = m.data;
+        }
+      }
     });
 
     this.contratosGrouped = Array.from(map.values());
+
+    // Recalcula o restante/excedente com base no que foi somado das movimentações
+    this.contratosGrouped.forEach(resumo => {
+      if (resumo.cotaTotalKg > 0) {
+        resumo.restanteEstimadoKg = resumo.cotaTotalKg - resumo.totalEntregueKg;
+      } else {
+        // Se não tem cota, tudo é excedente
+        resumo.restanteEstimadoKg = -resumo.totalEntregueKg;
+      }
+    });
   }
 
   get movimentacoesFiltradas() {

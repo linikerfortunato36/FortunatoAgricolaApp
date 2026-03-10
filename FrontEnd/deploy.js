@@ -58,6 +58,10 @@ async function deploy() {
         await client.ensureDir("/www");
         await client.cd("/www");
         await client.uploadFromDir(path.resolve(__dirname, "./dist/front-end-app/browser"));
+
+        console.log("Uploading Frontend Routing web.config to /www...");
+        await client.uploadFrom(path.resolve(__dirname, "../webconfig-frontend.txt"), "web.config");
+
         console.log("✅ Frontend uploaded successfully.");
     }
     catch (err) {

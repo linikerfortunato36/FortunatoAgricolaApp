@@ -127,11 +127,14 @@
             <div class="col" *ngFor="let summary of contratosGrouped">
                 <div class="card border-0 shadow-sm h-100 rounded-4">
                     <div class="card-body p-4 position-relative overflow-hidden">
-                        <div class="position-absolute top-0 end-0 bg-primary bg-opacity-10 rounded-bottom-start p-3">
-                            <i class="bi bi-file-earmark-text text-primary fs-3 opacity-50"></i>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="text-uppercase text-muted fw-bold small mb-0">Contrato #{{ summary.contratoNumero
+                                }}</h6>
+                            <span class="badge bg-light text-dark border small" *ngIf="summary.ultimaEntrega">
+                                <i class="bi bi-clock-history me-1"></i> Última: {{ summary.ultimaEntrega |
+                                date:'dd/MM/yyyy' }}
+                            </span>
                         </div>
-                        <h6 class="text-uppercase text-muted fw-bold small mb-3">Contrato #{{ summary.contratoNumero }}
-                        </h6>
 
                         <h3 class="fw-bold text-dark mb-1">{{ summary.totalEntregueKg | number:'1.0-0':'pt-BR' }} Kg
                         </h3>
@@ -141,9 +144,10 @@
                             <div class="d-flex justify-content-between text-muted small mt-2">
                                 <span>Cota: <strong>{{ summary.cotaTotalKg | number:'1.0-0':'pt-BR' }}
                                         Kg</strong></span>
-                                <span *ngIf="summary.dataFinalEntrega" class="text-danger fw-bold"><i
-                                        class="bi bi-calendar-x"></i> {{ summary.dataFinalEntrega |
-                                    date:'dd/MM/yyyy':'UTC' }}</span>
+                                <span class="text-danger fw-bold small">
+                                    <i class="bi bi-calendar-x"></i> Vencimento: {{ summary.dataFinalEntrega ?
+                                    (summary.dataFinalEntrega | date:'dd/MM/yyyy':'UTC') : 'Não inf.' }}
+                                </span>
                             </div>
                             <div class="progress mt-1" style="height: 6px;">
                                 <div class="progress-bar bg-primary" role="progressbar"
