@@ -23,11 +23,13 @@ export class ContratoFormComponent implements OnInit {
     selectedProdutorId: string | null = null;
     quotaInput: number | null = null;
     valorCompraInput: number | null = null;
+    dataLimiteProdutorInput: string | null = null;
 
     contrato: any = {
         clienteId: null,
         numeroContrato: '',
         quantidadeTotalKg: 0,
+        dataFinalEntrega: null,
         valorVendaPorSaca: 0,
         status: 'Aberto',
         isActive: true,
@@ -61,6 +63,16 @@ export class ContratoFormComponent implements OnInit {
             this.apiService.getContratoById(this.contratoId).subscribe({
                 next: (data) => {
                     this.contrato = data;
+                    if (this.contrato.dataFinalEntrega) {
+                        this.contrato.dataFinalEntrega = new Date(this.contrato.dataFinalEntrega).toISOString().split('T')[0];
+                    }
+                    if (this.contrato.produtoresVinculados) {
+                        this.contrato.produtoresVinculados.forEach((p: any) => {
+                            if (p.dataFinalEntrega) {
+                                p.dataFinalEntrega = new Date(p.dataFinalEntrega).toISOString().split('T')[0];
+                            }
+                        });
+                    }
                     this.loading = false;
                 },
                 error: (err) => {
@@ -92,23 +104,20 @@ export class ContratoFormComponent implements OnInit {
             return;
         }
 
-        if (this.sumQuotas + this.quotaInput > this.contrato.quantidadeTotalKg) {
-            alert('A soma das cotas não pode exceder o total do contrato!');
-            return;
-        }
-
         const prod = this.produtores.find(p => p.id === this.selectedProdutorId);
         this.contrato.produtoresVinculados.push({
             produtorId: this.selectedProdutorId,
             produtorNome: prod?.nome || '',
             quantidadeCotaKg: this.quotaInput,
             quantidadeEntregueKg: 0,
-            valorCompraPorSaca: this.valorCompraInput
+            valorCompraPorSaca: this.valorCompraInput,
+            dataFinalEntrega: this.dataLimiteProdutorInput || null
         });
 
         this.selectedProdutorId = null;
         this.quotaInput = null;
         this.valorCompraInput = null;
+        this.dataLimiteProdutorInput = null;
     }
 
     removeProdutor(produtorId: string): void {
@@ -118,11 +127,6 @@ export class ContratoFormComponent implements OnInit {
     onSubmit(): void {
         if (!this.contrato.clienteId || !this.contrato.numeroContrato || this.contrato.quantidadeTotalKg <= 0) {
             alert('Preencha todos os campos obrigatórios corretamente.');
-            return;
-        }
-
-        if (this.sumQuotas > this.contrato.quantidadeTotalKg) {
-            alert('A soma das cotas dos produtores excede a cota total do contrato!');
             return;
         }
 

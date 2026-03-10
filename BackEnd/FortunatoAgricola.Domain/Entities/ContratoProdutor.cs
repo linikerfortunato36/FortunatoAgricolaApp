@@ -14,5 +14,6 @@ namespace FortunatoAgricola.Domain.Entities
         public decimal QuantidadeEntregueKg { get; set; }
         public decimal QuantidadeRestanteKg => QuantidadeCotaKg - QuantidadeEntregueKg;
         public decimal ValorCompraPorSaca { get; set; }
+        public DateTime? DataFinalEntrega { get; set; }
     }
 }

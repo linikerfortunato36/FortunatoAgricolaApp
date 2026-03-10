@@ -71,7 +71,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold text-dark">Data Final Entrega</label>
+                                    <input type="date" class="form-control" [(ngModel)]="contrato.dataFinalEntrega"
+                                        name="dataFinalEntrega">
+                                </div>
+
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold text-dark">Status Inicial</label>
                                     <select class="form-select" [(ngModel)]="contrato.status" name="status">
                                         <option value="Aberto">Aberto</option>
@@ -97,22 +103,27 @@
 
                             <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded"
                                 *ngIf="authService.isAdminOrMaster()">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold text-dark small">Selecionar Produtor</label>
                                     <ng-select [items]="produtores" bindLabel="nome" bindValue="id"
                                         [(ngModel)]="selectedProdutorId" name="selectedProdutorId"
-                                        placeholder="Pesquise o produtor...">
+                                        placeholder="Pesquise produtor...">
                                     </ng-select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="form-label fw-bold text-dark small">Cota (Kg)</label>
                                     <input type="number" class="form-control" [(ngModel)]="quotaInput" name="quotaInput"
-                                        placeholder="Ex: 50000">
+                                        placeholder="50000">
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold text-dark small">Compra (R$ / Sc)</label>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold text-dark small">Compra (R$/Sc)</label>
                                     <input type="number" class="form-control" [(ngModel)]="valorCompraInput"
                                         name="valorCompraInput" placeholder="Ex: 150.00">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold text-dark small">Data Limite (Cota)</label>
+                                    <input type="date" class="form-control" [(ngModel)]="dataLimiteProdutorInput"
+                                        name="dataLimiteProdutorInput">
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-secondary w-100" (click)="addProdutor()"
@@ -127,6 +138,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Produtor</th>
+                                            <th class="text-end">Limite Final</th>
                                             <th class="text-end">Compra (R$/Sc)</th>
                                             <th class="text-end">Cota Definida (Kg)</th>
                                             <th class="text-center" style="width: 80px;"
@@ -136,6 +148,8 @@
                                     <tbody>
                                         <tr *ngFor="let p of contrato.produtoresVinculados">
                                             <td>{{ p.produtorNome }}</td>
+                                            <td class="text-end text-muted small">{{ p.dataFinalEntrega ?
+                                                (p.dataFinalEntrega | date:'dd/MM/yyyy':'UTC') : '--' }}</td>
                                             <td class="text-end fw-bold">{{ p.valorCompraPorSaca |
                                                 currency:'BRL':'symbol':'1.2-2' }}</td>
                                             <td class="text-end fw-bold">{{ p.quantidadeCotaKg | number:'1.0-0' }} Kg
@@ -154,7 +168,7 @@
                                     </tbody>
                                     <tfoot class="table-light">
                                         <tr>
-                                            <td colspan="2" class="fw-bold text-end">SOMA DAS COTAS:</td>
+                                            <td colspan="3" class="fw-bold text-end">SOMA DAS COMPRAS (COTAS):</td>
                                             <td class="text-end fw-bold text-primary">{{ sumQuotas | number:'1.0-0' }}
                                                 Kg</td>
                                             <td *ngIf="authService.isAdminOrMaster()"></td>
@@ -166,8 +180,10 @@
                             <div class="alert alert-warning py-2 small mt-2 d-flex align-items-center"
                                 *ngIf="sumQuotas > contrato.quantidadeTotalKg">
                                 <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-                                <span>A soma das cotas ({{ sumQuotas | number:'1.0-0' }} Kg) excedeu o total do contrato
-                                    ({{ contrato.quantidadeTotalKg | number:'1.0-0' }} Kg)!</span>
+                                <span>A soma das compras ativas ({{ sumQuotas | number:'1.0-0' }} Kg) está gerando um
+                                    registro excedente ao limite do contrato
+                                    ({{ (sumQuotas - contrato.quantidadeTotalKg) | number:'1.0-0' }} Kg
+                                    excedentes).</span>
                             </div>
 
                         </fieldset>

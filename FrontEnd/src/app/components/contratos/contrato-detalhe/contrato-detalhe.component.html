@@ -31,6 +31,10 @@
                     <h5 class="fw-bold mb-1 text-dark text-truncate">{{ contrato?.clienteNome || '—' }}</h5>
                     <span class="badge" [ngClass]="contrato?.status === 'Finalizado' ? 'bg-success' : 'bg-primary'">{{
                         contrato?.status || '—' }}</span>
+                    <div class="mt-3 text-muted small fw-bold">
+                        <i class="bi bi-calendar-event me-1"></i> Limite: {{ contrato?.dataFinalEntrega ?
+                        (contrato?.dataFinalEntrega | date:'dd/MM/yyyy':'UTC') : 'Não Definido' }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,17 +66,22 @@
                             role="progressbar" [style.width]="getProgressoPct() + '%'"></div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-2">
-                        <p class="text-danger small fw-bold mb-0"
-                            *ngIf="getFaltaComprar() > 0">
-                            <i class="bi bi-cart-x-fill me-1"></i> Falta Comprar: {{ getFaltaComprar() | number:'1.0-0' }} Kg
+                        <p class="text-danger small fw-bold mb-0" *ngIf="getFaltaComprar() > 0">
+                            <i class="bi bi-cart-x-fill me-1"></i> Falta Comprar: {{ getFaltaComprar() | number:'1.0-0'
+                            }} Kg
                         </p>
-                        <p class="text-success small fw-bold mb-0"
-                            *ngIf="getFaltaComprar() === 0">
+                        <p class="text-success small fw-bold mb-0" *ngIf="getFaltaComprar() === 0">
                             <i class="bi bi-check-circle-fill me-1"></i> Compras Finalizadas
                         </p>
                         <p class="text-danger small fw-bold mb-0 text-end ms-auto"
                             *ngIf="(contrato?.quantidadeRestanteKg || 0) > 0">
-                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{ (contrato?.quantidadeRestanteKg || 0) | number:'1.0-0' }} Kg para bater a meta
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{
+                            (contrato?.quantidadeRestanteKg || 0) | number:'1.0-0' }} Kg para o Limite
+                        </p>
+                        <p class="text-warning small fw-bold mb-0 text-end ms-auto"
+                            *ngIf="(contrato?.quantidadeRestanteKg || 0) < 0">
+                            <i class="bi bi-exclamation-circle-fill me-1"></i> Excedentes: {{
+                            ((contrato?.quantidadeRestanteKg || 0) * -1) | number:'1.0-0' }} Kg
                         </p>
                     </div>
                 </div>
@@ -108,6 +117,10 @@
                                 <strong>Compra:</strong> {{ p.valorCompraPorSaca | currency:'BRL':'symbol':'1.2-2' }} /
                                 Sc
                             </div>
+                            <div class="text-danger small fw-bold mb-2">
+                                <i class="bi bi-calendar-x"></i> Limite Produtor: {{ p.dataFinalEntrega ?
+                                (p.dataFinalEntrega | date:'dd/MM/yyyy':'UTC') : 'Não estipulado (Siga o Contrato)' }}
+                            </div>
                             <div class="d-flex justify-content-between mb-1 mt-3 small">
                                 <span class="text-muted">Entregue: <strong class="text-dark">{{ p.quantidadeEntregueKg |
                                         number:'1.0-0' }} Kg</strong></span>
@@ -125,9 +138,15 @@
                                 <strong class="text-danger">{{ p.quantidadeRestanteKg | number:'1.0-0' }} Kg</strong>
                             </div>
                             <div class="d-flex justify-content-between mt-2 small text-success"
-                                *ngIf="p.quantidadeRestanteKg <= 0">
-                                <span class="fw-bold"><i class="bi bi-check-circle me-1"></i>Cota Atingida /
-                                    Excedida</span>
+                                *ngIf="p.quantidadeRestanteKg === 0">
+                                <span class="fw-bold"><i class="bi bi-check-circle me-1"></i>Cota Atingida!</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 small text-warning"
+                                *ngIf="p.quantidadeRestanteKg < 0">
+                                <span class="fw-bold text-warning"><i
+                                        class="bi bi-exclamation-triangle-fill me-1"></i>Excedente Entregue:</span>
+                                <strong class="text-warning">{{ (p.quantidadeRestanteKg * -1) | number:'1.0-0' }}
+                                    Kg</strong>
                             </div>
                         </div>
                     </div>

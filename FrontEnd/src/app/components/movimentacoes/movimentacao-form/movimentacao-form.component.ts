@@ -118,8 +118,7 @@ export class MovimentacaoFormComponent implements OnInit {
           const vinculo = this.contratoSelecionado!.produtoresVinculados!.find(v => v.produtorId === p.id);
           if (!vinculo) return false;
 
-          const restante = vinculo.quantidadeCotaKg - (vinculo.quantidadeEntregueKg || 0);
-          return restante > 0;
+          return true; // allow exceeding quotas
         });
 
         if (this.form.produtorOrigemId && !this.produtoresFiltrados.some(p => p.id === this.form.produtorOrigemId)) {
@@ -224,11 +223,6 @@ export class MovimentacaoFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.form.contratoId || !this.form.produtorOrigemId || !this.form.transportadoraId || !this.form.vendedorId) {
       this.submitError = 'Preencha todos os campos obrigatórios (Contrato, Produtor, Transportadora e Vendedor).';
-      return;
-    }
-
-    if (this.form.pesoLiquidofazenda > this.remainingQuota) {
-      this.submitError = `Erro: O Peso Líquido Fazenda (${this.form.pesoLiquidofazenda} Kg) não pode ser maior que o saldo restante do produtor (${this.remainingQuota} Kg).`;
       return;
     }
 

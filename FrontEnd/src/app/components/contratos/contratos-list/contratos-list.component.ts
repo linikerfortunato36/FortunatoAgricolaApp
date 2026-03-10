@@ -24,6 +24,7 @@ export class ContratosListComponent implements OnInit {
   filtroStatus = 'Todos';
   filtroClienteId: string | null = null;
   filtroNumero = '';
+  filtroDataEntrega: string = '';
 
   p: number = 1;
 
@@ -33,7 +34,8 @@ export class ContratosListComponent implements OnInit {
   novaCompra = {
     produtorId: null as string | null,
     quantidadeCotaKg: null as number | null,
-    valorCompraPorSaca: null as number | null
+    valorCompraPorSaca: null as number | null,
+    dataFinalEntrega: null as string | null
   };
 
   constructor(
@@ -73,6 +75,7 @@ export class ContratosListComponent implements OnInit {
     this.filtroStatus = 'Todos';
     this.filtroClienteId = null;
     this.filtroNumero = '';
+    this.filtroDataEntrega = '';
     this.p = 1;
   }
 
@@ -81,7 +84,18 @@ export class ContratosListComponent implements OnInit {
       const matchStatus = this.filtroStatus === 'Todos' || c.status === this.filtroStatus;
       const matchCliente = !this.filtroClienteId || c.clienteId === this.filtroClienteId;
       const matchNumero = !this.filtroNumero || c.numeroContrato.toLowerCase().includes(this.filtroNumero.toLowerCase());
-      return matchStatus && matchCliente && matchNumero;
+
+      let matchData = true;
+      if (this.filtroDataEntrega) {
+        if (!c.dataFinalEntrega) {
+          matchData = false;
+        } else {
+          const contractDate = new Date(c.dataFinalEntrega).toISOString().split('T')[0];
+          matchData = contractDate <= this.filtroDataEntrega;
+        }
+      }
+
+      return matchStatus && matchCliente && matchNumero && matchData;
     });
   }
 
@@ -92,12 +106,12 @@ export class ContratosListComponent implements OnInit {
 
   getFaltaComprar(c: Contrato): number {
     const totalCotas = (c.produtoresVinculados || []).reduce((s, p) => s + p.quantidadeCotaKg, 0);
-    return Math.max(0, c.quantidadeTotalKg - totalCotas);
+    return c.quantidadeTotalKg - totalCotas;
   }
 
   abrirCompraModal(contrato: Contrato): void {
     this.compraSelecionado = contrato;
-    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null };
+    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null, dataFinalEntrega: null };
     this.isCompraModalOpen = true;
   }
 
@@ -113,10 +127,9 @@ export class ContratosListComponent implements OnInit {
     }
 
     const maxPermitido = this.getFaltaComprar(this.compraSelecionado);
-    if (this.novaCompra.quantidadeCotaKg > maxPermitido) {
-      Swal.fire('Erro', `A quantidade informada excede o limite disponível do contrato.\nFalta comprar no máximo ${maxPermitido.toLocaleString()} kg.`, 'error');
-      return;
-    }
+    const msgAviso = this.novaCompra.quantidadeCotaKg > maxPermitido && maxPermitido > 0
+      ? `Atenção: A quantidade informada (${this.novaCompra.quantidadeCotaKg} kg) excede o limite disponível do contrato (${maxPermitido} kg). Este excedente será registrado.`
+      : '';
 
     const c = this.compraSelecionado;
     const novosProdutores = c.produtoresVinculados ? [...c.produtoresVinculados] : [];
@@ -126,6 +139,7 @@ export class ContratosListComponent implements OnInit {
     if (existente) {
       existente.quantidadeCotaKg += this.novaCompra.quantidadeCotaKg;
       existente.valorCompraPorSaca = this.novaCompra.valorCompraPorSaca;
+      existente.dataFinalEntrega = this.novaCompra.dataFinalEntrega || undefined;
     } else {
       novosProdutores.push({
         contratoId: c.id,
@@ -134,7 +148,8 @@ export class ContratosListComponent implements OnInit {
         quantidadeCotaKg: this.novaCompra.quantidadeCotaKg,
         quantidadeEntregueKg: 0,
         quantidadeRestanteKg: this.novaCompra.quantidadeCotaKg,
-        valorCompraPorSaca: this.novaCompra.valorCompraPorSaca
+        valorCompraPorSaca: this.novaCompra.valorCompraPorSaca,
+        dataFinalEntrega: this.novaCompra.dataFinalEntrega || undefined
       });
     }
 
@@ -148,7 +163,8 @@ export class ContratosListComponent implements OnInit {
       produtoresVinculados: novosProdutores.map(p => ({
         produtorId: p.produtorId,
         quantidadeCotaKg: p.quantidadeCotaKg,
-        valorCompraPorSaca: p.valorCompraPorSaca
+        valorCompraPorSaca: p.valorCompraPorSaca,
+        dataFinalEntrega: p.dataFinalEntrega
       }))
     };
 
@@ -261,7 +277,8 @@ export class ContratosListComponent implements OnInit {
       doc.setFontSize(9);
       doc.text(`CONTRATO Nº ${c.numeroContrato}  —  Cliente: ${c.clienteNome}`, 18, yPos + 5.5);
       doc.setFontSize(8);
-      doc.text(`Status: ${c.status}`, pageW - 18, yPos + 5.5, { align: 'right' });
+      const dataLimiteText = c.dataFinalEntrega ? new Date(c.dataFinalEntrega).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'N/A';
+      doc.text(`Status: ${c.status} | Data Limite: ${dataLimiteText}`, pageW - 18, yPos + 5.5, { align: 'right' });
       yPos += 8;
 
       // Contract Info

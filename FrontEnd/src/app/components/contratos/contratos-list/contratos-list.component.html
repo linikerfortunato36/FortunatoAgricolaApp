@@ -42,10 +42,15 @@
                     </ng-select>
                 </div>
 
+                <div class="d-flex align-items-center gap-2">
+                    <label class="text-muted small mb-0 ms-2 fw-bold">Data Entrega (Até):</label>
+                    <input type="date" class="form-control shadow-sm" [(ngModel)]="filtroDataEntrega"
+                        style="width: 150px;">
+                </div>
+
                 <div class="ms-auto">
                     <button class="btn btn-outline-secondary btn-sm" (click)="limparFiltros()"><i
-                            class="bi bi-funnel"></i> Limpar
-                        Filtros</button>
+                            class="bi bi-funnel"></i> Limpar Filtros</button>
                 </div>
             </div>
 
@@ -60,6 +65,7 @@
                             <th>FALTA COMPRAR</th>
                             <th>TOTAL ENTREGUE</th>
                             <th style="width: 20%">STATUS / METAS</th>
+                            <th>DATA LIMITE</th>
                             <th>ÚLTIMA ALTERAÇÃO</th>
                             <th class="pe-4 text-end">AÇÕES</th>
                         </tr>
@@ -72,8 +78,14 @@
                             <td>{{ c.clienteNome }}</td>
                             <td><span class="fw-bold">{{ (c.quantidadeTotalKg / 1000) | number:'1.0-0' }} t</span></td>
                             <td
-                                [ngClass]="{'text-danger fw-bold': getFaltaComprar(c) > 0, 'text-success fw-bold': getFaltaComprar(c) === 0}">
-                                {{ (getFaltaComprar(c) / 1000) | number:'1.0-2' }} t
+                                [ngClass]="{'text-danger fw-bold': getFaltaComprar(c) > 0, 'text-success fw-bold': getFaltaComprar(c) === 0, 'text-warning fw-bold': getFaltaComprar(c) < 0}">
+                                <span *ngIf="getFaltaComprar(c) >= 0">{{ (getFaltaComprar(c) / 1000) | number:'1.0-2' }}
+                                    t</span>
+                                <span *ngIf="getFaltaComprar(c) < 0"
+                                    title="Excedente negociado acima do estipulado no contrato">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Excedentes: {{
+                                    (Math.abs(getFaltaComprar(c)) / 1000) | number:'1.0-2' }} t
+                                </span>
                             </td>
                             <td
                                 [ngClass]="{'text-success fw-bold': c.quantidadeEntregueKg > 0, 'text-muted': c.quantidadeEntregueKg === 0}">
@@ -93,6 +105,11 @@
                                     </div>
                                 </div>
                             </td>
+                            <td>
+                                <span *ngIf="c.dataFinalEntrega" class="fw-bold text-dark">{{ c.dataFinalEntrega |
+                                    date:'dd/MM/yyyy' }}</span>
+                                <span *ngIf="!c.dataFinalEntrega" class="text-muted small">Não Definida</span>
+                            </td>
                             <td class="small text-muted">
                                 <div *ngIf="c.updatedByName">
                                     <i class="bi bi-person text-muted me-1"></i>{{ c.updatedByName }}
@@ -109,9 +126,8 @@
                                     class="btn btn-sm btn-outline-primary shadow-sm mb-1" title="Painel de Entregas">
                                     <i class="bi bi-arrow-right-short fs-6"></i> Acessar Painel
                                 </button>
-                                <button *ngIf="authService.canModify() && getFaltaComprar(c) > 0"
-                                    (click)="abrirCompraModal(c)" class="btn btn-sm btn-success shadow-sm ms-1 mb-1"
-                                    title="Efetuar Compra">
+                                <button *ngIf="authService.canModify()" (click)="abrirCompraModal(c)"
+                                    class="btn btn-sm btn-success shadow-sm ms-1 mb-1" title="Efetuar Compra">
                                     <i class="bi bi-cart-plus"></i> Compra
                                 </button>
                                 <button *ngIf="authService.isAdminOrMaster()"
@@ -159,18 +175,27 @@
                         </ng-select>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             <label class="form-label fw-bold text-muted small">Cota (Kg)</label>
                             <input type="number" class="form-control" name="cotaKg"
-                                [(ngModel)]="novaCompra.quantidadeCotaKg" placeholder="Ex: 5000" required min="1"
-                                [max]="compraSelecionado ? getFaltaComprar(compraSelecionado) : null">
-                            <div class="form-text text-danger" *ngIf="compraSelecionado">Permitido vincular: {{
+                                [(ngModel)]="novaCompra.quantidadeCotaKg" placeholder="Ex: 5000" required min="1">
+                            <div class="form-text text-danger"
+                                *ngIf="compraSelecionado && getFaltaComprar(compraSelecionado) > 0">Disponível no
+                                contrato: {{
                                 getFaltaComprar(compraSelecionado) | number:'1.0-0' }} kg</div>
+                            <div class="form-text text-warning fw-bold"
+                                *ngIf="compraSelecionado && getFaltaComprar(compraSelecionado) <= 0">Contrato Ocupado!
+                                Nova compra será tratada como excedente.</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-muted small">Valor Compra / Saca (R$)</label>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label fw-bold text-muted small">Valor / Saca (R$)</label>
                             <input type="number" class="form-control" name="valorCompra"
-                                [(ngModel)]="novaCompra.valorCompraPorSaca" placeholder="Ex: 150.00" required min="1">
+                                [(ngModel)]="novaCompra.valorCompraPorSaca" placeholder="150.00" required min="1">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold text-muted small">Entrega Máxima</label>
+                            <input type="date" class="form-control" name="dataFinalProdutor"
+                                [(ngModel)]="novaCompra.dataFinalEntrega">
                         </div>
                     </div>
                 </form>

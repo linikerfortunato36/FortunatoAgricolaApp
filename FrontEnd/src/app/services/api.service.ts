@@ -62,6 +62,7 @@ export interface ContratoProdutor {
   quantidadeEntregueKg: number;
   quantidadeRestanteKg: number;
   valorCompraPorSaca?: number;
+  dataFinalEntrega?: string;
 }
 
 export interface Contrato {
@@ -75,6 +76,7 @@ export interface Contrato {
   quantidadeRestanteKg: number;
   quantidadeEntregas: number;
   valorTotalNfe: number;
+  dataFinalEntrega?: string;
   valorVendaPorSaca?: number;
   percentualEntregue: number;
   isActive: boolean;

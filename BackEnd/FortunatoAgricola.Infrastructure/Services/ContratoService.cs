@@ -40,6 +40,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
                 QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
+                DataFinalEntrega = c.DataFinalEntrega,
                 ValorVendaPorSaca = c.ValorVendaPorSaca,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
@@ -54,7 +55,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                     QuantidadeCotaKg = pv.QuantidadeCotaKg,
                     QuantidadeEntregueKg = pv.QuantidadeEntregueKg,
                     QuantidadeRestanteKg = pv.QuantidadeRestanteKg,
-                    ValorCompraPorSaca = pv.ValorCompraPorSaca
+                    ValorCompraPorSaca = pv.ValorCompraPorSaca,
+                    DataFinalEntrega = pv.DataFinalEntrega
                 }).ToList()
             });
         }
@@ -81,6 +83,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
                 QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
+                DataFinalEntrega = c.DataFinalEntrega,
                 ValorVendaPorSaca = c.ValorVendaPorSaca,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
@@ -95,7 +98,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                     QuantidadeCotaKg = pv.QuantidadeCotaKg,
                     QuantidadeEntregueKg = pv.QuantidadeEntregueKg,
                     QuantidadeRestanteKg = pv.QuantidadeRestanteKg,
-                    ValorCompraPorSaca = pv.ValorCompraPorSaca
+                    ValorCompraPorSaca = pv.ValorCompraPorSaca,
+                    DataFinalEntrega = pv.DataFinalEntrega
                 }).ToList()
             };
         }
@@ -107,6 +111,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ClienteId = dto.ClienteId,
                 NumeroContrato = dto.NumeroContrato,
                 QuantidadeTotalKg = dto.QuantidadeTotalKg,
+                DataFinalEntrega = dto.DataFinalEntrega,
                 ValorVendaPorSaca = dto.ValorVendaPorSaca,
                 QuantidadeEntregueKg = 0,
                 Status = "Aberto",
@@ -126,7 +131,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                         ProdutorId = pv.ProdutorId,
                         QuantidadeCotaKg = pv.QuantidadeCotaKg,
                         ValorCompraPorSaca = pv.ValorCompraPorSaca,
-                        QuantidadeEntregueKg = 0
+                        QuantidadeEntregueKg = 0,
+                        DataFinalEntrega = pv.DataFinalEntrega
                     });
                 }
                 await _context.SaveChangesAsync();
@@ -145,6 +151,7 @@ namespace FortunatoAgricola.Infrastructure.Services
 
             c.NumeroContrato = dto.NumeroContrato;
             c.QuantidadeTotalKg = dto.QuantidadeTotalKg;
+            c.DataFinalEntrega = dto.DataFinalEntrega;
             c.ValorVendaPorSaca = dto.ValorVendaPorSaca;
             c.Status = dto.Status;
             c.IsActive = dto.IsActive;
@@ -168,6 +175,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                     {
                         existing.QuantidadeCotaKg = pv.QuantidadeCotaKg;
                         existing.ValorCompraPorSaca = pv.ValorCompraPorSaca;
+                        existing.DataFinalEntrega = pv.DataFinalEntrega;
                         _context.ContratoProdutores.Update(existing);
                     }
                     else
@@ -178,7 +186,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                             ProdutorId = pv.ProdutorId,
                             QuantidadeCotaKg = pv.QuantidadeCotaKg,
                             ValorCompraPorSaca = pv.ValorCompraPorSaca,
-                            QuantidadeEntregueKg = 0
+                            QuantidadeEntregueKg = 0,
+                            DataFinalEntrega = pv.DataFinalEntrega
                         });
                     }
                 }
@@ -211,6 +220,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeRestanteKg = c.QuantidadeRestanteKg,
                 QuantidadeEntregas = c.Movimentacoes?.Count ?? 0,
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
+                DataFinalEntrega = c.DataFinalEntrega,
                 ValorVendaPorSaca = c.ValorVendaPorSaca,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
@@ -225,7 +235,8 @@ namespace FortunatoAgricola.Infrastructure.Services
                     QuantidadeCotaKg = pv.QuantidadeCotaKg,
                     QuantidadeEntregueKg = pv.QuantidadeEntregueKg,
                     QuantidadeRestanteKg = pv.QuantidadeRestanteKg,
-                    ValorCompraPorSaca = pv.ValorCompraPorSaca
+                    ValorCompraPorSaca = pv.ValorCompraPorSaca,
+                    DataFinalEntrega = pv.DataFinalEntrega
                 }).ToList()
             });
         }

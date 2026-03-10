@@ -165,6 +165,9 @@ namespace FortunatoAgricola.Infrastructure.Migrations
                     b.Property<string>("CreatedByName")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("DataFinalEntrega")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -221,6 +224,9 @@ namespace FortunatoAgricola.Infrastructure.Migrations
 
                     b.Property<string>("CreatedByName")
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DataFinalEntrega")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
