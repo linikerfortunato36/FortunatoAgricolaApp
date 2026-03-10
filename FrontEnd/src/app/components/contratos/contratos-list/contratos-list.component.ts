@@ -314,23 +314,25 @@ export class ContratosListComponent implements OnInit {
 
         autoTable(doc, {
           startY: yPos,
-          head: [['Produtor Original', 'Cota Comprada', 'Entregue', 'Falta Entregar', 'Valor de Compra (Sc)']],
+          head: [['Produtor Original', 'Cota Comprada', 'Data Limite', 'Entregue', 'Falta Entregar', 'Valor de Compra (Sc)']],
           body: c.produtoresVinculados.map(p => [
             p.produtorNome,
             fmt(p.quantidadeCotaKg) + ' Kg',
+            p.dataFinalEntrega ? new Date(p.dataFinalEntrega).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-',
             fmt(p.quantidadeEntregueKg) + ' Kg',
             fmt(p.quantidadeRestanteKg) + ' Kg',
             fmtCurrency(p.valorCompraPorSaca ?? 0)
           ]),
-          foot: [['TOTAIS', fmt(tCotas) + ' Kg', fmt(tEntrg) + ' Kg', fmt(tFalta) + ' Kg', '']],
+          foot: [['TOTAIS', fmt(tCotas) + ' Kg', '', fmt(tEntrg) + ' Kg', fmt(tFalta) + ' Kg', '']],
           styles: { fontSize: 7.5, cellPadding: 2, lineColor: [220, 220, 220], lineWidth: 0.1 },
           headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' },
           footStyles: { fillColor: [245, 245, 245], textColor: [0, 0, 0], fontStyle: 'bold' },
           columnStyles: {
             1: { halign: 'right' },
-            2: { halign: 'right' },
-            3: { halign: 'right', textColor: [202, 138, 4] },
-            4: { halign: 'right', fontStyle: 'bold' }
+            2: { halign: 'center' },
+            3: { halign: 'right' },
+            4: { halign: 'right', textColor: [202, 138, 4] },
+            5: { halign: 'right', fontStyle: 'bold' }
           },
           margin: { left: 16, right: 16 }
         });

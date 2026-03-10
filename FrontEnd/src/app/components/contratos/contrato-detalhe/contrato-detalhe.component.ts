@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, Contrato, Movimentacao } from '../../../services/api.service';
+import { ApiService, Contrato, Movimentacao, Produtor, ContratoProdutor } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgSelectModule } from '@ng-select/ng-select';
+import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-contrato-detalhe',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, RouterModule, FormsModule, NgxPaginationModule, NgSelectModule],
   templateUrl: './contrato-detalhe.component.html',
   styleUrl: './contrato-detalhe.component.css'
 })
@@ -20,6 +24,16 @@ export class ContratoDetalheComponent implements OnInit {
   selectedMovimentacao: Movimentacao | null = null;
   configuracao: any = null;
   p_mov: number = 1;
+  produtores: Produtor[] = [];
+  isCompraModalOpen = false;
+  isEditVinculo = false;
+  activeProducerMenu: string | null = null;
+  novaCompra = {
+    produtorId: null as string | null,
+    quantidadeCotaKg: null as number | null,
+    valorCompraPorSaca: null as number | null,
+    dataFinalEntrega: null as string | null
+  };
 
   constructor(
     private apiService: ApiService,
@@ -34,7 +48,12 @@ export class ContratoDetalheComponent implements OnInit {
       this.carregarContrato();
       this.carregarMovimentacoes();
       this.carregarConfiguracao();
+      this.carregarProdutores();
     }
+  }
+
+  carregarProdutores(): void {
+    this.apiService.getProdutores().subscribe(data => this.produtores = data.filter(p => p.isActive));
   }
 
   carregarConfiguracao(): void {
@@ -78,13 +97,11 @@ export class ContratoDetalheComponent implements OnInit {
   }
 
   exportarFechamento(): void {
-    if (!this.contrato || this.movimentacoes.length === 0) return;
+    if (!this.contrato) return;
 
-    import('jspdf').then(({ default: jsPDF }) => {
-      import('jspdf-autotable').then(({ default: autoTable }) => {
-        const doc = new jsPDF({ orientation: 'landscape', format: 'a4' });
-        const c = this.contrato!;
-        const movs = this.movimentacoes;
+    const doc = new jsPDF({ orientation: 'landscape', format: 'a4' });
+    const c = this.contrato!;
+    const movs = this.movimentacoes;
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();
 
@@ -250,12 +267,13 @@ export class ContratoDetalheComponent implements OnInit {
 
           autoTable(doc, {
             startY: y,
-            head: [['Produtor', 'Cota Total', 'Entregue', 'Faltante / Restante', 'Conclus\u00e3o']],
+            head: [['Produtor', 'Cota Total', 'Data Limite', 'Entregue', 'Faltante / Restante', 'Conclus\u00e3o']],
             body: c.produtoresVinculados.map(p => {
               const pct = p.quantidadeCotaKg > 0 ? ((p.quantidadeEntregueKg / p.quantidadeCotaKg) * 100).toFixed(1) : '0.0';
               return [
                 p.produtorNome || '-',
                 fmt(p.quantidadeCotaKg) + ' Kg',
+                p.dataFinalEntrega ? new Date(p.dataFinalEntrega).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-',
                 fmt(p.quantidadeEntregueKg) + ' Kg',
                 fmt(p.quantidadeRestanteKg) + ' Kg',
                 `${pct}%`
@@ -265,7 +283,7 @@ export class ContratoDetalheComponent implements OnInit {
             headStyles: { fillColor: [26, 46, 28], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 7 },
             alternateRowStyles: { fillColor: [248, 250, 252] },
             columnStyles: {
-              1: { halign: 'right' }, 2: { halign: 'right' }, 3: { halign: 'right', textColor: [220, 38, 38], fontStyle: 'bold' }, 4: { halign: 'center', fontStyle: 'bold' }
+              1: { halign: 'right' }, 2: { halign: 'center' }, 3: { halign: 'right' }, 4: { halign: 'right', textColor: [220, 38, 38], fontStyle: 'bold' }, 5: { halign: 'center', fontStyle: 'bold' }
             },
             margin: { left: 14, right: 14 },
           });
@@ -355,9 +373,8 @@ export class ContratoDetalheComponent implements OnInit {
           doc.text(`P\u00e1g. ${i} / ${pageCount}`, pageW - 14, pageH - 3, { align: 'right' });
         }
 
-        doc.save(`Fechamento_${c.numeroContrato.replace(/\//g, '-')}_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
-      });
-    });
+    const dataStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+    doc.save(`Fechamento_${c.numeroContrato.replace(/\//g, '-')}_${dataStr}.pdf`);
   }
 
   getProgressoPct(): number {
@@ -368,6 +385,144 @@ export class ContratoDetalheComponent implements OnInit {
   getFaltaComprar(): number {
     if (!this.contrato) return 0;
     const totalCotas = (this.contrato.produtoresVinculados || []).reduce((s, p) => s + p.quantidadeCotaKg, 0);
-    return this.contrato.quantidadeTotalKg - totalCotas;
+    return Math.max(0, this.contrato.quantidadeTotalKg - totalCotas);
+  }
+
+  // --- MÉTODOS DE COMPRA / VÍNCULO ---
+  abrirCompraModal(): void {
+    this.isEditVinculo = false;
+    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null, dataFinalEntrega: null };
+    this.isCompraModalOpen = true;
+  }
+
+  editarVinculo(p: ContratoProdutor): void {
+    this.isEditVinculo = true;
+    this.novaCompra = {
+      produtorId: p.produtorId,
+      quantidadeCotaKg: p.quantidadeCotaKg,
+      valorCompraPorSaca: p.valorCompraPorSaca || null,
+      dataFinalEntrega: p.dataFinalEntrega ? new Date(p.dataFinalEntrega).toISOString().split('T')[0] : null
+    };
+    this.isCompraModalOpen = true;
+  }
+
+  fecharCompraModal(): void {
+    this.isCompraModalOpen = false;
+  }
+
+  salvarCompra(): void {
+    if (!this.contrato || !this.novaCompra.produtorId || !this.novaCompra.quantidadeCotaKg || !this.novaCompra.valorCompraPorSaca) {
+      Swal.fire('Erro', 'Preencha todos os campos obrigatórios.', 'error');
+      return;
+    }
+
+    const c = this.contrato;
+    const novosProdutores = c.produtoresVinculados ? [...c.produtoresVinculados] : [];
+
+    if (this.isEditVinculo) {
+      const idx = novosProdutores.findIndex(p => p.produtorId === this.novaCompra.produtorId);
+      if (idx !== -1) {
+        novosProdutores[idx].quantidadeCotaKg = this.novaCompra.quantidadeCotaKg;
+        novosProdutores[idx].valorCompraPorSaca = this.novaCompra.valorCompraPorSaca;
+        novosProdutores[idx].dataFinalEntrega = this.novaCompra.dataFinalEntrega || undefined;
+      }
+    } else {
+      const existente = novosProdutores.find(p => p.produtorId === this.novaCompra.produtorId);
+      if (existente) {
+        existente.quantidadeCotaKg += this.novaCompra.quantidadeCotaKg;
+        existente.valorCompraPorSaca = this.novaCompra.valorCompraPorSaca;
+        existente.dataFinalEntrega = this.novaCompra.dataFinalEntrega || undefined;
+      } else {
+        novosProdutores.push({
+          contratoId: c.id,
+          produtorId: this.novaCompra.produtorId,
+          produtorNome: '',
+          quantidadeCotaKg: this.novaCompra.quantidadeCotaKg,
+          quantidadeEntregueKg: 0,
+          quantidadeRestanteKg: this.novaCompra.quantidadeCotaKg,
+          valorCompraPorSaca: this.novaCompra.valorCompraPorSaca,
+          dataFinalEntrega: this.novaCompra.dataFinalEntrega || undefined
+        });
+      }
+    }
+
+    const payload = {
+      id: c.id,
+      numeroContrato: c.numeroContrato,
+      quantidadeTotalKg: c.quantidadeTotalKg,
+      valorVendaPorSaca: c.valorVendaPorSaca,
+      status: c.status,
+      isActive: c.isActive,
+      dataFinalEntrega: c.dataFinalEntrega,
+      produtoresVinculados: novosProdutores.map(p => ({
+        produtorId: p.produtorId,
+        quantidadeCotaKg: p.quantidadeCotaKg,
+        valorCompraPorSaca: p.valorCompraPorSaca,
+        dataFinalEntrega: p.dataFinalEntrega
+      }))
+    };
+
+    this.apiService.updateContrato(c.id, payload).subscribe({
+      next: () => {
+        Swal.fire('Sucesso', 'Vínculo salvo com sucesso!', 'success');
+        this.fecharCompraModal();
+        this.carregarContrato();
+      },
+      error: (e) => {
+        console.error(e);
+        Swal.fire('Erro', 'Falha ao salvar o vínculo.', 'error');
+      }
+    });
+  }
+
+  excluirVinculo(produtorId: string): void {
+    if (!this.contrato) return;
+
+    Swal.fire({
+      title: 'Remover Vínculo?',
+      text: 'O produtor será removido deste contrato. Movimentações existentes não serão apagadas, mas perderão a referência de cota.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, remover',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const c = this.contrato!;
+        const novosProdutores = (c.produtoresVinculados || []).filter(p => p.produtorId !== produtorId);
+
+        const payload = {
+          id: c.id,
+          numeroContrato: c.numeroContrato,
+          quantidadeTotalKg: c.quantidadeTotalKg,
+          valorVendaPorSaca: c.valorVendaPorSaca,
+          status: c.status,
+          isActive: c.isActive,
+          dataFinalEntrega: c.dataFinalEntrega,
+          produtoresVinculados: novosProdutores.map(p => ({
+            produtorId: p.produtorId,
+            quantidadeCotaKg: p.quantidadeCotaKg,
+            valorCompraPorSaca: p.valorCompraPorSaca,
+            dataFinalEntrega: p.dataFinalEntrega
+          }))
+        };
+
+        this.apiService.updateContrato(c.id, payload).subscribe({
+          next: () => {
+            Swal.fire('Removido!', 'Vínculo removido.', 'success');
+            this.carregarContrato();
+          },
+          error: () => Swal.fire('Erro', 'Falha ao remover vínculo.', 'error')
+        });
+      }
+    });
+  }
+
+  toggleProducerMenu(id: string): void {
+    this.activeProducerMenu = this.activeProducerMenu === id ? null : id;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.activeProducerMenu = null;
   }
 }

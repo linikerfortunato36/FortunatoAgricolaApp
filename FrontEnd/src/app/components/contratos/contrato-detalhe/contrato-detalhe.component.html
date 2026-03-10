@@ -12,9 +12,14 @@
             <h2 class="h3 fw-bold text-dark mb-0">Contrato Nº {{ contrato?.numeroContrato || 'Carregando...' }}</h2>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger" (click)="exportarFechamento()"><i
-                    class="bi bi-file-earmark-pdf me-1"></i> Exportar
-                Fechamento</button>
+            <button class="btn btn-outline-danger" (click)="exportarFechamento()" title="Exportar PDF Detalhado"><i
+                    class="bi bi-file-earmark-pdf me-1"></i> Exportar</button>
+
+            <button *ngIf="authService.canModify()" (click)="abrirCompraModal()"
+                class="btn btn-outline-success fw-bold">
+                <i class="bi bi-cart-plus me-1"></i> Comprar
+            </button>
+
             <button *ngIf="authService.canModify()" [routerLink]="['/app/movimentacoes/novo']"
                 [queryParams]="{contratoId: contratoId}" class="btn btn-primary fw-bold">
                 <i class="bi bi-plus-circle me-1"></i> Nova Movimentação
@@ -110,10 +115,24 @@
                 (Cotas)</h5>
             <div class="row g-3">
                 <div class="col-md-4 col-sm-6" *ngFor="let p of (contrato?.produtoresVinculados || [])">
-                    <div class="card h-100 shadow-sm border-0 border-start border-3 border-secondary bg-light">
+                    <div class="card h-100 shadow-sm border-0 border-start border-3 border-secondary bg-light position-relative">
                         <div class="card-body p-3">
-                            <h6 class="fw-bold text-primary mb-1 text-truncate" title="{{ p.produtorNome }}">{{
-                                p.produtorNome }}</h6>
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="fw-bold text-primary mb-0 text-truncate pe-4" title="{{ p.produtorNome }}">
+                                    {{ p.produtorNome }}
+                                </h6>
+                                <div class="dropdown" *ngIf="authService.canModify()">
+                                    <button class="btn btn-link btn-sm p-0 text-muted" type="button" (click)="toggleProducerMenu(p.produtorId); $event.stopPropagation()">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" [class.show]="activeProducerMenu === p.produtorId" 
+                                        style="position: absolute; right: 0; top: 100%; z-index: 1000; display: block;" *ngIf="activeProducerMenu === p.produtorId">
+                                        <li><a class="dropdown-item small py-2" style="cursor: pointer;" (click)="editarVinculo(p); activeProducerMenu = null"><i class="bi bi-pencil me-2 text-primary"></i>Editar Cota</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item small py-2 text-danger" style="cursor: pointer;" (click)="excluirVinculo(p.produtorId); activeProducerMenu = null"><i class="bi bi-trash me-2"></i>Remover</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="text-muted small mb-2" *ngIf="p.valorCompraPorSaca">
                                 <strong>Compra:</strong> {{ p.valorCompraPorSaca | currency:'BRL':'symbol':'1.2-2' }} /
                                 Sc
@@ -323,6 +342,62 @@
                 </div>
                 <div class="modal-footer bg-light border-0">
                     <button type="button" class="btn btn-primary px-4" (click)="fecharModal()">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Efetuar Compra / Vincular Produtor -->
+    <div class="modal" tabindex="-1" [ngClass]="{'show d-block': isCompraModalOpen}"
+        [style.backgroundColor]="isCompraModalOpen ? 'rgba(0,0,0,0.5)' : 'transparent'" *ngIf="isCompraModalOpen">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header" [ngClass]="isEditVinculo ? 'bg-primary text-white' : 'bg-success text-white'">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi me-2" [ngClass]="isEditVinculo ? 'bi-pencil-square' : 'bi-cart-plus'"></i>
+                        {{ isEditVinculo ? 'Editar Vínculo' : 'Efetuar Compra' }} ({{ contrato?.numeroContrato }})
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="fecharCompraModal()"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form #compraForm="ngForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small">Produtor</label>
+                            <ng-select [items]="produtores" bindLabel="nome" bindValue="id" name="produtorId"
+                                [(ngModel)]="novaCompra.produtorId" placeholder="Selecione o Produtor" required
+                                [readonly]="isEditVinculo">
+                            </ng-select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-muted small">Cota (Kg)</label>
+                                <input type="number" class="form-control" name="cotaKg"
+                                    [(ngModel)]="novaCompra.quantidadeCotaKg" placeholder="Ex: 5000" required min="1">
+                                <div class="form-text text-muted small" *ngIf="!isEditVinculo">Falta Comprar: {{ getFaltaComprar() | number }} Kg</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-muted small">Valor / Saca (R$)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" name="valorCompra"
+                                        [(ngModel)]="novaCompra.valorCompraPorSaca" placeholder="150.00" required min="1">
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold text-muted small">Data Limite para Entrega (Cota)</label>
+                                <input type="date" class="form-control" name="dataFinalProdutor"
+                                    [(ngModel)]="novaCompra.dataFinalEntrega">
+                                <small class="text-muted">Se vazio, segue a data do contrato.</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary" (click)="fecharCompraModal()">Cancelar</button>
+                    <button type="button" class="btn" [ngClass]="isEditVinculo ? 'btn-primary' : 'btn-success'"
+                        (click)="salvarCompra()" [disabled]="!compraForm.valid">
+                        <i class="bi bi-check-circle me-1"></i> {{ isEditVinculo ? 'Salvar Alterações' : 'Salvar Vínculo' }}
+                    </button>
                 </div>
             </div>
         </div>
