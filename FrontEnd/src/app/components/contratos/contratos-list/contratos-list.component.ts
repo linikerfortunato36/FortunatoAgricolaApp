@@ -44,6 +44,8 @@ export class ContratosListComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
+  public Math = Math;
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       if (params['q']) {
@@ -221,7 +223,7 @@ export class ContratosListComponent implements OnInit {
       hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo'
     });
 
-    const fmt = (n: number) => n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    const fmt = (n: number) => n.toLocaleString('pt-BR');
     const fmtCurrency = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
     // HEADER FUNCTION
@@ -253,7 +255,7 @@ export class ContratosListComponent implements OnInit {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(26, 46, 28);
-    doc.text(`Total de Contratos: ${contratos.length}    |    Total Acordado: ${fmt(totalKg)} kg    |    Total Entregue: ${fmt(entregueKg)} kg    |    Valor Total NF-e: ${fmtCurrency(totalNfe)}`, 18, yPos + 8);
+    doc.text(`Total de Contratos: ${contratos.length}    |    Total Acordado: ${fmt(totalKg)} Kg    |    Total Entregue: ${fmt(entregueKg)} Kg    |    Valor Total NF-e: ${fmtCurrency(totalNfe)}`, 18, yPos + 8);
     yPos += 22;
 
     // Iterate over Contracts
@@ -265,8 +267,7 @@ export class ContratosListComponent implements OnInit {
         yPos = 35;
       }
 
-      const totalCotas = (c.produtoresVinculados || []).reduce((s, p) => s + p.quantidadeCotaKg, 0);
-      const faltaComprar = Math.max(0, c.quantidadeTotalKg - totalCotas);
+      const faltaComprar = this.getFaltaComprar(c);
       const faltaEntregar = c.quantidadeRestanteKg ?? 0;
 
       // Contract Title Box
@@ -287,16 +288,23 @@ export class ContratosListComponent implements OnInit {
       doc.setTextColor(50, 50, 50);
       doc.setFont('helvetica', 'bold');
       let xInfo = 18;
-      doc.text(`Total Contrato: `, xInfo, yPos + 6); doc.setFont('helvetica', 'normal'); doc.text(`${fmt(c.quantidadeTotalKg)} kg`, xInfo + 23, yPos + 6);
+      doc.text(`Total Contrato: `, xInfo, yPos + 6); doc.setFont('helvetica', 'normal'); doc.text(`${fmt(c.quantidadeTotalKg)} Kg`, xInfo + 23, yPos + 6);
       xInfo += 52;
-      doc.setFont('helvetica', 'bold');
-      doc.text(`Falta Comprar: `, xInfo, yPos + 6); doc.setTextColor(220, 38, 38); doc.text(`${fmt(faltaComprar)} kg`, xInfo + 24, yPos + 6); doc.setTextColor(50, 50, 50);
+
+      if (faltaComprar < 0) {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Excedentes: `, xInfo, yPos + 6); doc.setTextColor(202, 138, 4); doc.text(`${fmt(Math.abs(faltaComprar))} Kg`, xInfo + 22, yPos + 6); doc.setTextColor(50, 50, 50);
+      } else {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Falta Comprar: `, xInfo, yPos + 6); doc.setTextColor(220, 38, 38); doc.text(`${fmt(faltaComprar)} Kg`, xInfo + 24, yPos + 6); doc.setTextColor(50, 50, 50);
+      }
+
       xInfo += 48;
       doc.setFont('helvetica', 'bold');
-      doc.text(`Entregue: `, xInfo, yPos + 6); doc.setFont('helvetica', 'normal'); doc.text(`${fmt(c.quantidadeEntregueKg)} kg`, xInfo + 15, yPos + 6);
+      doc.text(`Entregue: `, xInfo, yPos + 6); doc.setFont('helvetica', 'normal'); doc.text(`${fmt(c.quantidadeEntregueKg)} Kg`, xInfo + 15, yPos + 6);
       xInfo += 38;
       doc.setFont('helvetica', 'bold');
-      doc.text(`Falta Entregar: `, xInfo, yPos + 6); doc.setTextColor(202, 138, 4); doc.text(`${fmt(faltaEntregar)} kg`, xInfo + 24, yPos + 6); doc.setTextColor(50, 50, 50);
+      doc.text(`Falta Entregar: `, xInfo, yPos + 6); doc.setTextColor(202, 138, 4); doc.text(`${fmt(faltaEntregar)} Kg`, xInfo + 24, yPos + 6); doc.setTextColor(50, 50, 50);
       yPos += 14;
 
       if (c.produtoresVinculados && c.produtoresVinculados.length > 0) {
@@ -309,12 +317,12 @@ export class ContratosListComponent implements OnInit {
           head: [['Produtor Original', 'Cota Comprada', 'Entregue', 'Falta Entregar', 'Valor de Compra (Sc)']],
           body: c.produtoresVinculados.map(p => [
             p.produtorNome,
-            fmt(p.quantidadeCotaKg) + ' kg',
-            fmt(p.quantidadeEntregueKg) + ' kg',
-            fmt(p.quantidadeRestanteKg) + ' kg',
+            fmt(p.quantidadeCotaKg) + ' Kg',
+            fmt(p.quantidadeEntregueKg) + ' Kg',
+            fmt(p.quantidadeRestanteKg) + ' Kg',
             fmtCurrency(p.valorCompraPorSaca ?? 0)
           ]),
-          foot: [['TOTAIS', fmt(tCotas) + ' kg', fmt(tEntrg) + ' kg', fmt(tFalta) + ' kg', '']],
+          foot: [['TOTAIS', fmt(tCotas) + ' Kg', fmt(tEntrg) + ' Kg', fmt(tFalta) + ' Kg', '']],
           styles: { fontSize: 7.5, cellPadding: 2, lineColor: [220, 220, 220], lineWidth: 0.1 },
           headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' },
           footStyles: { fillColor: [245, 245, 245], textColor: [0, 0, 0], fontStyle: 'bold' },

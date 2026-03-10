@@ -76,20 +76,20 @@
                         <tr *ngFor="let c of getContratosFiltrados() | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td class="ps-4 fw-bold text-dark">{{ c.numeroContrato }}</td>
                             <td>{{ c.clienteNome }}</td>
-                            <td><span class="fw-bold">{{ (c.quantidadeTotalKg / 1000) | number:'1.0-0' }} t</span></td>
+                            <td><span class="fw-bold">{{ c.quantidadeTotalKg | number:'1.0-0':'pt-BR' }} Kg</span></td>
                             <td
                                 [ngClass]="{'text-danger fw-bold': getFaltaComprar(c) > 0, 'text-success fw-bold': getFaltaComprar(c) === 0, 'text-warning fw-bold': getFaltaComprar(c) < 0}">
-                                <span *ngIf="getFaltaComprar(c) >= 0">{{ (getFaltaComprar(c) / 1000) | number:'1.0-2' }}
-                                    t</span>
+                                <span *ngIf="getFaltaComprar(c) >= 0">{{ getFaltaComprar(c) | number:'1.0-0':'pt-BR' }}
+                                    Kg</span>
                                 <span *ngIf="getFaltaComprar(c) < 0"
                                     title="Excedente negociado acima do estipulado no contrato">
                                     <i class="bi bi-exclamation-triangle-fill"></i> Excedentes: {{
-                                    (Math.abs(getFaltaComprar(c)) / 1000) | number:'1.0-2' }} t
+                                    Math.abs(getFaltaComprar(c)) | number:'1.0-0':'pt-BR' }} Kg
                                 </span>
                             </td>
                             <td
                                 [ngClass]="{'text-success fw-bold': c.quantidadeEntregueKg > 0, 'text-muted': c.quantidadeEntregueKg === 0}">
-                                {{ (c.quantidadeEntregueKg / 1000) | number:'1.0-2' }} t
+                                {{ c.quantidadeEntregueKg | number:'1.0-0':'pt-BR' }} Kg
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between small text-primary fw-bold mb-1">
@@ -182,7 +182,7 @@
                             <div class="form-text text-danger"
                                 *ngIf="compraSelecionado && getFaltaComprar(compraSelecionado) > 0">Disponível no
                                 contrato: {{
-                                getFaltaComprar(compraSelecionado) | number:'1.0-0' }} kg</div>
+                                getFaltaComprar(compraSelecionado) | number:'1.0-0':'pt-BR' }} Kg</div>
                             <div class="form-text text-warning fw-bold"
                                 *ngIf="compraSelecionado && getFaltaComprar(compraSelecionado) <= 0">Contrato Ocupado!
                                 Nova compra será tratada como excedente.</div>

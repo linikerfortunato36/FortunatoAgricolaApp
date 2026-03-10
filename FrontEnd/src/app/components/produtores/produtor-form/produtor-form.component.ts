@@ -29,6 +29,7 @@ export class ProdutorFormComponent implements OnInit {
   movimentacoes: Movimentacao[] = [];
   contratosGrouped: any[] = [];
   filtroContrato: string = '';
+  contratosVinculados: any[] = [];
 
   loading = false;
   submitting = false;
@@ -73,11 +74,25 @@ export class ProdutorFormComponent implements OnInit {
   loadMovimentacoes(): void {
     if (!this.produtorId) return;
 
+    // Carrega Movimentações e Contratos em paralelo
     this.apiService.getMovimentacoesByProdutor(this.produtorId).subscribe({
-      next: (data) => {
-        this.movimentacoes = data;
-        this.processarDashboard();
-        this.loading = false;
+      next: (movData) => {
+        this.movimentacoes = movData;
+
+        this.apiService.getContratos().subscribe({
+          next: (contData) => {
+            this.contratosVinculados = contData.filter(c =>
+              c.produtoresVinculados && c.produtoresVinculados.some((p: any) => p.produtorId === this.produtorId)
+            );
+            this.processarDashboard();
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('Erro ao carregar contratos do produtor', err);
+            this.processarDashboard();
+            this.loading = false;
+          }
+        });
       },
       error: (err) => {
         console.error('Erro ao carregar movimentações do produtor', err);
@@ -89,19 +104,39 @@ export class ProdutorFormComponent implements OnInit {
   processarDashboard(): void {
     const map = new Map<string, any>();
 
+    // Inicializa a partir dos contratos vinculados primeiro
+    this.contratosVinculados.forEach(c => {
+      const vinculo = c.produtoresVinculados.find((p: any) => p.produtorId === this.produtorId);
+      map.set(c.numeroContrato, {
+        contratoId: c.id,
+        contratoNumero: c.numeroContrato,
+        clienteNome: c.clienteNome,
+        cotaTotalKg: vinculo ? vinculo.quantidadeCotaKg : 0,
+        restanteEstimadoKg: vinculo ? (vinculo.quantidadeCotaKg - (vinculo.quantidadeEntregueKg || 0)) : 0,
+        dataFinalEntrega: vinculo?.dataFinalEntrega || null,
+        totalEntregueKg: 0,
+        totalSacas: 0,
+        totalDescargas: 0
+      });
+    });
+
+    // Agora aplica as movimentações (para garantir totais de sacas e descargas real-time)
     this.movimentacoes.forEach(m => {
       if (!map.has(m.contratoNumero)) {
         map.set(m.contratoNumero, {
           contratoId: m.contratoId,
           contratoNumero: m.contratoNumero,
           clienteNome: m.clienteNome,
+          cotaTotalKg: 0,
+          restanteEstimadoKg: 0,
+          dataFinalEntrega: null,
           totalEntregueKg: 0,
           totalSacas: 0,
           totalDescargas: 0
         });
       }
       const resumo = map.get(m.contratoNumero);
-      resumo.totalEntregueKg += m.pesoLiquidofazenda; // ou pesoFinal
+      resumo.totalEntregueKg += m.pesoFinal; // atualizado: usar pesoFinal que eh o liquido
       resumo.totalSacas += m.quantidadeSacas;
       resumo.totalDescargas += 1;
     });

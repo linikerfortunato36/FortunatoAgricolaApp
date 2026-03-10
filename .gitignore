@@ -263,3 +263,5 @@ Thumbs.db
 /BackEnd/FortunatoAgricola.API/bin/Release/net9.0/win-x86/publish-x86-test
 /BackEnd/FortunatoAgricola.API/publish-x86-test/publish-x86/publish
 /BackEnd/FortunatoAgricola.API/publish-x86-test/publish-x86
+/BackEnd/FortunatoAgricola.API/obj
+/BackEnd/FortunatoAgricola.API/obj
