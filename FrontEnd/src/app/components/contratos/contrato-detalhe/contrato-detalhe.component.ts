@@ -92,7 +92,7 @@ export class ContratoDetalheComponent implements OnInit {
           day: '2-digit', month: '2-digit', year: 'numeric',
           hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo'
         });
-        const fmt = (n: number) => (n ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        const fmt = (n: number) => (n ?? 0).toLocaleString('pt-BR');
         const fmtR = (n: number) => (n ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const fmtD = (s: string) => s ? new Date(s).toLocaleDateString('pt-BR') : '-';
 
@@ -142,10 +142,10 @@ export class ContratoDetalheComponent implements OnInit {
         const infoL = [
           { label: 'CLIENTE DESTINO', val: c.clienteNome, x: 16, w: 55 },
           { label: 'STATUS', val: c.status, x: 75, w: 30 },
-          { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} kg`, x: 110, w: 35 },
-          { label: 'FALTA COMPRAR', val: `${fmt(faltaComprar)} kg`, x: 160, w: 35 },
-          { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} kg`, x: 210, w: 35 },
-          { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} kg`, x: 250, w: 35 },
+          { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} Kg`, x: 110, w: 35 },
+          { label: 'FALTA COMPRAR', val: `${fmt(faltaComprar)} Kg`, x: 160, w: 35 },
+          { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} Kg`, x: 210, w: 35 },
+          { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} Kg`, x: 250, w: 35 },
         ];
         infoL.forEach(info => {
           doc.setFont('helvetica', 'bold');
@@ -231,8 +231,8 @@ export class ContratoDetalheComponent implements OnInit {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.text(`${movs.length} viagens`, 20, y + 6.5);
-        doc.text(`${fmt(totalSacas)} sacas`, 60, y + 6.5);
-        doc.text(`Peso Final: ${fmt(totalKgFinal)} kg`, 110, y + 6.5);
+        doc.text(`${fmt(totalSacas)} Sacas`, 60, y + 6.5);
+        doc.text(`Peso Final: ${fmt(totalKgFinal)} Kg`, 110, y + 6.5);
         doc.text(`NF-e Emitidas: ${fmtR(totalNfe)}`, 190, y + 6.5);
         const pct = c.quantidadeTotalKg > 0 ? ((c.quantidadeEntregueKg / c.quantidadeTotalKg) * 100).toFixed(1) : '0.0';
         doc.text(`Conclus\u00e3o: ${pct}%`, 255, y + 6.5);
@@ -255,9 +255,9 @@ export class ContratoDetalheComponent implements OnInit {
               const pct = p.quantidadeCotaKg > 0 ? ((p.quantidadeEntregueKg / p.quantidadeCotaKg) * 100).toFixed(1) : '0.0';
               return [
                 p.produtorNome || '-',
-                fmt(p.quantidadeCotaKg) + ' kg',
-                fmt(p.quantidadeEntregueKg) + ' kg',
-                fmt(p.quantidadeRestanteKg) + ' kg',
+                fmt(p.quantidadeCotaKg) + ' Kg',
+                fmt(p.quantidadeEntregueKg) + ' Kg',
+                fmt(p.quantidadeRestanteKg) + ' Kg',
                 `${pct}%`
               ];
             }),
@@ -295,12 +295,12 @@ export class ContratoDetalheComponent implements OnInit {
             m.produtorOrigemNome || '-',
             m.transportadoraNome || '-',
             m.motorista || '-',
-            fmt(m.quantidadeOrigemKg) + ' kg',
-            fmt(m.pesoDescargaKg) + ' kg',
+            fmt(m.quantidadeOrigemKg) + ' Kg',
+            fmt(m.pesoDescargaKg) + ' Kg',
             (m.umidadePorcentagem ?? 0).toFixed(1) + '%',
             (m.impurezaPorcentagem ?? 0).toFixed(1) + '%',
-            fmt(m.pesoFinal) + ' kg',
-            fmt(m.quantidadeSacas) + ' sc',
+            fmt(m.pesoFinal) + ' Kg',
+            fmt(m.quantidadeSacas) + ' Sc',
             fmtR(m.valorCompraPorSaca ?? 0),
             fmtR(m.valorVendaPorSaca ?? 0),
             fmtR(m.custoFretePorSaca ?? 0),
@@ -311,11 +311,11 @@ export class ContratoDetalheComponent implements OnInit {
           ]),
           foot: [[
             'TOTAIS', '', '', '',
-            fmt(movs.reduce((s, m) => s + (m.quantidadeOrigemKg || 0), 0)) + ' kg',
-            fmt(movs.reduce((s, m) => s + (m.pesoDescargaKg || 0), 0)) + ' kg',
+            fmt(movs.reduce((s, m) => s + (m.quantidadeOrigemKg || 0), 0)) + ' Kg',
+            fmt(movs.reduce((s, m) => s + (m.pesoDescargaKg || 0), 0)) + ' Kg',
             '', '',
-            fmt(totalKgFinal) + ' kg',
-            fmt(totalSacas) + ' sc',
+            fmt(totalKgFinal) + ' Kg',
+            fmt(totalSacas) + ' Sc',
             '', '', '', '',
             fmtR(totalVenda),
             fmtR(ganhoLiquido),
@@ -368,6 +368,6 @@ export class ContratoDetalheComponent implements OnInit {
   getFaltaComprar(): number {
     if (!this.contrato) return 0;
     const totalCotas = (this.contrato.produtoresVinculados || []).reduce((s, p) => s + p.quantidadeCotaKg, 0);
-    return Math.max(0, this.contrato.quantidadeTotalKg - totalCotas);
+    return this.contrato.quantidadeTotalKg - totalCotas;
   }
 }

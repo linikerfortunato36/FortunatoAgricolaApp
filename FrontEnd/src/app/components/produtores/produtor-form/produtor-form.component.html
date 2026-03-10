@@ -133,12 +133,14 @@
                         <h6 class="text-uppercase text-muted fw-bold small mb-3">Contrato #{{ summary.contratoNumero }}
                         </h6>
 
-                        <h3 class="fw-bold text-dark mb-1">{{ summary.totalEntregueKg | number:'1.0-0' }} Kg</h3>
+                        <h3 class="fw-bold text-dark mb-1">{{ summary.totalEntregueKg | number:'1.0-0':'pt-BR' }} Kg
+                        </h3>
                         <p class="text-secondary small mb-3">Total Descarregado (Líquido)</p>
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-between text-muted small mt-2">
-                                <span>Cota: <strong>{{ summary.cotaTotalKg | number:'1.0-0' }} Kg</strong></span>
+                                <span>Cota: <strong>{{ summary.cotaTotalKg | number:'1.0-0':'pt-BR' }}
+                                        Kg</strong></span>
                                 <span *ngIf="summary.dataFinalEntrega" class="text-danger fw-bold"><i
                                         class="bi bi-calendar-x"></i> {{ summary.dataFinalEntrega |
                                     date:'dd/MM/yyyy':'UTC' }}</span>
@@ -150,12 +152,12 @@
                             </div>
                             <div class="d-flex justify-content-between text-muted small mt-1">
                                 <span *ngIf="summary.restanteEstimadoKg > 0">Faltam: <strong class="text-danger">{{
-                                        summary.restanteEstimadoKg | number:'1.0-0' }} Kg</strong></span>
+                                        summary.restanteEstimadoKg | number:'1.0-0':'pt-BR' }} Kg</strong></span>
                                 <span *ngIf="summary.restanteEstimadoKg === 0" class="text-success fw-bold"><i
                                         class="bi bi-check-circle"></i> Cota Atingida</span>
                                 <span *ngIf="summary.restanteEstimadoKg < 0" class="text-warning fw-bold"><i
                                         class="bi bi-exclamation-triangle-fill"></i> Excedente: {{
-                                    (summary.restanteEstimadoKg * -1) | number:'1.0-0' }} Kg</span>
+                                    (summary.restanteEstimadoKg * -1) | number:'1.0-0':'pt-BR' }} Kg</span>
                             </div>
                         </div>
 
@@ -166,7 +168,7 @@
                             </div>
                             <div class="flex-fill ps-2">
                                 <div class="text-muted small">Total em Sacas</div>
-                                <div class="fw-bold">{{ summary.totalSacas | number:'1.0-0' }} scs</div>
+                                <div class="fw-bold">{{ summary.totalSacas | number:'1.0-0':'pt-BR' }} Sacas</div>
                             </div>
                         </div>
                     </div>
@@ -214,12 +216,12 @@
                             </td>
                             <td><i class="bi bi-truck me-1"></i> {{ m.motorista }} <br><span
                                     class="x-small text-muted">{{ m.nfe }}</span></td>
-                            <td>{{ m.quantidadeOrigemKg | number:'1.0-0' }} Kg</td>
-                            <td>{{ m.umidadeKg | number:'1.0-2' }} Kg <br><span class="text-danger x-small">({{
-                                    m.umidadePorcentagem | number:'1.0-2' }}%)</span></td>
-                            <td>{{ m.impurezaKg | number:'1.0-2' }} Kg <br><span class="text-danger x-small">({{
-                                    m.impurezaPorcentagem | number:'1.0-2' }}%)</span></td>
-                            <td class="pe-4 fw-bold text-dark">{{ m.pesoFinal | number:'1.0-0' }} Kg</td>
+                            <td>{{ m.quantidadeOrigemKg | number:'1.0-0':'pt-BR' }} Kg</td>
+                            <td>{{ m.umidadeKg | number:'1.2-2':'pt-BR' }} Kg <br><span class="text-danger x-small">({{
+                                    m.umidadePorcentagem | number:'1.2-2':'pt-BR' }}%)</span></td>
+                            <td>{{ m.impurezaKg | number:'1.2-2':'pt-BR' }} Kg <br><span class="text-danger x-small">({{
+                                    m.impurezaPorcentagem | number:'1.2-2':'pt-BR' }}%)</span></td>
+                            <td class="pe-4 fw-bold text-dark">{{ m.pesoFinal | number:'1.0-0':'pt-BR' }} Kg</td>
                         </tr>
                         <tr *ngIf="movimentacoesFiltradas.length === 0">
                             <td colspan="7" class="text-center py-4 text-muted border-bottom-0">Nenhum registro

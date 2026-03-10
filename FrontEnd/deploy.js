@@ -46,12 +46,19 @@ async function deploy() {
 
         console.log("✅ Backend uploaded successfully.");
 
-        // console.log("Uploading Frontend to /www...");
-        // await client.cd("/");
-        // await client.ensureDir("/www");
-        // await client.cd("/www");
-        // await client.uploadFromDir(path.resolve(__dirname, "./dist/front-end-app/browser"));
-        // console.log("✅ Frontend uploaded successfully.");
+        console.log("Building Frontend locally...");
+        execSync("npm run build", {
+            cwd: __dirname,
+            stdio: "inherit"
+        });
+        console.log("Frontend build successfully completed!");
+
+        console.log("Uploading Frontend to /www...");
+        await client.cd("/");
+        await client.ensureDir("/www");
+        await client.cd("/www");
+        await client.uploadFromDir(path.resolve(__dirname, "./dist/front-end-app/browser"));
+        console.log("✅ Frontend uploaded successfully.");
     }
     catch (err) {
         console.log("❌ Error:", err)

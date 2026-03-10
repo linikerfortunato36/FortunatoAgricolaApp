@@ -47,8 +47,8 @@
                             <h6 class="text-muted fw-bold mb-1 small text-uppercase">Volumetria Negociada vs Entregue
                             </h6>
                             <span class="fs-4 fw-bolder text-dark">{{ (contrato?.quantidadeEntregueKg || 0) |
-                                number:'1.0-0' }} Kg</span>
-                            <span class="text-muted">/ {{ (contrato?.quantidadeTotalKg || 0) | number:'1.0-0' }}
+                                number:'1.0-0':'pt-BR' }} Kg</span>
+                            <span class="text-muted">/ {{ (contrato?.quantidadeTotalKg || 0) | number:'1.0-0':'pt-BR' }}
                                 Kg</span>
                             <div class="mt-1 small" *ngIf="contrato?.valorVendaPorSaca">
                                 <span class="badge bg-success-subtle text-success border border-success-subtle">
@@ -67,7 +67,8 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <p class="text-danger small fw-bold mb-0" *ngIf="getFaltaComprar() > 0">
-                            <i class="bi bi-cart-x-fill me-1"></i> Falta Comprar: {{ getFaltaComprar() | number:'1.0-0'
+                            <i class="bi bi-cart-x-fill me-1"></i> Falta Comprar: {{ getFaltaComprar() |
+                            number:'1.0-0':'pt-BR'
                             }} Kg
                         </p>
                         <p class="text-success small fw-bold mb-0" *ngIf="getFaltaComprar() === 0">
@@ -76,12 +77,12 @@
                         <p class="text-danger small fw-bold mb-0 text-end ms-auto"
                             *ngIf="(contrato?.quantidadeRestanteKg || 0) > 0">
                             <i class="bi bi-exclamation-triangle-fill me-1"></i> Restam {{
-                            (contrato?.quantidadeRestanteKg || 0) | number:'1.0-0' }} Kg para o Limite
+                            (contrato?.quantidadeRestanteKg || 0) | number:'1.0-0':'pt-BR' }} Kg para o Limite
                         </p>
                         <p class="text-warning small fw-bold mb-0 text-end ms-auto"
                             *ngIf="(contrato?.quantidadeRestanteKg || 0) < 0">
                             <i class="bi bi-exclamation-circle-fill me-1"></i> Excedentes: {{
-                            ((contrato?.quantidadeRestanteKg || 0) * -1) | number:'1.0-0' }} Kg
+                            ((contrato?.quantidadeRestanteKg || 0) * -1) | number:'1.0-0':'pt-BR' }} Kg
                         </p>
                     </div>
                 </div>
@@ -92,7 +93,7 @@
             <div class="card h-100 shadow-sm border-0 bg-primary text-white text-end">
                 <div class="card-body">
                     <h6 class="text-uppercase fw-bold mb-2 small opacity-75">Valores & Entregas (NF-e)</h6>
-                    <h3 class="fw-bold mb-1">R$ {{ (contrato?.valorTotalNfe || 0) | number:'1.2-2' }}</h3>
+                    <h3 class="fw-bold mb-1">R$ {{ (contrato?.valorTotalNfe || 0) | number:'1.2-2':'pt-BR' }}</h3>
                     <p class="mb-0 small opacity-75">Faturamento Bruto Consolidado</p>
                     <hr class="my-2 border-white opacity-25">
                     <p class="mb-0 small"><strong>{{ contrato?.quantidadeEntregas || 0 }}</strong> Tickets / Viagens
@@ -123,8 +124,8 @@
                             </div>
                             <div class="d-flex justify-content-between mb-1 mt-3 small">
                                 <span class="text-muted">Entregue: <strong class="text-dark">{{ p.quantidadeEntregueKg |
-                                        number:'1.0-0' }} Kg</strong></span>
-                                <span class="text-muted">Cota: <strong>{{ p.quantidadeCotaKg | number:'1.0-0' }}
+                                        number:'1.0-0':'pt-BR' }} Kg</strong></span>
+                                <span class="text-muted">Cota: <strong>{{ p.quantidadeCotaKg | number:'1.0-0':'pt-BR' }}
                                         Kg</strong></span>
                             </div>
                             <div class="progress" style="height: 6px; border-radius: 4px;">
@@ -135,7 +136,8 @@
                             <div class="d-flex justify-content-between mt-2 small text-danger"
                                 *ngIf="p.quantidadeRestanteKg > 0">
                                 <span class="fw-bold"><i class="bi bi-clock-history me-1"></i>Faltam:</span>
-                                <strong class="text-danger">{{ p.quantidadeRestanteKg | number:'1.0-0' }} Kg</strong>
+                                <strong class="text-danger">{{ p.quantidadeRestanteKg | number:'1.0-0':'pt-BR' }}
+                                    Kg</strong>
                             </div>
                             <div class="d-flex justify-content-between mt-2 small text-success"
                                 *ngIf="p.quantidadeRestanteKg === 0">
@@ -145,7 +147,8 @@
                                 *ngIf="p.quantidadeRestanteKg < 0">
                                 <span class="fw-bold text-warning"><i
                                         class="bi bi-exclamation-triangle-fill me-1"></i>Excedente Entregue:</span>
-                                <strong class="text-warning">{{ (p.quantidadeRestanteKg * -1) | number:'1.0-0' }}
+                                <strong class="text-warning">{{ (p.quantidadeRestanteKg * -1) | number:'1.0-0':'pt-BR'
+                                    }}
                                     Kg</strong>
                             </div>
                         </div>
@@ -269,23 +272,23 @@
                             <h6 class="fw-bold text-primary mt-4 mb-3">VOLUMETRIA (KG)</h6>
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="text-muted">Origem:</span>
-                                <span>{{ selectedMovimentacao.quantidadeOrigemKg | number }}</span>
+                                <span>{{ selectedMovimentacao.quantidadeOrigemKg | number:'1.0-0':'pt-BR' }} Kg</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="text-muted">Sacas:</span>
-                                <span>{{ selectedMovimentacao.quantidadeSacas | number:'1.0-1' }} sc</span>
+                                <span>{{ selectedMovimentacao.quantidadeSacas | number:'1.0-1':'pt-BR' }} Scs</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="text-muted">Descarga:</span>
-                                <span>{{ selectedMovimentacao.pesoDescargaKg | number }}</span>
+                                <span>{{ selectedMovimentacao.pesoDescargaKg | number:'1.0-0':'pt-BR' }} Kg</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1 text-danger">
                                 <span class="text-muted">Quebra:</span>
-                                <span>{{ selectedMovimentacao.diferencaPesoKg | number }}</span>
+                                <span>{{ selectedMovimentacao.diferencaPesoKg | number:'1.0-0':'pt-BR' }} Kg</span>
                             </div>
                             <div class="d-flex justify-content-between border-top pt-2 fw-bold text-primary">
                                 <span>PESO FINAL:</span>
-                                <span>{{ selectedMovimentacao.pesoFinal | number }} Kg</span>
+                                <span>{{ selectedMovimentacao.pesoFinal | number:'1.0-0':'pt-BR' }} Kg</span>
                             </div>
                         </div>
                         <div class="col-md-6" *ngIf="!authService.isOperador()">
@@ -293,22 +296,22 @@
                             <p class="mb-1"><span class="text-muted">Nota Fiscal:</span> {{ selectedMovimentacao.nfe ||
                                 '—' }}</p>
                             <p class="mb-1"><span class="text-muted">Valor NF-e:</span> R$ {{
-                                selectedMovimentacao.valorNfe | number:'1.2-2' }}</p>
+                                selectedMovimentacao.valorNfe | number:'1.2-2':'pt-BR' }}</p>
                             <p class="mb-1"><span class="text-muted">Venda por Saca:</span> R$ {{
-                                selectedMovimentacao.valorVendaPorSaca | number:'1.2-2' }}</p>
+                                selectedMovimentacao.valorVendaPorSaca | number:'1.2-2':'pt-BR' }}</p>
                             <p class="mb-1"><span class="text-muted">Venda Total:</span> R$ {{
-                                selectedMovimentacao.valorTotalVenda | number:'1.2-2' }}</p>
+                                selectedMovimentacao.valorTotalVenda | number:'1.2-2':'pt-BR' }}</p>
                             <hr>
                             <p class="mb-1"><span class="text-muted">Ganho Bruto:</span> R$ {{
-                                selectedMovimentacao.ganhoBruto | number:'1.2-2' }}</p>
+                                selectedMovimentacao.ganhoBruto | number:'1.2-2':'pt-BR' }}</p>
                             <p class="mb-1"><span class="text-muted">Imposto Est.:</span> R$ {{
-                                selectedMovimentacao.imposto | number:'1.2-2' }}</p>
+                                selectedMovimentacao.imposto | number:'1.2-2':'pt-BR' }}</p>
                             <p class="mb-1"><span class="text-muted">Comissão LD:</span> R$ {{
-                                selectedMovimentacao.totalComissaoLd | number:'1.2-2' }}</p>
+                                selectedMovimentacao.totalComissaoLd | number:'1.2-2':'pt-BR' }}</p>
                             <div class="mt-3 p-2 bg-light rounded text-center">
                                 <span class="d-block small text-muted text-uppercase fw-bold">Ganho Líquido</span>
                                 <span class="fs-4 fw-bold text-success">R$ {{ selectedMovimentacao.ganhoLiquido |
-                                    number:'1.2-2' }}</span>
+                                    number:'1.2-2':'pt-BR' }}</span>
                             </div>
                             <div class="mt-4">
                                 <h6 class="fw-bold text-muted small mb-1">Observações:</h6>

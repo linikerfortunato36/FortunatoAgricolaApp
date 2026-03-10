@@ -64,7 +64,7 @@
                                     <ng-template ng-option-tmp let-item="item">
                                         {{ item.numeroContrato }} — {{ item.clienteNome }}
                                         <small class="d-block text-muted">Saldo restante: {{ item.quantidadeRestanteKg |
-                                            number }} kg</small>
+                                            number:'1.0-0':'pt-BR' }} Kg</small>
                                     </ng-template>
                                 </ng-select>
                             </div>
@@ -112,7 +112,8 @@
                                 <label class="form-label fw-bold text-primary">Peso Bruto na Origem (Kg) *</label>
                                 <input type="number" class="form-control form-control-lg text-end fw-bold"
                                     [(ngModel)]="form.quantidadeOrigemKg" placeholder="0">
-                                <div class="form-text">Resultará em <strong>{{ sacas | number:'1.0-1' }} sacas</strong>.
+                                <div class="form-text">Resultará em <strong>{{ sacas | number:'1.0-1':'pt-BR' }}
+                                        Sacas</strong>.
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -131,7 +132,7 @@
                                     [(ngModel)]="form.pesoDescargaKg" (ngModelChange)="calcularDescontos()"
                                     placeholder="0">
                                 <div *ngIf="diferencaPeso > 0" class="form-text text-danger fw-bold">Quebra total de {{
-                                    diferencaPeso | number }} Kg.</div>
+                                    diferencaPeso | number:'1.0-0':'pt-BR' }} Kg.</div>
                             </div>
                         </div>
 
@@ -159,7 +160,7 @@
                     <div
                         class="card-footer bg-white border-0 py-3 text-end d-flex justify-content-between align-items-center">
                         <span class="fw-bold text-muted">PESO FINAL CALCULADO (COM DESCONTOS):</span>
-                        <span class="fs-4 fw-bold text-primary">{{ pesoFinal | number:'1.0-0' }} Kg</span>
+                        <span class="fs-4 fw-bold text-primary">{{ pesoFinal | number:'1.0-0':'pt-BR' }} Kg</span>
                     </div>
                 </div>
 
@@ -233,31 +234,32 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between mb-3 small">
                         <span class="text-muted">Venda Bruta:</span>
-                        <span class="fw-bold text-dark">R$ {{ valorTotalVenda | number:'1.2-2' }}</span>
+                        <span class="fw-bold text-dark">R$ {{ valorTotalVenda | number:'1.2-2':'pt-BR' }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2 small">
                         <span class="text-muted">Total da Compra:</span>
-                        <span class="text-danger fw-bold">- R$ {{ totalCompra | number:'1.2-2' }}</span>
+                        <span class="text-danger fw-bold">- R$ {{ totalCompra | number:'1.2-2':'pt-BR' }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-4 border-bottom pb-3">
                         <span class="text-muted">Ganho Bruto:</span>
-                        <span class="text-dark fw-bold">R$ {{ ganhoBruto | number:'1.2-2' }}</span>
+                        <span class="text-dark fw-bold">R$ {{ ganhoBruto | number:'1.2-2':'pt-BR' }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 small text-muted">
                         <span>Imposto Est. (Saca):</span>
-                        <span>- R$ {{ imposto | number:'1.2-2' }}</span>
+                        <span>- R$ {{ imposto | number:'1.2-2':'pt-BR' }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-4 small text-muted">
                         <span>Comissão LD:</span>
-                        <span>- R$ {{ comissaoLd | number:'1.2-2' }}</span>
+                        <span>- R$ {{ comissaoLd | number:'1.2-2':'pt-BR' }}</span>
                     </div>
 
                     <div class="mt-2 p-3 rounded-3 text-center"
                         style="background-color: #f1f8e9; border: 1px solid #c5e1a5;">
                         <span class="text-uppercase small fw-bold d-block mb-1" style="color: #33691e;">Ganho Líquido
                             Estimado</span>
-                        <h3 class="fw-bold mb-0" style="color: #2e7d32;">R$ {{ ganhoLiquido | number:'1.2-2' }}</h3>
+                        <h3 class="fw-bold mb-0" style="color: #2e7d32;">R$ {{ ganhoLiquido | number:'1.2-2':'pt-BR' }}
+                        </h3>
                     </div>
                 </div>
             </div>
