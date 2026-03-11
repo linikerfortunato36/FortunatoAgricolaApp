@@ -317,6 +317,7 @@
                             <th class="text-end">Sacas</th>
                             <th class="text-end">Total Venda</th>
                             <th class="text-end">Total Frete</th>
+                            <th class="text-end">Dif. Frete</th>
                             <th class="text-end">Armazém (nós)</th>
                             <th class="text-end">Armazém (cliente)</th>
                             <th class="text-end">Imposto</th>
@@ -333,6 +334,9 @@
                             <td class="text-end">{{ c.totalSacas | number:'1.0-1' }}</td>
                             <td class="text-end">{{ c.totalVenda | currency:'BRL':'symbol':'1.2-2' }}</td>
                             <td class="text-end text-primary">{{ c.totalFrete | currency:'BRL':'symbol':'1.2-2' }}</td>
+                            <td class="text-end fw-bold" [ngClass]="c.totalDiferencaFrete >= 0 ? 'text-success' : 'text-danger'">
+                                {{ c.totalDiferencaFrete | currency:'BRL':'symbol':'1.2-2' }}
+                            </td>
                             <td class="text-end text-danger">{{ c.totalNos | currency:'BRL':'symbol':'1.2-2' }}</td>
                             <td class="text-end text-success">{{ c.totalCliente | currency:'BRL':'symbol':'1.2-2' }}
                             </td>
@@ -351,6 +355,9 @@
                             <td class="text-end">{{ balancoContratosTotais.venda | currency:'BRL':'symbol':'1.2-2' }}
                             </td>
                             <td class="text-end">{{ balancoContratosTotais.frete | currency:'BRL':'symbol':'1.2-2' }}
+                            </td>
+                            <td class="text-end fw-bold" [ngClass]="balancoContratosTotais.diferencaFrete >= 0 ? 'text-success' : 'text-danger'">
+                                {{ balancoContratosTotais.diferencaFrete | currency:'BRL':'symbol':'1.2-2' }}
                             </td>
                             <td class="text-end">{{ balancoContratosTotais.armazem | currency:'BRL':'symbol':'1.2-2' }}
                             </td>

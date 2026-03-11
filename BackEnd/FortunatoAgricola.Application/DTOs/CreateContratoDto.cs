@@ -1,4 +1,4 @@
-﻿namespace FortunatoAgricola.Application.DTOs
+namespace FortunatoAgricola.Application.DTOs
 {
     public class CreateContratoDto
     {
@@ -7,6 +7,7 @@
         public decimal QuantidadeTotalKg { get; set; }
         public DateTime? DataFinalEntrega { get; set; }
         public decimal ValorVendaPorSaca { get; set; }
+        public decimal ValorFreteCotado { get; set; }
         public List<CreateContratoProdutorDto> ProdutoresVinculados { get; set; } = new List<CreateContratoProdutorDto>();
     }
 }

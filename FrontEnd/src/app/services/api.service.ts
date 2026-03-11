@@ -78,6 +78,7 @@ export interface Contrato {
   valorTotalNfe: number;
   dataFinalEntrega?: string;
   valorVendaPorSaca?: number;
+  valorFreteCotado: number;
   percentualEntregue: number;
   isActive: boolean;
   createdAt?: string;
@@ -124,7 +125,9 @@ export interface Movimentacao {
   vendedorNome: string;
 
   // Financeiro
+  valorFreteCotado: number;
   custoFretePorSaca: number;
+  diferencaFrete: number;
   valorCompraPorSaca: number;
   valorTotalCompra: number;
   valorTotalFrete: number;

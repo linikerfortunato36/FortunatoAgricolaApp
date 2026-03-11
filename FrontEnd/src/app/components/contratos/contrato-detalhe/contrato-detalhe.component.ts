@@ -160,7 +160,7 @@ export class ContratoDetalheComponent implements OnInit {
           { label: 'CLIENTE DESTINO', val: c.clienteNome, x: 16, w: 55 },
           { label: 'STATUS', val: c.status, x: 75, w: 30 },
           { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} Kg`, x: 110, w: 35 },
-          { label: 'FALTA COMPRAR', val: `${fmt(faltaComprar)} Kg`, x: 160, w: 35 },
+          { label: 'FRETE COTADO', val: `${fmtR(c.valorFreteCotado || 0)} / Sc`, x: 160, w: 35 },
           { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} Kg`, x: 210, w: 35 },
           { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} Kg`, x: 250, w: 35 },
         ];
@@ -198,6 +198,7 @@ export class ContratoDetalheComponent implements OnInit {
         const ganhoBruto = movs.reduce((s, m) => s + (m.ganhoBruto || 0), 0);
         const imposto = movs.reduce((s, m) => s + (m.imposto || 0), 0);
         const comissao = movs.reduce((s, m) => s + (m.totalComissaoLd || 0), 0);
+        const totalDifFrete = movs.reduce((s, m) => s + (m.diferencaFrete * m.quantidadeSacas || 0), 0);
         const ganhoLiquido = movs.reduce((s, m) => s + (m.ganhoLiquido || 0), 0);
         const totalSacas = movs.reduce((s, m) => s + (m.quantidadeSacas || 0), 0);
         const totalKgFinal = movs.reduce((s, m) => s + (m.pesoFinal || 0), 0);
@@ -220,6 +221,7 @@ export class ContratoDetalheComponent implements OnInit {
           { label: 'GANHO BRUTO', value: fmtR(ganhoBruto), color: [22, 163, 74] },
           { label: 'IMPOSTOS', value: fmtR(imposto), color: [220, 38, 38] },
           { label: 'COMISS\u00c3O LD', value: fmtR(comissao), color: [139, 92, 246] },
+          { label: 'DIFEREN\u00c7A FRETE', value: fmtR(totalDifFrete), color: totalDifFrete >= 0 ? [22, 163, 74] : [220, 38, 38] },
           { label: 'GANHO L\u00cdQUIDO', value: fmtR(ganhoLiquido), color: [22, 163, 74] },
         ];
 
@@ -304,8 +306,8 @@ export class ContratoDetalheComponent implements OnInit {
           startY: y,
           head: [[
             'Data', 'Produtor Origem', 'Transportadora', 'Motorista',
-            'Kg Origem', 'Kg Desc.', 'U%', 'I%', 'KG Final', 'Sacas',
-            'Compra/sc', 'Venda/sc', 'Frete/sc', 'Armz/sc',
+            'Kg Origem', 'Kg Desc.', 'KG Final',
+            'Compra/sc', 'Venda/sc', 'Frete/sc', 'Dif. Frete',
             'Total Venda', 'G. L\u00edquido', 'NF-e'
           ]],
           body: movs.map(m => [
@@ -315,14 +317,11 @@ export class ContratoDetalheComponent implements OnInit {
             m.motorista || '-',
             fmt(m.quantidadeOrigemKg) + ' Kg',
             fmt(m.pesoDescargaKg) + ' Kg',
-            (m.umidadePorcentagem ?? 0).toFixed(1) + '%',
-            (m.impurezaPorcentagem ?? 0).toFixed(1) + '%',
             fmt(m.pesoFinal) + ' Kg',
-            fmt(m.quantidadeSacas) + ' Sc',
             fmtR(m.valorCompraPorSaca ?? 0),
             fmtR(m.valorVendaPorSaca ?? 0),
             fmtR(m.custoFretePorSaca ?? 0),
-            fmtR(m.valorPorSacaArmazem ?? 0),
+            fmtR(m.diferencaFrete ?? 0),
             fmtR(m.valorTotalVenda ?? 0),
             fmtR(m.ganhoLiquido ?? 0),
             m.nfe || '-'
@@ -331,10 +330,9 @@ export class ContratoDetalheComponent implements OnInit {
             'TOTAIS', '', '', '',
             fmt(movs.reduce((s, m) => s + (m.quantidadeOrigemKg || 0), 0)) + ' Kg',
             fmt(movs.reduce((s, m) => s + (m.pesoDescargaKg || 0), 0)) + ' Kg',
-            '', '',
             fmt(totalKgFinal) + ' Kg',
-            fmt(totalSacas) + ' Sc',
-            '', '', '', '',
+            '', '', '',
+            fmtR(totalDifFrete),
             fmtR(totalVenda),
             fmtR(ganhoLiquido),
             ''
@@ -454,6 +452,7 @@ export class ContratoDetalheComponent implements OnInit {
       status: c.status,
       isActive: c.isActive,
       dataFinalEntrega: c.dataFinalEntrega,
+      valorFreteCotado: c.valorFreteCotado,
       produtoresVinculados: novosProdutores.map(p => ({
         produtorId: p.produtorId,
         quantidadeCotaKg: p.quantidadeCotaKg,
@@ -498,6 +497,7 @@ export class ContratoDetalheComponent implements OnInit {
           status: c.status,
           isActive: c.isActive,
           dataFinalEntrega: c.dataFinalEntrega,
+          valorFreteCotado: c.valorFreteCotado,
           produtoresVinculados: novosProdutores.map(p => ({
             produtorId: p.produtorId,
             quantidadeCotaKg: p.quantidadeCotaKg,

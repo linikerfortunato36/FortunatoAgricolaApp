@@ -42,6 +42,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
                 DataFinalEntrega = c.DataFinalEntrega,
                 ValorVendaPorSaca = c.ValorVendaPorSaca,
+                ValorFreteCotado = c.ValorFreteCotado,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
@@ -85,6 +86,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
                 DataFinalEntrega = c.DataFinalEntrega,
                 ValorVendaPorSaca = c.ValorVendaPorSaca,
+                ValorFreteCotado = c.ValorFreteCotado,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,
@@ -113,6 +115,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 QuantidadeTotalKg = dto.QuantidadeTotalKg,
                 DataFinalEntrega = dto.DataFinalEntrega,
                 ValorVendaPorSaca = dto.ValorVendaPorSaca,
+                ValorFreteCotado = dto.ValorFreteCotado,
                 QuantidadeEntregueKg = 0,
                 Status = "Aberto",
                 IsActive = true
@@ -153,6 +156,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             c.QuantidadeTotalKg = dto.QuantidadeTotalKg;
             c.DataFinalEntrega = dto.DataFinalEntrega;
             c.ValorVendaPorSaca = dto.ValorVendaPorSaca;
+            c.ValorFreteCotado = dto.ValorFreteCotado;
             c.Status = dto.Status;
             c.IsActive = dto.IsActive;
             c.UpdatedAt = DateTime.UtcNow;
@@ -222,6 +226,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 ValorTotalNfe = c.Movimentacoes?.Sum(m => m.ValorNfe) ?? 0,
                 DataFinalEntrega = c.DataFinalEntrega,
                 ValorVendaPorSaca = c.ValorVendaPorSaca,
+                ValorFreteCotado = c.ValorFreteCotado,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
                 CreatedByName = c.CreatedByName,

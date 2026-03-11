@@ -25,6 +25,10 @@ export class ContratosListComponent implements OnInit {
   filtroClienteId: string | null = null;
   filtroNumero = '';
   filtroDataEntrega: string = '';
+  filtroDataLimiteProdutor: string = '';
+
+  sortColumn: string = 'numeroContrato';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   p: number = 1;
 
@@ -78,11 +82,12 @@ export class ContratosListComponent implements OnInit {
     this.filtroClienteId = null;
     this.filtroNumero = '';
     this.filtroDataEntrega = '';
+    this.filtroDataLimiteProdutor = '';
     this.p = 1;
   }
 
   getContratosFiltrados(): Contrato[] {
-    return this.contratos.filter(c => {
+    let filtrados = this.contratos.filter(c => {
       const matchStatus = this.filtroStatus === 'Todos' || c.status === this.filtroStatus;
       const matchCliente = !this.filtroClienteId || c.clienteId === this.filtroClienteId;
       const matchNumero = !this.filtroNumero || c.numeroContrato.toLowerCase().includes(this.filtroNumero.toLowerCase());
@@ -97,8 +102,49 @@ export class ContratosListComponent implements OnInit {
         }
       }
 
-      return matchStatus && matchCliente && matchNumero && matchData;
+      let matchDataProdutor = true;
+      if (this.filtroDataLimiteProdutor) {
+        matchDataProdutor = (c.produtoresVinculados || []).some(p => {
+          if (!p.dataFinalEntrega) return false;
+          const pDate = new Date(p.dataFinalEntrega).toISOString().split('T')[0];
+          return pDate <= this.filtroDataLimiteProdutor;
+        });
+      }
+
+      return matchStatus && matchCliente && matchNumero && matchData && matchDataProdutor;
     });
+
+    // Sorting
+    return filtrados.sort((a: any, b: any) => {
+      let valA = a[this.sortColumn];
+      let valB = b[this.sortColumn];
+
+      // Handle special columns
+      if (this.sortColumn === 'faltaComprar') {
+        valA = this.getFaltaComprar(a);
+        valB = this.getFaltaComprar(b);
+      } else if (this.sortColumn === 'percentual') {
+        valA = a.quantidadeTotalKg > 0 ? (a.quantidadeEntregueKg / a.quantidadeTotalKg) : 0;
+        valB = b.quantidadeTotalKg > 0 ? (b.quantidadeEntregueKg / b.quantidadeTotalKg) : 0;
+      }
+
+      if (valA === valB) return 0;
+      if (valA === null || valA === undefined) return 1;
+      if (valB === null || valB === undefined) return -1;
+
+      const factor = this.sortDirection === 'asc' ? 1 : -1;
+      return valA > valB ? factor : -factor;
+    });
+  }
+
+  sort(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.p = 1; // Reset to first page
   }
 
   getProgressoWidth(entregue: number, total: number): number {
@@ -162,6 +208,7 @@ export class ContratosListComponent implements OnInit {
       valorVendaPorSaca: c.valorVendaPorSaca,
       status: c.status,
       isActive: c.isActive,
+      valorFreteCotado: c.valorFreteCotado,
       produtoresVinculados: novosProdutores.map(p => ({
         produtorId: p.produtorId,
         quantidadeCotaKg: p.quantidadeCotaKg,

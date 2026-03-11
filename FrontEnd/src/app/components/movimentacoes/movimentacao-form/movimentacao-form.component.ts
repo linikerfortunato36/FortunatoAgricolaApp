@@ -99,6 +99,11 @@ export class MovimentacaoFormComponent implements OnInit {
     return this.ganhoBruto - this.imposto - this.comissaoLd;
   }
 
+  get diferencaFrete(): number {
+    if (!this.contratoSelecionado || !this.contratoSelecionado.valorFreteCotado) return 0;
+    return this.contratoSelecionado.valorFreteCotado - this.form.custoFretePorSaca;
+  }
+
   get contratoSelecionado(): Contrato | undefined {
     return this.contratos.find(c => c.id === this.form.contratoId);
   }

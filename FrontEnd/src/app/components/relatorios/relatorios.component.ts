@@ -30,6 +30,7 @@ interface BalancoContrato {
     totalCliente: number;
     totalImposto: number;
     totalComissao: number;
+    totalDiferencaFrete: number;
     ganhoBruto: number;
     ganhoLiquido: number;
     numMovimentacoes: number;
@@ -222,6 +223,7 @@ export class RelatoriosComponent implements OnInit {
                     totalFrete: 0, totalArmazem: 0,
                     totalNos: 0, totalCliente: 0,
                     totalImposto: 0, totalComissao: 0,
+                    totalDiferencaFrete: 0,
                     ganhoBruto: 0, ganhoLiquido: 0,
                     numMovimentacoes: 0
                 });
@@ -232,6 +234,7 @@ export class RelatoriosComponent implements OnInit {
             c.totalVenda += m.valorTotalVenda;
             c.totalCompra += m.valorTotalCompra;
             c.totalFrete += m.valorTotalFrete;
+            c.totalDiferencaFrete += (m.diferencaFrete * m.quantidadeSacas);
             c.totalArmazem += m.valorTotalArmazem;
             c.totalImposto += m.imposto || 0;
             c.totalComissao += m.totalComissaoLd || 0;
@@ -253,6 +256,7 @@ export class RelatoriosComponent implements OnInit {
             armazem: c.reduce((s, x) => s + x.totalArmazem, 0),
             imposto: c.reduce((s, x) => s + x.totalImposto, 0),
             comissao: c.reduce((s, x) => s + x.totalComissao, 0),
+            diferencaFrete: c.reduce((s, x) => s + x.totalDiferencaFrete, 0),
             ganhoBruto: c.reduce((s, x) => s + x.ganhoBruto, 0),
             ganhoLiquido: c.reduce((s, x) => s + x.ganhoLiquido, 0),
         };

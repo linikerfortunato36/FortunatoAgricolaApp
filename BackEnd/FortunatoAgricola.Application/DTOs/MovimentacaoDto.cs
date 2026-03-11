@@ -26,7 +26,9 @@ namespace FortunatoAgricola.Application.DTOs
         public string VendedorNome { get; set; } = string.Empty;
         
         // Dados Financeiros
+        public decimal ValorFreteCotado { get; set; }
         public decimal CustoFretePorSaca { get; set; }
+        public decimal DiferencaFrete => ValorFreteCotado - CustoFretePorSaca;
         public decimal ValorCompraPorSaca { get; set; }
         public decimal ValorTotalCompra { get; set; }
         public decimal ValorTotalFrete { get; set; }

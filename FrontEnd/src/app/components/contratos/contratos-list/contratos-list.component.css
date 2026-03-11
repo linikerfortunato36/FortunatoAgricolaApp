@@ -1,0 +1,12 @@
+.cursor-pointer {
+    cursor: pointer;
+    user-select: none;
+}
+
+.cursor-pointer:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.x-small {
+    font-size: 0.7rem;
+}

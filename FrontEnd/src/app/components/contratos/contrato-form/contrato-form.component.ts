@@ -31,6 +31,7 @@ export class ContratoFormComponent implements OnInit {
         quantidadeTotalKg: 0,
         dataFinalEntrega: null,
         valorVendaPorSaca: 0,
+        valorFreteCotado: 0,
         status: 'Aberto',
         isActive: true,
         produtoresVinculados: []

@@ -241,6 +241,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             TransportadoraNome = m.Transportadora?.Nome ?? string.Empty,
             VendedorId = m.VendedorId,
             VendedorNome = m.Vendedor?.Nome ?? string.Empty,
+            ValorFreteCotado = m.Contrato?.ValorFreteCotado ?? 0,
             CustoFretePorSaca = m.CustoFretePorSaca,
             ValorCompraPorSaca = m.ValorCompraPorSaca,
             ValorTotalCompra = (m.ValorCompraPorSaca + m.CustoFretePorSaca + (m.QuemPagaArmazem == "Nos" ? m.ValorPorSacaArmazem : 0)) * m.QuantidadeSacas, // Redundante mas útil no DTO
