@@ -188,9 +188,9 @@
                                 <label class="form-label fw-bold small">Frete por Saca (R$)</label>
                                 <input type="number" class="form-control text-end mb-1" [(ngModel)]="form.custoFretePorSaca"
                                     placeholder="0,00">
-                                <div class="mt-1 small d-flex gap-2 align-items-center" *ngIf="contratoSelecionado">
-                                    <span class="text-muted">Referência: {{ valorFreteCotadoReferencia | currency:'BRL':'symbol':'1.2-2' }}</span>
-                                    <span *ngIf="form.custoFretePorSaca > 0 && valorFreteCotadoReferencia > 0" 
+                                <div class="mt-1 small d-flex gap-2 align-items-center" *ngIf="form.produtorOrigemId">
+                                    <span class="text-muted">Referência (Vínculo): {{ valorFreteCotadoReferencia | currency:'BRL':'symbol':'1.2-2' }}</span>
+                                    <span *ngIf="form.custoFretePorSaca !== 0 || valorFreteCotadoReferencia !== 0" 
                                           [ngClass]="diferencaFrete >= 0 ? 'text-success' : 'text-danger'" class="fw-bold">
                                         ({{ (diferencaFrete >= 0 ? '+' : '') }}{{ diferencaFrete | currency:'BRL':'symbol':'1.2-2' }})
                                     </span>

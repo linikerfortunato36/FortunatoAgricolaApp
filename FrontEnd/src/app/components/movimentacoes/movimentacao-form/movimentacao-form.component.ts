@@ -36,6 +36,7 @@ export class MovimentacaoFormComponent implements OnInit {
     motorista: '',
     transportadoraId: '',
     vendedorId: '',
+    valorFreteCotado: 0,
     custoFretePorSaca: 0,
     valorCompraPorSaca: 0,
     valorPorSacaArmazem: 0,
@@ -100,18 +101,13 @@ export class MovimentacaoFormComponent implements OnInit {
   }
 
   get valorFreteCotadoReferencia(): number {
-    if (!this.contratoSelecionado) return 0;
+    if (!this.contratoSelecionado || !this.form.produtorOrigemId) return 0;
     
     // Busca o vinculo do produtor selecionado
     const vinculo = this.contratoSelecionado.produtoresVinculados?.find(p => p.produtorId === this.form.produtorOrigemId);
     
-    // Se tiver vinculo e frete cotado no vinculo > 0, usa ele
-    if (vinculo && vinculo.valorFreteCotado && vinculo.valorFreteCotado > 0) {
-      return vinculo.valorFreteCotado;
-    }
-    
-    // Caso contrário, usa o do contrato
-    return this.contratoSelecionado.valorFreteCotado || 0;
+    // Agora o frete vem EXCLUSIVAMENTE do vínculo. Se for 0, é 0.
+    return vinculo ? (vinculo.valorFreteCotado || 0) : 0;
   }
 
   get diferencaFrete(): number {
@@ -249,6 +245,9 @@ export class MovimentacaoFormComponent implements OnInit {
 
     this.isSubmitting = true;
     this.submitError = '';
+    
+    // Registra o frete de referência na movimentação
+    this.form.valorFreteCotado = this.valorFreteCotadoReferencia;
 
     this.apiService.createMovimentacao(this.form).subscribe({
       next: () => {

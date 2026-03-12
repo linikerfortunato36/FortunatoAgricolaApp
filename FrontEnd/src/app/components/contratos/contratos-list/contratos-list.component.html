@@ -74,9 +74,6 @@
                             <th class="cursor-pointer" (click)="sort('quantidadeTotalKg')">
                                 TOTAL ACORDADO <i class="bi" [ngClass]="sortColumn === 'quantidadeTotalKg' ? (sortDirection === 'asc' ? 'bi-sort-up' : 'bi-sort-down') : 'bi-arrow-down-up text-opacity-25'"></i>
                             </th>
-                            <th class="cursor-pointer" (click)="sort('valorFreteCotado')">
-                                FRETE COTADO <i class="bi" [ngClass]="sortColumn === 'valorFreteCotado' ? (sortDirection === 'asc' ? 'bi-sort-up' : 'bi-sort-down') : 'bi-arrow-down-up text-opacity-25'"></i>
-                            </th>
                             <th class="cursor-pointer" (click)="sort('faltaComprar')">
                                 FALTA COMPRAR <i class="bi" [ngClass]="sortColumn === 'faltaComprar' ? (sortDirection === 'asc' ? 'bi-sort-up' : 'bi-sort-down') : 'bi-arrow-down-up text-opacity-25'"></i>
                             </th>
@@ -103,12 +100,6 @@
                             <td>{{ c.clienteNome }}</td>
                             <td>
                                 <span class="fw-bold">{{ c.quantidadeTotalKg | number:'1.0-0':'pt-BR' }} Kg</span>
-                            </td>
-                            <td>
-                                <span class="text-info fw-bold" *ngIf="c.valorFreteCotado">
-                                    {{ c.valorFreteCotado | currency:'BRL':'symbol':'1.2-2' }} / Sc
-                                </span>
-                                <span class="text-muted small" *ngIf="!c.valorFreteCotado">—</span>
                             </td>
                             <td
                                 [ngClass]="{'text-danger fw-bold': getFaltaComprar(c) > 0, 'text-success fw-bold': getFaltaComprar(c) === 0, 'text-warning fw-bold': getFaltaComprar(c) < 0}">
@@ -226,9 +217,14 @@
                                 Nova compra será tratada como excedente.</div>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label class="form-label fw-bold text-muted small">Valor / Saca (R$)</label>
+                            <label class="form-label fw-bold text-muted small">Valor / Sc (R$)</label>
                             <input type="number" class="form-control" name="valorCompra"
                                 [(ngModel)]="novaCompra.valorCompraPorSaca" placeholder="150.00" required min="1">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold text-muted small">Frete / Sc (R$)</label>
+                            <input type="number" class="form-control" name="freteCotado"
+                                [(ngModel)]="novaCompra.valorFreteCotado" placeholder="10.00">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold text-muted small">Entrega Máxima</label>

@@ -39,6 +39,7 @@ export class ContratosListComponent implements OnInit {
     produtorId: null as string | null,
     quantidadeCotaKg: null as number | null,
     valorCompraPorSaca: null as number | null,
+    valorFreteCotado: null as number | null,
     dataFinalEntrega: null as string | null
   };
 
@@ -159,7 +160,7 @@ export class ContratosListComponent implements OnInit {
 
   abrirCompraModal(contrato: Contrato): void {
     this.compraSelecionado = contrato;
-    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null, dataFinalEntrega: null };
+    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null, valorFreteCotado: null, dataFinalEntrega: null };
     this.isCompraModalOpen = true;
   }
 
@@ -187,6 +188,7 @@ export class ContratosListComponent implements OnInit {
     if (existente) {
       existente.quantidadeCotaKg += this.novaCompra.quantidadeCotaKg;
       existente.valorCompraPorSaca = this.novaCompra.valorCompraPorSaca;
+      existente.valorFreteCotado = this.novaCompra.valorFreteCotado || 0;
       existente.dataFinalEntrega = this.novaCompra.dataFinalEntrega || undefined;
     } else {
       novosProdutores.push({
@@ -197,6 +199,7 @@ export class ContratosListComponent implements OnInit {
         quantidadeEntregueKg: 0,
         quantidadeRestanteKg: this.novaCompra.quantidadeCotaKg,
         valorCompraPorSaca: this.novaCompra.valorCompraPorSaca,
+        valorFreteCotado: this.novaCompra.valorFreteCotado || 0,
         dataFinalEntrega: this.novaCompra.dataFinalEntrega || undefined
       });
     }
@@ -208,11 +211,11 @@ export class ContratosListComponent implements OnInit {
       valorVendaPorSaca: c.valorVendaPorSaca,
       status: c.status,
       isActive: c.isActive,
-      valorFreteCotado: c.valorFreteCotado,
       produtoresVinculados: novosProdutores.map(p => ({
         produtorId: p.produtorId,
         quantidadeCotaKg: p.quantidadeCotaKg,
         valorCompraPorSaca: p.valorCompraPorSaca,
+        valorFreteCotado: p.valorFreteCotado || 0,
         dataFinalEntrega: p.dataFinalEntrega
       }))
     };

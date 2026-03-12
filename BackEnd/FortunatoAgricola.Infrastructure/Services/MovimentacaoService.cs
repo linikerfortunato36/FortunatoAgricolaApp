@@ -88,6 +88,7 @@ namespace FortunatoAgricola.Infrastructure.Services
                 
                 // Novos campos
                 CustoFretePorSaca = dto.CustoFretePorSaca,
+                ValorFreteCotado = dto.ValorFreteCotado,
                 ValorCompraPorSaca = dto.ValorCompraPorSaca,
                 ValorPorSacaArmazem = dto.ValorPorSacaArmazem,
                 QuemPagaArmazem = dto.QuemPagaArmazem,
@@ -247,9 +248,7 @@ namespace FortunatoAgricola.Infrastructure.Services
             TransportadoraNome = m.Transportadora?.Nome ?? string.Empty,
             VendedorId = m.VendedorId,
             VendedorNome = m.Vendedor?.Nome ?? string.Empty,
-            ValorFreteCotado = (m.Contrato?.ProdutoresVinculados?.FirstOrDefault(x => x.ProdutorId == m.ProdutorOrigemId)?.ValorFreteCotado > 0) 
-                               ? m.Contrato.ProdutoresVinculados.First(x => x.ProdutorId == m.ProdutorOrigemId).ValorFreteCotado 
-                               : (m.Contrato?.ValorFreteCotado ?? 0),
+            ValorFreteCotado = m.ValorFreteCotado,
             CustoFretePorSaca = m.CustoFretePorSaca,
             ValorCompraPorSaca = m.ValorCompraPorSaca,
             ValorTotalCompra = (m.ValorCompraPorSaca + m.CustoFretePorSaca + (m.QuemPagaArmazem == "Nos" ? m.ValorPorSacaArmazem : 0)) * m.QuantidadeSacas, // Redundante mas útil no DTO

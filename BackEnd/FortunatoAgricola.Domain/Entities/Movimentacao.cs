@@ -18,6 +18,7 @@ namespace FortunatoAgricola.Domain.Entities
         public decimal UmidadePorcentagem { get; set; }
         public decimal ImpurezaKg { get; set; }
         public decimal ImpurezaPorcentagem { get; set; }
+        public decimal ValorFreteCotado { get; set; }
         public decimal CustoFretePorSaca { get; set; }
         public decimal ValorCompraPorSaca { get; set; }
         public decimal ValorTotalCompra => QuantidadeSacas * ValorCompraPorSaca;

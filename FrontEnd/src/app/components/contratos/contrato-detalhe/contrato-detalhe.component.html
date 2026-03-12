@@ -44,17 +44,7 @@
             </div>
         </div>
 
-        <div class="col-md-2" *ngIf="contrato">
-            <div class="card h-100 shadow-sm border-0 border-start border-info border-4">
-                <div class="card-body p-3">
-                    <h6 class="text-muted text-uppercase fw-bold mb-3 small" style="font-size: 0.7rem;">Frete Cotado</h6>
-                    <h5 class="fw-bold mb-1 text-info" style="font-size: 1rem;">{{ (contrato?.valorFreteCotado || 0) | currency:'BRL':'symbol':'1.2-2' }} / Sc</h5>
-                    <p class="mb-0 small text-muted" style="font-size: 0.7rem;">Base p/ Diferença</p>
-                </div>
-            </div>
-        </div>
-
-        <div [ngClass]="authService.isOperador() ? 'col-md-7' : 'col-md-4'">
+        <div [ngClass]="authService.isOperador() ? 'col-md-9' : 'col-md-6'">
             <div class="card h-100 shadow-sm border-0 bg-light">
                 <div class="card-body p-3 d-flex flex-column justify-content-center">
                     <div class="d-flex justify-content-between align-items-end mb-2">

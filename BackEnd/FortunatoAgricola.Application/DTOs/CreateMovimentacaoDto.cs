@@ -1,4 +1,4 @@
-﻿namespace FortunatoAgricola.Application.DTOs
+namespace FortunatoAgricola.Application.DTOs
 {
     public class CreateMovimentacaoDto
     {
@@ -17,6 +17,7 @@
         public Guid VendedorId { get; set; }
         
         // Novos campos financeiros
+        public decimal ValorFreteCotado { get; set; }
         public decimal CustoFretePorSaca { get; set; }
         public decimal ValorCompraPorSaca { get; set; }
         public decimal ValorPorSacaArmazem { get; set; }

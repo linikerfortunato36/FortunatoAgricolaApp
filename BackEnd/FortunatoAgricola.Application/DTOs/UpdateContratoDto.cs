@@ -8,7 +8,6 @@ namespace FortunatoAgricola.Application.DTOs
         public string Status { get; set; } = string.Empty;
         public DateTime? DataFinalEntrega { get; set; }
         public decimal ValorVendaPorSaca { get; set; }
-        public decimal ValorFreteCotado { get; set; }
         public bool IsActive { get; set; }
         public List<CreateContratoProdutorDto> ProdutoresVinculados { get; set; } = new List<CreateContratoProdutorDto>();
     }

@@ -160,10 +160,9 @@ export class ContratoDetalheComponent implements OnInit {
         const infoL = [
           { label: 'CLIENTE DESTINO', val: c.clienteNome, x: 16, w: 55 },
           { label: 'STATUS', val: c.status, x: 75, w: 30 },
-          { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} Kg`, x: 110, w: 35 },
-          { label: 'FRETE COTADO', val: `${fmtR(c.valorFreteCotado || 0)} / Sc`, x: 160, w: 35 },
-          { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} Kg`, x: 210, w: 35 },
-          { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} Kg`, x: 250, w: 35 },
+          { label: 'TOTAL ACORDADO', val: `${fmt(c.quantidadeTotalKg)} Kg`, x: 110, w: 45 },
+          { label: 'ENTREGUE', val: `${fmt(c.quantidadeEntregueKg)} Kg`, x: 170, w: 45 },
+          { label: 'RESTANTE', val: `${fmt(c.quantidadeRestanteKg)} Kg`, x: 230, w: 45 },
         ];
         infoL.forEach(info => {
           doc.setFont('helvetica', 'bold');
@@ -459,7 +458,6 @@ export class ContratoDetalheComponent implements OnInit {
       status: c.status,
       isActive: c.isActive,
       dataFinalEntrega: c.dataFinalEntrega,
-      valorFreteCotado: c.valorFreteCotado,
       produtoresVinculados: novosProdutores.map(p => ({
         produtorId: p.produtorId,
         quantidadeCotaKg: p.quantidadeCotaKg,
@@ -505,7 +503,6 @@ export class ContratoDetalheComponent implements OnInit {
           status: c.status,
           isActive: c.isActive,
           dataFinalEntrega: c.dataFinalEntrega,
-          valorFreteCotado: c.valorFreteCotado,
           produtoresVinculados: novosProdutores.map(p => ({
             produtorId: p.produtorId,
             quantidadeCotaKg: p.quantidadeCotaKg,

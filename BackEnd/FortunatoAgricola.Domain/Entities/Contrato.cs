@@ -13,7 +13,6 @@ namespace FortunatoAgricola.Domain.Entities
         public decimal QuantidadeRestanteKg => QuantidadeTotalKg - QuantidadeEntregueKg;
         public DateTime? DataFinalEntrega { get; set; }
         public decimal ValorVendaPorSaca { get; set; }
-        public decimal ValorFreteCotado { get; set; }
         public bool IsActive { get; set; } = true;
         public virtual ICollection<Movimentacao> Movimentacoes { get; set; } = new List<Movimentacao>();
         public virtual ICollection<ContratoProdutor> ProdutoresVinculados { get; set; } = new List<ContratoProdutor>();
