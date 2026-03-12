@@ -9,6 +9,7 @@ namespace FortunatoAgricola.Application.DTOs
         public decimal QuantidadeEntregueKg { get; set; }
         public decimal QuantidadeRestanteKg { get; set; }
         public decimal ValorCompraPorSaca { get; set; }
+        public decimal ValorFreteCotado { get; set; }
         public DateTime? DataFinalEntrega { get; set; }
     }
 }

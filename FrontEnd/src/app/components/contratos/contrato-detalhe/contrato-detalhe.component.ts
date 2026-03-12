@@ -32,6 +32,7 @@ export class ContratoDetalheComponent implements OnInit {
     produtorId: null as string | null,
     quantidadeCotaKg: null as number | null,
     valorCompraPorSaca: null as number | null,
+    valorFreteCotado: null as number | null,
     dataFinalEntrega: null as string | null
   };
 
@@ -269,12 +270,14 @@ export class ContratoDetalheComponent implements OnInit {
 
           autoTable(doc, {
             startY: y,
-            head: [['Produtor', 'Cota Total', 'Data Limite', 'Entregue', 'Faltante / Restante', 'Conclus\u00e3o']],
+            head: [['Produtor', 'Cota Total', 'Compra', 'Frete', 'Data Limite', 'Entregue', 'Faltante', 'Conc.']],
             body: c.produtoresVinculados.map(p => {
               const pct = p.quantidadeCotaKg > 0 ? ((p.quantidadeEntregueKg / p.quantidadeCotaKg) * 100).toFixed(1) : '0.0';
               return [
                 p.produtorNome || '-',
                 fmt(p.quantidadeCotaKg) + ' Kg',
+                fmtR(p.valorCompraPorSaca || 0),
+                fmtR(p.valorFreteCotado || 0),
                 p.dataFinalEntrega ? new Date(p.dataFinalEntrega).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-',
                 fmt(p.quantidadeEntregueKg) + ' Kg',
                 fmt(p.quantidadeRestanteKg) + ' Kg',
@@ -285,7 +288,7 @@ export class ContratoDetalheComponent implements OnInit {
             headStyles: { fillColor: [26, 46, 28], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 7 },
             alternateRowStyles: { fillColor: [248, 250, 252] },
             columnStyles: {
-              1: { halign: 'right' }, 2: { halign: 'center' }, 3: { halign: 'right' }, 4: { halign: 'right', textColor: [220, 38, 38], fontStyle: 'bold' }, 5: { halign: 'center', fontStyle: 'bold' }
+              1: { halign: 'right' }, 2: { halign: 'right' }, 3: { halign: 'right' }, 4: { halign: 'center' }, 5: { halign: 'right' }, 6: { halign: 'right', textColor: [220, 38, 38], fontStyle: 'bold' }, 7: { halign: 'center', fontStyle: 'bold' }
             },
             margin: { left: 14, right: 14 },
           });
@@ -389,7 +392,7 @@ export class ContratoDetalheComponent implements OnInit {
   // --- MÉTODOS DE COMPRA / VÍNCULO ---
   abrirCompraModal(): void {
     this.isEditVinculo = false;
-    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null, dataFinalEntrega: null };
+    this.novaCompra = { produtorId: null, quantidadeCotaKg: null, valorCompraPorSaca: null, valorFreteCotado: null, dataFinalEntrega: null };
     this.isCompraModalOpen = true;
   }
 
@@ -399,6 +402,7 @@ export class ContratoDetalheComponent implements OnInit {
       produtorId: p.produtorId,
       quantidadeCotaKg: p.quantidadeCotaKg,
       valorCompraPorSaca: p.valorCompraPorSaca || null,
+      valorFreteCotado: p.valorFreteCotado || null,
       dataFinalEntrega: p.dataFinalEntrega ? new Date(p.dataFinalEntrega).toISOString().split('T')[0] : null
     };
     this.isCompraModalOpen = true;
@@ -422,6 +426,7 @@ export class ContratoDetalheComponent implements OnInit {
       if (idx !== -1) {
         novosProdutores[idx].quantidadeCotaKg = this.novaCompra.quantidadeCotaKg;
         novosProdutores[idx].valorCompraPorSaca = this.novaCompra.valorCompraPorSaca;
+        novosProdutores[idx].valorFreteCotado = this.novaCompra.valorFreteCotado || 0;
         novosProdutores[idx].dataFinalEntrega = this.novaCompra.dataFinalEntrega || undefined;
       }
     } else {
@@ -429,18 +434,20 @@ export class ContratoDetalheComponent implements OnInit {
       if (existente) {
         existente.quantidadeCotaKg += this.novaCompra.quantidadeCotaKg;
         existente.valorCompraPorSaca = this.novaCompra.valorCompraPorSaca;
+        existente.valorFreteCotado = this.novaCompra.valorFreteCotado || 0;
         existente.dataFinalEntrega = this.novaCompra.dataFinalEntrega || undefined;
       } else {
         novosProdutores.push({
           contratoId: c.id,
           produtorId: this.novaCompra.produtorId,
-          produtorNome: '',
-          quantidadeCotaKg: this.novaCompra.quantidadeCotaKg,
-          quantidadeEntregueKg: 0,
-          quantidadeRestanteKg: this.novaCompra.quantidadeCotaKg,
-          valorCompraPorSaca: this.novaCompra.valorCompraPorSaca,
-          dataFinalEntrega: this.novaCompra.dataFinalEntrega || undefined
-        });
+        produtorNome: this.produtores.find(x => x.id === this.novaCompra.produtorId)?.nome || '',
+        quantidadeCotaKg: this.novaCompra.quantidadeCotaKg,
+        quantidadeEntregueKg: 0,
+        quantidadeRestanteKg: this.novaCompra.quantidadeCotaKg,
+        valorCompraPorSaca: this.novaCompra.valorCompraPorSaca,
+        valorFreteCotado: this.novaCompra.valorFreteCotado || 0,
+        dataFinalEntrega: this.novaCompra.dataFinalEntrega || undefined
+      });
       }
     }
 
@@ -457,6 +464,7 @@ export class ContratoDetalheComponent implements OnInit {
         produtorId: p.produtorId,
         quantidadeCotaKg: p.quantidadeCotaKg,
         valorCompraPorSaca: p.valorCompraPorSaca,
+        valorFreteCotado: p.valorFreteCotado || 0,
         dataFinalEntrega: p.dataFinalEntrega
       }))
     };

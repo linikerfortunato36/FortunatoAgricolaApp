@@ -129,15 +129,20 @@
                                     <input type="number" class="form-control" [(ngModel)]="valorCompraInput"
                                         name="valorCompraInput" placeholder="Ex: 150.00">
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold text-dark small">Data Limite (Cota)</label>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold text-dark small">Frete (R$/Sc)</label>
+                                    <input type="number" class="form-control" [(ngModel)]="freteCotadoInput"
+                                        name="freteCotadoInput" placeholder="Ex: 10.00">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold text-dark small">Data Limite</label>
                                     <input type="date" class="form-control" [(ngModel)]="dataLimiteProdutorInput"
                                         name="dataLimiteProdutorInput">
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-secondary w-100" (click)="addProdutor()"
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-secondary w-100 px-0" (click)="addProdutor()"
                                         [disabled]="!selectedProdutorId || !quotaInput || !valorCompraInput">
-                                        <i class="bi bi-plus-circle me-1"></i> Add
+                                        <i class="bi bi-plus-circle"></i>
                                     </button>
                                 </div>
                             </div>
@@ -149,6 +154,7 @@
                                             <th>Produtor</th>
                                             <th class="text-end">Limite Final</th>
                                             <th class="text-end">Compra (R$/Sc)</th>
+                                            <th class="text-end">Frete (R$/Sc)</th>
                                             <th class="text-end">Cota Definida (Kg)</th>
                                             <th class="text-center" style="width: 80px;"
                                                 *ngIf="authService.isAdminOrMaster()">Ação</th>
@@ -160,6 +166,8 @@
                                             <td class="text-end text-muted small">{{ p.dataFinalEntrega ?
                                                 (p.dataFinalEntrega | date:'dd/MM/yyyy':'UTC') : '--' }}</td>
                                             <td class="text-end fw-bold">{{ p.valorCompraPorSaca |
+                                                currency:'BRL':'symbol':'1.2-2' }}</td>
+                                            <td class="text-end text-info">{{ (p.valorFreteCotado || 0) |
                                                 currency:'BRL':'symbol':'1.2-2' }}</td>
                                             <td class="text-end fw-bold">{{ p.quantidadeCotaKg | number:'1.0-0' }} Kg
                                             </td>
@@ -177,7 +185,7 @@
                                     </tbody>
                                     <tfoot class="table-light">
                                         <tr>
-                                            <td colspan="3" class="fw-bold text-end">SOMA DAS COMPRAS (COTAS):</td>
+                                            <td colspan="4" class="fw-bold text-end">SOMA DAS COMPRAS (COTAS):</td>
                                             <td class="text-end fw-bold text-primary">{{ sumQuotas | number:'1.0-0' }}
                                                 Kg</td>
                                             <td *ngIf="authService.isAdminOrMaster()"></td>

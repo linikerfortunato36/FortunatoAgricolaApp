@@ -99,9 +99,25 @@ export class MovimentacaoFormComponent implements OnInit {
     return this.ganhoBruto - this.imposto - this.comissaoLd;
   }
 
+  get valorFreteCotadoReferencia(): number {
+    if (!this.contratoSelecionado) return 0;
+    
+    // Busca o vinculo do produtor selecionado
+    const vinculo = this.contratoSelecionado.produtoresVinculados?.find(p => p.produtorId === this.form.produtorOrigemId);
+    
+    // Se tiver vinculo e frete cotado no vinculo > 0, usa ele
+    if (vinculo && vinculo.valorFreteCotado && vinculo.valorFreteCotado > 0) {
+      return vinculo.valorFreteCotado;
+    }
+    
+    // Caso contrário, usa o do contrato
+    return this.contratoSelecionado.valorFreteCotado || 0;
+  }
+
   get diferencaFrete(): number {
-    if (!this.contratoSelecionado || !this.contratoSelecionado.valorFreteCotado) return 0;
-    return this.contratoSelecionado.valorFreteCotado - this.form.custoFretePorSaca;
+    const freteCotado = this.valorFreteCotadoReferencia;
+    if (freteCotado === 0) return 0;
+    return freteCotado - this.form.custoFretePorSaca;
   }
 
   get contratoSelecionado(): Contrato | undefined {

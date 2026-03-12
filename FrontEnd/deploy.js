@@ -27,6 +27,12 @@ async function deploy() {
             await client.ensureDir("/www/api");
             await client.cd("/www/api");
 
+            console.log("Creating app_offline.htm to stop the app pool...");
+            const fs = require('fs');
+            const offlineFile = path.resolve(__dirname, "../app_offline.htm");
+            fs.writeFileSync(offlineFile, "<html><body><h1>Site em Manutencao</h1><p>Atualizando backend...</p></body></html>");
+            await client.uploadFrom(offlineFile, "app_offline.htm");
+
             // Clear old backend files to avoid garbage
             console.log("Clearing /www/api...");
             try {
@@ -37,7 +43,6 @@ async function deploy() {
 
             console.log("Uploading from publish-x86...");
             const publishFolder = path.resolve(__dirname, "../BackEnd/FortunatoAgricola.API/publish-x86");
-            const fs = require('fs');
             if (fs.existsSync(path.join(publishFolder, 'web.config'))) {
                 fs.unlinkSync(path.join(publishFolder, 'web.config'));
             }
@@ -45,9 +50,17 @@ async function deploy() {
             await client.uploadFromDir(publishFolder);
             console.log("Uploading predefined root webconfig.txt to web.config...");
             await client.uploadFrom(path.resolve(__dirname, "../webconfig.txt"), "web.config");
+            
+            console.log("Removing app_offline.htm...");
+            await client.remove("app_offline.htm");
+            
+            if (fs.existsSync(offlineFile)) fs.unlinkSync(offlineFile);
+
             console.log("✅ Backend uploaded successfully.");
         } catch (backendErr) {
             console.log("❌ Partial or total failure in Backend upload. Continuing with Frontend...", backendErr);
+            // Try to remove app_offline anyway
+            try { await client.remove("app_offline.htm"); } catch(e) {}
         }
 
         console.log("Building Frontend locally...");

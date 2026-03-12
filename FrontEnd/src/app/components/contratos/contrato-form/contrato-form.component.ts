@@ -23,6 +23,7 @@ export class ContratoFormComponent implements OnInit {
     selectedProdutorId: string | null = null;
     quotaInput: number | null = null;
     valorCompraInput: number | null = null;
+    freteCotadoInput: number | null = null;
     dataLimiteProdutorInput: string | null = null;
 
     contrato: any = {
@@ -112,12 +113,14 @@ export class ContratoFormComponent implements OnInit {
             quantidadeCotaKg: this.quotaInput,
             quantidadeEntregueKg: 0,
             valorCompraPorSaca: this.valorCompraInput,
+            valorFreteCotado: this.freteCotadoInput || 0,
             dataFinalEntrega: this.dataLimiteProdutorInput || null
         });
 
         this.selectedProdutorId = null;
         this.quotaInput = null;
         this.valorCompraInput = null;
+        this.freteCotadoInput = null;
         this.dataLimiteProdutorInput = null;
     }
 

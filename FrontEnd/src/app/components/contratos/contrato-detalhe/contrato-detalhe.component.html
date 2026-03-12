@@ -133,9 +133,9 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="text-muted small mb-2" *ngIf="p.valorCompraPorSaca">
-                                <strong>Compra:</strong> {{ p.valorCompraPorSaca | currency:'BRL':'symbol':'1.2-2' }} /
-                                Sc
+                            <div class="small mb-2">
+                                <div class="text-muted"><strong>Compra:</strong> {{ p.valorCompraPorSaca | currency:'BRL':'symbol':'1.2-2' }} / Sc</div>
+                                <div class="text-info"><strong>Frete:</strong> {{ (p.valorFreteCotado || 0) | currency:'BRL':'symbol':'1.2-2' }}</div>
                             </div>
                             <div class="text-danger small fw-bold mb-2">
                                 <i class="bi bi-calendar-x"></i> Limite Produtor: {{ p.dataFinalEntrega ?
@@ -387,18 +387,26 @@
                             </ng-select>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label fw-bold text-muted small">Cota (Kg)</label>
                                 <input type="number" class="form-control" name="cotaKg"
-                                    [(ngModel)]="novaCompra.quantidadeCotaKg" placeholder="Ex: 5000" required min="1">
+                                     [(ngModel)]="novaCompra.quantidadeCotaKg" placeholder="Ex: 5000" required min="1">
                                 <div class="form-text text-muted small" *ngIf="!isEditVinculo">Falta Comprar: {{ getFaltaComprar() | number }} Kg</div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-muted small">Valor / Saca (R$)</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">R$</span>
-                                    <input type="number" class="form-control" name="valorCompra"
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold text-muted small">Valor / Sc (R$)</label>
+                                <div class="input-group text-success">
+                                    <span class="input-group-text bg-success-subtle border-success-subtle text-success">R$</span>
+                                    <input type="number" class="form-control border-success-subtle" name="valorCompra"
                                         [(ngModel)]="novaCompra.valorCompraPorSaca" placeholder="150.00" required min="1">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold text-muted small">Frete / Sc (R$)</label>
+                                <div class="input-group text-info">
+                                    <span class="input-group-text bg-info-subtle border-info-subtle text-info">R$</span>
+                                    <input type="number" class="form-control border-info-subtle" name="freteCotado"
+                                        [(ngModel)]="novaCompra.valorFreteCotado" placeholder="10.00">
                                 </div>
                             </div>
                             <div class="col-12 mb-3">

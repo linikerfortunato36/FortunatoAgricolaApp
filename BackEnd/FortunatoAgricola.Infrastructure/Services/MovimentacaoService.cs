@@ -23,6 +23,8 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var movimentacoes = await _context.Movimentacoes
                 .Include(m => m.Contrato)
+                    .ThenInclude(c => c.ProdutoresVinculados)
+                .Include(m => m.Contrato)
                     .ThenInclude(c => c.Cliente)
                 .Include(m => m.ProdutorOrigem)
                 .Include(m => m.Transportadora)
@@ -38,6 +40,8 @@ namespace FortunatoAgricola.Infrastructure.Services
         {
             var movimentacoes = await _context.Movimentacoes
                 .Include(m => m.Contrato)
+                    .ThenInclude(c => c.ProdutoresVinculados)
+                .Include(m => m.Contrato)
                     .ThenInclude(c => c.Cliente)
                 .Include(m => m.ProdutorOrigem)
                 .Include(m => m.Transportadora)
@@ -51,6 +55,8 @@ namespace FortunatoAgricola.Infrastructure.Services
         public async Task<MovimentacaoDto> GetByIdAsync(Guid id)
         {
             var m = await _context.Movimentacoes
+                .Include(mov => mov.Contrato)
+                    .ThenInclude(c => c.ProdutoresVinculados)
                 .Include(mov => mov.Contrato)
                     .ThenInclude(c => c.Cliente)
                 .Include(mov => mov.ProdutorOrigem)
@@ -241,7 +247,9 @@ namespace FortunatoAgricola.Infrastructure.Services
             TransportadoraNome = m.Transportadora?.Nome ?? string.Empty,
             VendedorId = m.VendedorId,
             VendedorNome = m.Vendedor?.Nome ?? string.Empty,
-            ValorFreteCotado = m.Contrato?.ValorFreteCotado ?? 0,
+            ValorFreteCotado = (m.Contrato?.ProdutoresVinculados?.FirstOrDefault(x => x.ProdutorId == m.ProdutorOrigemId)?.ValorFreteCotado > 0) 
+                               ? m.Contrato.ProdutoresVinculados.First(x => x.ProdutorId == m.ProdutorOrigemId).ValorFreteCotado 
+                               : (m.Contrato?.ValorFreteCotado ?? 0),
             CustoFretePorSaca = m.CustoFretePorSaca,
             ValorCompraPorSaca = m.ValorCompraPorSaca,
             ValorTotalCompra = (m.ValorCompraPorSaca + m.CustoFretePorSaca + (m.QuemPagaArmazem == "Nos" ? m.ValorPorSacaArmazem : 0)) * m.QuantidadeSacas, // Redundante mas útil no DTO

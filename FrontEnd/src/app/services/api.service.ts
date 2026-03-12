@@ -62,6 +62,7 @@ export interface ContratoProdutor {
   quantidadeEntregueKg: number;
   quantidadeRestanteKg: number;
   valorCompraPorSaca?: number;
+  valorFreteCotado?: number;
   dataFinalEntrega?: string;
 }
 
